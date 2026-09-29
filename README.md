@@ -66,9 +66,13 @@ docs/DESIGN.md       UI tokens & bans
 STATUS.md            what works / blockers / Nov hack plan
 ```
 
+## Deploy
+
+Streamlit Community Cloud should use branch `main` and main file **`app/streamlit_app.py`**. See [`DEPLOY.md`](DEPLOY.md).
+
 ## Stack
 
-pandas, geopandas, rasterio, folium, streamlit, plotly, scikit-learn, pygbif/requests, pyarrow.
+pandas, geopandas, rasterio, folium, streamlit, plotly, scikit-learn, pygbif/requests, pyarrow, reportlab.
 
 Optional: langchain/openai behind `ENABLE_LLM_NAMES=1`.
 

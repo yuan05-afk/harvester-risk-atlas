@@ -33,6 +33,14 @@ Last updated: 2026-09-29 ~19:20 (Asia/Manila)
 | Demo mode toggle → *Arcangelisia flava* (abutra) + narrative captions | Done |
 | Chart HTML download (PNG if kaleido installed) | Done |
 | Exploratory suitability sketch (RF presence/background; not an SDM) | Done (dossier expander) |
+| Map how-to-read strip | Done |
+| Methods HPI weights expander | Done |
+| Demo talk track (Map, dossier, brief, compare, methods) | Done |
+| PDF field brief via reportlab, plus HTML | Done |
+| IUCN badge (cited code, otherwise “Not recorded”) | Done |
+| Plotly legends under the axis (title stays clear) | Done |
+| Compare cards: dedented HTML, italic binomial, no uppercase | Done |
+| `DEPLOY.md` — Streamlit entry `app/streamlit_app.py` | Done |
 
 **No feature rebuild required** — archetypes/charts run on existing `hpi_scores` columns. IUCN left `not_queried`.
 

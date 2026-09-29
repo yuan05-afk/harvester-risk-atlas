@@ -32,6 +32,31 @@ LAYOUT_BASE = dict(
 )
 
 
+def _legend_below() -> dict:
+    """Horizontal legend under the axis so it does not share a band with the title."""
+    return dict(
+        orientation="h",
+        yanchor="top",
+        y=-0.28,
+        x=0,
+        xanchor="left",
+        title_text="",
+        font=dict(family="Inter, -apple-system, sans-serif", size=12, color=INK),
+    )
+
+
+def _title_above(text: str) -> dict:
+    return dict(
+        text=text,
+        x=0,
+        xanchor="left",
+        y=1,
+        yanchor="top",
+        pad=dict(b=18, t=0),
+        font=dict(size=13, color=INK_SEC, family="Inter, -apple-system, sans-serif"),
+    )
+
+
 def _components_from_row(row: pd.Series | dict[str, Any]) -> pd.DataFrame:
     get = row.get if hasattr(row, "get") else lambda k, d=None: row[k] if k in row.index else d
     return pd.DataFrame(
@@ -139,14 +164,14 @@ def hpi_distribution(hpi: pd.DataFrame, highlight: str | None = None) -> go.Figu
         fig.add_vline(x=val, line_dash="dot", line_color=ACCENT, annotation_text=highlight, annotation_position="top")
     fig.update_layout(
         **LAYOUT_BASE,
-        title=dict(text="HPI distribution (atlas cohort)", font=dict(size=13, color=INK_SEC)),
-        height=220,
+        title=_title_above("HPI distribution (atlas cohort)"),
+        height=300,
         bargap=0.08,
         showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0, title=""),
+        legend=_legend_below(),
         xaxis=dict(title="HPI", range=[0, 1], gridcolor=HAIRLINE),
         yaxis=dict(title="Species", gridcolor=HAIRLINE),
-        margin=dict(l=8, r=12, t=48, b=36),
+        margin=dict(l=48, r=16, t=72, b=108),
     )
     return fig
 
@@ -180,14 +205,14 @@ def compare_components(row_a: pd.Series, row_b: pd.Series) -> go.Figure:
     )
     fig.update_layout(
         **LAYOUT_BASE,
-        title=dict(text="Component comparison", font=dict(size=13, color=INK_SEC)),
-        height=260,
+        title=_title_above("Component comparison"),
+        height=360,
         barmode="group",
         showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+        legend=_legend_below(),
         xaxis=dict(range=[0, 1], gridcolor=HAIRLINE, title=""),
         yaxis=dict(title=""),
-        margin=dict(l=8, r=12, t=48, b=8),
+        margin=dict(l=56, r=24, t=72, b=96),
     )
     return fig
 

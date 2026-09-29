@@ -433,3 +433,136 @@ div[data-testid="stMetricLabel"] {
 @media (max-width: 700px) {
   .hra-compare-grid { grid-template-columns: 1fr; }
 }
+.hra-compare-card {
+  min-width: 0;
+}
+.hra-compare-card .card-title,
+.hra-compare-card .card-binomial,
+.hra-compare-card .genus,
+.hra-compare-card .epithet {
+  text-transform: none;
+  letter-spacing: 0;
+  hyphens: manual;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.hra-compare-card .card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0;
+}
+.hra-compare-card .card-binomial {
+  margin: 0.2rem 0 0.45rem 0;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #3a3a3c;
+  line-height: 1.3;
+}
+.hra-compare-card .genus,
+.hra-compare-card .epithet {
+  display: inline-block;
+  white-space: nowrap;
+  font-style: italic;
+}
+.hra-compare-card .epithet {
+  margin-left: 0.28em;
+}
+.hra-compare-card .metric-line,
+.hra-compare-card .components {
+  margin: 0.35rem 0 0 0;
+  font-size: 0.875rem;
+  color: var(--ink-secondary);
+}
+
+/* Map how-to-read strip */
+.hra-howto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  align-items: baseline;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.85rem;
+  margin: 0.25rem 0 0.65rem 0;
+  font-size: 0.8125rem;
+  color: var(--ink-secondary);
+  line-height: 1.45;
+}
+.hra-howto .kicker {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* Demo talk track */
+.hra-talk {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.7rem 0.95rem 0.45rem 0.95rem;
+  margin: 0.35rem 0 0.9rem 0;
+}
+.hra-talk .kicker {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.hra-talk ol {
+  margin: 0.35rem 0 0.25rem 1.15rem;
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+.hra-talk li {
+  margin-bottom: 0.28rem;
+}
+
+/* IUCN category badge — neutral when the snapshot has no cited code */
+.iucn-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem 0.1rem 0.12rem;
+  background: var(--surface);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  vertical-align: middle;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.iucn-badge .code {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.12rem 0.42rem;
+  background: #e8e8ed;
+  color: var(--ink-secondary);
+}
+.iucn-badge .name,
+.iucn-badge .year {
+  color: var(--ink);
+  font-weight: 500;
+}
+.iucn-badge .year {
+  color: var(--ink-secondary);
+  font-weight: 400;
+}
+.iucn-badge.cr .code { background: #d81e05; color: #fff; }
+.iucn-badge.en .code { background: #fc7f3f; color: #1d1d1f; }
+.iucn-badge.vu .code { background: #f9e814; color: #1d1d1f; }
+.iucn-badge.nt .code { background: #cce226; color: #1d1d1f; }
+.iucn-badge.lc .code { background: #60c659; color: #1d1d1f; }
+.iucn-badge.ex .code,
+.iucn-badge.ew .code { background: #1d1d1f; color: #fff; }
+.iucn-badge.dd .code,
+.iucn-badge.ne .code,
+.iucn-badge.unknown .code { background: #e8e8ed; color: #6e6e73; }

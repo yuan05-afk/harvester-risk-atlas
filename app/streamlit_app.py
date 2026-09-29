@@ -18,11 +18,23 @@ from harvester_risk_atlas.config import (  # noqa: E402
     HPI_CSV,
     OCCURRENCES_PARQUET,
     DATA_PROCESSED,
-    HPI_WEIGHTS,
 )
-from harvester_risk_atlas.hpi import dossier_actions, hpi_formula_markdown  # noqa: E402
+from harvester_risk_atlas.hpi import (  # noqa: E402
+    dossier_actions,
+    hpi_formula_markdown,
+    weights_explainer_markdown,
+)
 from harvester_risk_atlas.names import resolve_query  # noqa: E402
-from harvester_risk_atlas.pdf_brief import render_field_brief_html  # noqa: E402
+from harvester_risk_atlas.pdf_brief import (  # noqa: E402
+    render_field_brief_html,
+    render_field_brief_pdf,
+)
+from harvester_risk_atlas.markup import (  # noqa: E402
+    compare_grid_html,
+    demo_talk_track_html,
+    iucn_badge_html,
+    map_howto_html,
+)
 from harvester_risk_atlas.archetypes import (  # noqa: E402
     assign_archetypes,
     archetype_summary,
@@ -82,9 +94,34 @@ DEMO_CAPTIONS = {
     ),
     "brief": (
         "Demo · Step 3",
-        "Download the HTML field brief for stewardship talking points — research/education only, "
+        "Download the PDF field brief for stewardship talking points — research/education only, "
         "never a permit or medical claim.",
     ),
+}
+
+DEMO_TALK_TRACK = {
+    "Map": [
+        "Open on the map. Circles are species centroids from the GBIF sample, not places people harvested.",
+        "Size is HPI. Color is only the pressure band. The how-to-read strip says the same thing.",
+        "Demo species is abutra, Arcangelisia flava: moderate band, and the harvest proxy is the loud component.",
+    ],
+    "Species dossier": [
+        "Read HPI, then the four components. For abutra, harvest is high and rarity is not.",
+        "Point at the IUCN badge. It says Not recorded. Do not fill in a category.",
+        "The waterfall is weight times component. The decade chart counts GBIF records, not harvest volume.",
+    ],
+    "Field brief": [
+        "Download the PDF field brief. It repeats the score, the IUCN line, and the stewardship notes.",
+        "Say this out loud: research and education only. Not a permit, not medical advice, not an IUCN assessment.",
+    ],
+    "Compare": [
+        "Compare abutra with banaba. The chart title stays above the plot. Species names sit in the legend under the axis.",
+        "Both cards are HTML. A long binomial wraps between genus and epithet, in italics, without uppercasing the letters.",
+    ],
+    "Methods": [
+        "Open the weights expander. Rarity 0.30, climate 0.25, harvest 0.25, protected-area gap 0.20. They sum to 1.00.",
+        "Close on this line: HPI is computed in this app. It is not an IUCN index and not a harvest volume.",
+    ],
 }
 
 
@@ -168,6 +205,15 @@ def demo_caption(key: str, enabled: bool):
         f'<div class="hra-demo-caption"><span class="tag">{tag}</span>{body}</div>',
         unsafe_allow_html=True,
     )
+
+
+def demo_talk(page: str, enabled: bool):
+    if not enabled:
+        return
+    lines = DEMO_TALK_TRACK.get(page)
+    if not lines:
+        return
+    st.markdown(demo_talk_track_html(page, lines), unsafe_allow_html=True)
 
 
 def map_color(band: str) -> str:
@@ -326,12 +372,14 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool):
           <div style="margin-top:0.5rem">
             <span class="hra-band {bc}">{band}</span>
             {chip}
+            {iucn_badge_html(row)}
           </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
     demo_caption("dossier", demo)
+    demo_talk("Species dossier", demo)
 
     hpi_v = float(row["hpi"])
     conf = float(row.get("hpi_confidence", 0))
@@ -412,20 +460,10 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool):
             unsafe_allow_html=True,
         )
     with c2:
-        iucn_cat = row.get("iucn_category") or row.get("iucn_category_code")
-        iucn_status = row.get("iucn_status") or "not_queried"
-        if iucn_cat and str(iucn_status) == "ok":
-            iucn_line = f"IUCN Red List: <strong>{iucn_cat}</strong>"
-            if row.get("iucn_year"):
-                iucn_line += f" ({row.get('iucn_year')})"
-        else:
-            iucn_line = (
-                f"IUCN Red List: <em>{iucn_status}</em> — category not shown (never invented)"
-            )
         iucn_note = row.get("iucn_note") or row.get("demo_iucn_note") or ""
         st.markdown(
             f'<div class="hra-card"><h3>Why it matters</h3><p>{row.get("notes","")}</p>'
-            f'<p style="margin-top:0.65rem">{iucn_line}</p>'
+            f'<p style="margin-top:0.65rem">{iucn_badge_html(row)}</p>'
             f'<p style="margin-top:0.35rem;color:#6e6e73;font-size:0.85rem">{iucn_note}</p></div>',
             unsafe_allow_html=True,
         )
@@ -457,22 +495,36 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool):
 
 def field_brief_page(row: pd.Series, demo: bool):
     demo_caption("brief", demo)
+    demo_talk("Field brief", demo)
     st.markdown(f"### Field brief — *{row['scientific_name']}*")
     st.caption(f"{row.get('vernacular_ph','')} · {row.get('hpi_band','')} · HPI {float(row['hpi']):.3f}")
+    st.markdown(iucn_badge_html(row), unsafe_allow_html=True)
     acts = dossier_actions(row.to_dict())
-    html = render_field_brief_html(row.to_dict(), acts)
+    payload = row.to_dict()
+    html = render_field_brief_html(payload, acts)
     components.html(html, height=520, scrolling=True)
-    st.download_button(
-        "Download field brief (HTML)",
-        data=html.encode("utf-8"),
-        file_name=f"field_brief_{row['scientific_name'].replace(' ', '_')}.html",
-        mime="text/html",
-        type="primary",
-    )
+    stem = str(row["scientific_name"]).replace(" ", "_")
+    c1, c2 = st.columns(2)
+    with c1:
+        st.download_button(
+            "Download field brief (PDF)",
+            data=render_field_brief_pdf(payload, acts),
+            file_name=f"field_brief_{stem}.pdf",
+            mime="application/pdf",
+            type="primary",
+        )
+    with c2:
+        st.download_button(
+            "Download field brief (HTML)",
+            data=html.encode("utf-8"),
+            file_name=f"field_brief_{stem}.html",
+            mime="text/html",
+        )
 
 
-def compare_page(hpi: pd.DataFrame):
+def compare_page(hpi: pd.DataFrame, demo: bool):
     st.markdown("### Compare species")
+    demo_talk("Compare", demo)
     st.caption("Side-by-side HPI components and key metrics. Pick any two from the atlas cohort.")
     names = hpi.sort_values("hpi", ascending=False)["scientific_name"].tolist()
     default_a = names[0] if names else None
@@ -500,45 +552,17 @@ def compare_page(hpi: pd.DataFrame):
     fig = compare_components(row_a, row_b)
     st.plotly_chart(fig, use_container_width=True)
     chart_download(fig, f"compare_{a.replace(' ','_')}_vs_{b.replace(' ','_')}")
-
-    def _metric_block(r: pd.Series) -> str:
-        arch = r.get("archetype_label") or "—"
-        return f"""
-        <div class="hra-card">
-          <h3>{r['scientific_name']}</h3>
-          <p style="color:#6e6e73;margin-bottom:0.5rem">{r.get('vernacular_ph','')}</p>
-          <p><span class="hra-mono">{float(r['hpi']):.3f}</span> · {r.get('hpi_band','')}</p>
-          <p style="margin-top:0.35rem">Confidence <span class="hra-mono">{float(r.get('hpi_confidence',0)):.2f}</span>
-            · n={int(r.get('n_occurrences') or 0)}</p>
-          <p style="margin-top:0.5rem"><span class="hra-chip">{arch}</span></p>
-          <p style="margin-top:0.65rem;font-size:0.85rem;color:#6e6e73">
-            R {float(r['component_rarity']):.3f} ·
-            C {float(r['component_climate']):.3f} ·
-            H {float(r['component_harvest']):.3f} ·
-            P {float(r['component_pa_gap']):.3f}
-          </p>
-          <p style="margin-top:0.35rem;font-size:0.8rem;color:#86868b">
-            IUCN: {r.get('iucn_status') or 'not_queried'}
-          </p>
-        </div>
-        """
-
-    st.markdown(
-        f'<div class="hra-compare-grid">{_metric_block(row_a)}{_metric_block(row_b)}</div>',
-        unsafe_allow_html=True,
-    )
+    st.markdown(compare_grid_html(row_a, row_b), unsafe_allow_html=True)
 
 
-def methods_page(hpi: pd.DataFrame):
+def methods_page(hpi: pd.DataFrame, demo: bool):
     st.markdown("## Methods & data sources")
+    demo_talk("Methods", demo)
     st.markdown(hpi_formula_markdown())
+    with st.expander("HPI weights", expanded=False):
+        st.markdown(weights_explainer_markdown())
     st.markdown(
-        f"""
-**Weights (v1.1):** rarity `{HPI_WEIGHTS['rarity']}`, climate `{HPI_WEIGHTS['climate_stress']}`,
-harvest `{HPI_WEIGHTS['harvest_proxy']}`, PA gap `{HPI_WEIGHTS['pa_gap']}`.
-
-See `docs/METHODS.md` and `docs/DESIGN.md` for full formulas, licenses, and AI disclosure.
-"""
+        "See `docs/METHODS.md` and `docs/DESIGN.md` for full formulas, licenses, and AI disclosure."
     )
     st.markdown(
         """
@@ -636,6 +660,7 @@ def main():
             demo_sp = pick_demo_species(hpi)
             st.session_state["selected"] = demo_sp
             st.caption(f"Demo species: *{demo_sp}*")
+            st.caption("Talk track is on each page. Follow Map, dossier, then field brief.")
 
         st.markdown("---")
         st.caption("Search scientific or PH vernacular name")
@@ -669,22 +694,24 @@ def main():
     workflow_steps(page)
 
     if page == "Methods":
-        methods_page(hpi)
+        methods_page(hpi, demo)
         return
 
     if page == "Compare":
-        compare_page(hpi)
+        compare_page(hpi, demo)
         return
 
     if page == "Map":
         demo_caption("map", demo)
+        demo_talk("Map", demo)
         color_arch = st.checkbox("Color centroids by risk archetype", value=False)
+        st.markdown(map_howto_html(), unsafe_allow_html=True)
         st.markdown(
             """<div class="hra-legend">
-            <span class="l-low">Lower relative pressure</span>
-            <span class="l-mid">Moderate</span>
-            <span class="l-high">Higher relative pressure</span>
-            </div>""",
+<span class="l-low">Lower relative pressure</span>
+<span class="l-mid">Moderate</span>
+<span class="l-high">Higher relative pressure</span>
+</div>""",
             unsafe_allow_html=True,
         )
         m = build_map(hpi, occ, selected, color_by_archetype=color_arch)
