@@ -39,6 +39,7 @@ from harvester_risk_atlas.charts import (  # noqa: E402
     decade_histogram,
     fig_to_png_bytes,
     fig_to_html_bytes,
+    hpi_spark_svg,
 )
 from harvester_risk_atlas.suitability import suitability_sketch  # noqa: E402
 
@@ -74,19 +75,19 @@ STEP_META = [
 DEMO_CAPTIONS = {
     "map": (
         "Demo · Step 1",
-        "Markers show species centroids on Esri gray canvas, sized by HPI. "
-        "Abutra (Arcangelisia flava) sits in the moderate band with a strong harvest-proxy signal — "
-        "a clear judging example of wild-collection pressure.",
+        "Centroids on Esri gray canvas: color = HPI band, size ∝ score. "
+        "Abutra (Arcangelisia flava) is moderate with a strong harvest proxy — "
+        "the judging example for wild-collection pressure.",
     ),
     "dossier": (
         "Demo · Step 2",
-        "Open the dossier for component breakdown, data gaps (IUCN not_queried until token), "
-        "risk archetype chip, and occurrence decade histogram from GBIF years.",
+        "Components, waterfall, data gaps (IUCN not linked), archetype chip, "
+        "and GBIF decade histogram.",
     ),
     "brief": (
         "Demo · Step 3",
-        "Download the HTML field brief for stewardship talking points — research/education only, "
-        "never a permit or medical claim.",
+        "Download HTML or PDF field brief. Stewardship talking points only — "
+        "not a permit or medical claim.",
     ),
 }
 
@@ -137,13 +138,13 @@ def header():
         <div class="hra-header">
           <div class="hra-kicker">EthnoHACK 2026 · Track 3 · Biodiversity &amp; Sustainability</div>
           <h1>Harvester Risk Atlas</h1>
-          <p class="hra-sub">Map medicinal-plant harvest and climate pressure across the Philippines / SEA.
-          Select a species for a risk dossier. Research and education only.</p>
+          <p class="hra-sub">Harvest and climate pressure for PH/SEA medicinal plants.
+          Pick a species → dossier → field brief. Research and education only.</p>
         </div>
         <div class="hra-disclaimer">
-          <strong>Disclaimer.</strong> Not medical advice. Not a harvest permit or Red List assessment.
-          Ethnobotany notes describe cultural/traditional context only. IUCN categories are never invented;
-          live Red List lookup requires an API token.
+          <strong>Disclaimer.</strong> Not medical advice, not a harvest permit, not a Red List assessment.
+          Ethnobotany notes are cultural context only. IUCN categories are never invented —
+          live lookup needs an API token.
         </div>
         """,
         unsafe_allow_html=True,
@@ -233,6 +234,31 @@ def build_map(
             tooltip=f"{r['scientific_name']} · {float(r['hpi']):.3f}",
         ).add_to(cluster)
 
+    # One-shot pulse ring on focused species (CSS, plays once — signal only)
+    if focus and focus in pts["scientific_name"].values:
+        frow = pts.loc[pts["scientific_name"] == focus].iloc[0]
+        pulse_css = (
+            "<style>"
+            "@keyframes hraPulseOnce{0%{transform:scale(.55);opacity:.55}"
+            "70%{transform:scale(1.35);opacity:0}100%{transform:scale(1.35);opacity:0}}"
+            ".hra-pulse{width:22px;height:22px;border-radius:50%;"
+            "border:2px solid #2d6a4f;box-sizing:border-box;"
+            "animation:hraPulseOnce .9s ease-out 1 forwards;"
+            "pointer-events:none}"
+            "@media (prefers-reduced-motion:reduce){.hra-pulse{animation:none;opacity:0}}"
+            "</style>"
+        )
+        m.get_root().html.add_child(folium.Element(pulse_css))
+        folium.Marker(
+            location=[float(frow["lat_mean"]), float(frow["lon_mean"])],
+            icon=folium.DivIcon(
+                html='<div class="hra-pulse"></div>',
+                icon_size=(22, 22),
+                icon_anchor=(11, 11),
+                class_name="hra-pulse-wrap",
+            ),
+        ).add_to(m)
+
     if focus and not occ.empty:
         sub = occ[occ["scientific_name"] == focus].dropna(subset=["lat", "lon"])
         haze = folium.FeatureGroup(name="Occurrence sample", show=True)
@@ -273,10 +299,11 @@ def build_map(
         title = "HPI band"
     legend_html = (
         f'<div style="position:fixed;bottom:28px;left:28px;z-index:9999;background:#fff;'
-        f'border:1px solid #d2d2d7;border-radius:8px;padding:8px 10px;font-family:-apple-system,sans-serif;'
-        f'box-shadow:0 1px 2px rgba(0,0,0,.04);line-height:1.35;max-width:200px">'
-        f'<div style="font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;'
-        f'color:#86868b;margin-bottom:4px">{title}</div>{items}</div>'
+        f'border:1px solid #d2d2d7;border-radius:8px;padding:8px 11px;'
+        f'font-family:-apple-system,BlinkMacSystemFont,sans-serif;'
+        f'box-shadow:0 1px 2px rgba(0,0,0,.04);line-height:1.35;max-width:210px">'
+        f'<div style="font-size:10px;font-weight:600;letter-spacing:.045em;text-transform:uppercase;'
+        f'color:#86868b;margin-bottom:5px">{title}</div>{items}</div>'
     )
     m.get_root().html.add_child(folium.Element(legend_html))
     return m
@@ -369,7 +396,7 @@ def iucn_badge_html(row: pd.Series) -> str:
     return '<span class="hra-iucn unlinked">IUCN not linked</span>'
 
 
-def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool):
+def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool, hpi: pd.DataFrame | None = None):
     band = str(row.get("hpi_band", ""))
     bc = band_class(band)
     arch = row.get("archetype_label") or ""
@@ -412,6 +439,13 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool):
         """,
         unsafe_allow_html=True,
     )
+    if hpi is not None and not hpi.empty:
+        spark = hpi_spark_svg(hpi, str(row["scientific_name"]))
+        if spark:
+            if hasattr(st, "html"):
+                st.html(spark)
+            else:
+                st.markdown(spark, unsafe_allow_html=True)
 
     tab_bar, tab_wf = st.tabs(["Component scores", "Weighted waterfall"])
     with tab_bar:
@@ -553,7 +587,7 @@ def field_brief_page(row: pd.Series, demo: bool):
 
 def compare_page(hpi: pd.DataFrame):
     st.markdown("### Compare species")
-    st.caption("Side-by-side HPI components and key metrics. Pick any two from the atlas cohort.")
+    st.caption("Side-by-side components and metrics for any two atlas species.")
     names = hpi.sort_values("hpi", ascending=False)["scientific_name"].tolist()
     default_a = names[0] if names else None
     default_b = names[1] if len(names) > 1 else names[0]
@@ -753,10 +787,10 @@ def main():
                 f"""<div class="hra-talktrack">
                 <span class="tag">60-sec talk track</span>
                 <ol>
-                  <li>Map (15s): Color = HPI band; size ∝ score. Abutra is moderate — harvest signal, not Red List.</li>
-                  <li>Dossier (25s): R/C/H/P bars + waterfall. Gaps: IUCN not linked; climate WorldClim; PA WDPCA.</li>
-                  <li>Brief (15s): Download HTML or PDF. Stewardship only — not a permit.</li>
-                  <li>Close (5s): Weights 0.30/0.25/0.25/0.20. IUCN never invented.</li>
+                  <li>Map (15s): Color = HPI band; size ∝ score. Abutra = moderate harvest signal, not Red List.</li>
+                  <li>Dossier (25s): R/C/H/P + waterfall. Gaps: IUCN not linked; WorldClim; WDPCA.</li>
+                  <li>Brief (15s): HTML or PDF. Stewardship only — not a permit.</li>
+                  <li>Close (5s): Weights 0.30 / 0.25 / 0.25 / 0.20. IUCN never invented.</li>
                 </ol>
                 </div>""",
                 unsafe_allow_html=True,
@@ -806,9 +840,8 @@ def main():
         st.markdown(
             """<div class="hra-howto">
             <span class="tag">How to read this</span>
-            <p>Marker color is HPI band only: green = lower relative pressure, earth = moderate,
-            red = higher. Marker size scales with HPI. This is a research index — not IUCN status
-            and not a harvest permit.</p>
+            <p>Color = HPI band (green lower · earth moderate · red higher). Size ∝ HPI.
+            Research index only — not IUCN status, not a harvest permit.</p>
             </div>""",
             unsafe_allow_html=True,
         )
@@ -864,7 +897,7 @@ def main():
     # Species dossier
     if selected and selected in set(hpi["scientific_name"]):
         row = hpi.loc[hpi["scientific_name"] == selected].iloc[0]
-        dossier(row, occ, demo)
+        dossier(row, occ, demo, hpi)
         m = build_map(hpi, occ, selected)
         st.markdown("#### Occurrence context")
         st_folium(m, width=None, height=400, returned_objects=[], use_container_width=True)

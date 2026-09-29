@@ -1,6 +1,6 @@
 # STATUS — Harvester Risk Atlas
 
-Last updated: 2026-09-29 ~20:35 (Asia/Manila)
+Last updated: 2026-09-29 ~20:55 (Asia/Manila)
 
 ## What works now
 
@@ -52,9 +52,31 @@ Last updated: 2026-09-29 ~20:35 (Asia/Manila)
 ## Design system
 - Tokens & bans documented in `docs/DESIGN.md`
 - UI: Inter/system + JetBrains/IBM Plex Mono for metrics; forest accent `#2d6a4f`; risk colors only on map/HPI
-- Map basemap: **Esri World Gray Canvas** (free, no key)
+- Motion: 120–180ms ease on signal controls only; no fade-up spam / bounce / aurora
+- Map basemap: **Esri World Gray Canvas** (free, no key); floating hairline legend panel
 
 ## Changelog (2026-09-29)
+
+### Demo visual polish — motion + denser UI (2026-09-29 ~20:55 Asia/Manila) — local only
+
+| Item | Status |
+|------|--------|
+| Motion = signal only (150ms ease): step chips, cards, sidebar radio, button/input hover + focus | Done |
+| Optional one-shot Folium focus pulse (CSS, `prefers-reduced-motion` respected) | Done |
+| Denser dossier metrics + clearer section rhythm; hairline panels + rare hair shadow | Done |
+| Focus rings (`--focus-ring`); floating hairline map legend panel | Done |
+| Cohort HPI SVG spark under dossier metrics (selected tick + rank) | Done |
+| Plotly soft bar cornerradius; legends stay below | Done |
+| Microcopy tightened (header, howto, demo captions, talk track) | Done |
+| How-to-read, weights, demo talk, PDF brief, IUCN not linked | Kept |
+| IUCN never invented | Unchanged |
+| `docs/DESIGN.md` motion + spark tokens | Updated |
+
+Files: `app/styles.css`, `app/streamlit_app.py`, `src/harvester_risk_atlas/charts.py`, `docs/DESIGN.md`, `STATUS.md`.
+
+**QA:** chart + spark imports OK; IUCN statuses `{not_queried}` only; PDF `%PDF-`; Streamlit boot HTTP 200 + `_stcore/health=ok`; AppTest Map page no exceptions.
+
+
 
 ### Judging packet docs (2026-09-29 ~20:35 Asia/Manila) — local only, no GitHub push
 

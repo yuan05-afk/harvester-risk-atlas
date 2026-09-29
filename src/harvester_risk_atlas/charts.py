@@ -125,8 +125,7 @@ def component_bar(row: pd.Series | dict[str, Any], title: str = "HPI components 
             x=comp["Score"],
             y=comp["Component"],
             orientation="h",
-            marker_color=colors,
-            marker_line_width=0,
+            marker=dict(color=colors, line=dict(width=0), cornerradius=3),
             text=[f"{v:.3f}" for v in comp["Score"]],
             textposition="outside",
             textfont=dict(size=11, color=INK_SEC, family="JetBrains Mono, ui-monospace, monospace"),
@@ -215,7 +214,7 @@ def hpi_distribution(hpi: pd.DataFrame, highlight: str | None = None) -> go.Figu
         labels={"hpi": "Harvest Pressure Index (HPI)", "hpi_band": "Band", "count": "Species"},
         template="plotly_white",
     )
-    fig.update_traces(marker_line_width=0, opacity=0.88)
+    fig.update_traces(marker_line_width=0, opacity=0.9, marker_line_color=PAPER)
     if highlight and highlight in set(df["scientific_name"]):
         val = float(df.loc[df["scientific_name"] == highlight, "hpi"].iloc[0])
         short = _short_name(highlight, 28)
@@ -257,7 +256,7 @@ def compare_components(row_a: pd.Series, row_b: pd.Series) -> go.Figure:
             y=comps,
             x=[float(row_a[k]) for k in keys],
             orientation="h",
-            marker_color=ACCENT,
+            marker=dict(color=ACCENT, line=dict(width=0), cornerradius=2),
             hovertemplate=f"{name_a} · %{{y}}: %{{x:.3f}}<extra></extra>",
         )
     )
@@ -267,7 +266,7 @@ def compare_components(row_a: pd.Series, row_b: pd.Series) -> go.Figure:
             y=comps,
             x=[float(row_b[k]) for k in keys],
             orientation="h",
-            marker_color=ACCENT_MID,
+            marker=dict(color=ACCENT_MID, line=dict(width=0), cornerradius=2),
             hovertemplate=f"{name_b} · %{{y}}: %{{x:.3f}}<extra></extra>",
         )
     )
@@ -312,8 +311,7 @@ def decade_histogram(occ_sub: pd.DataFrame, title: str = "Occurrences by decade"
         go.Bar(
             x=[f"{int(d)}s" for d in counts.index],
             y=counts.values,
-            marker_color=ACCENT,
-            marker_line_width=0,
+            marker=dict(color=ACCENT, line=dict(width=0), cornerradius=3),
             hovertemplate="%{x}: %{y} records<extra></extra>",
         )
     )
@@ -340,3 +338,56 @@ def fig_to_png_bytes(fig: go.Figure) -> bytes | None:
 def fig_to_html_bytes(fig: go.Figure) -> bytes:
     """Always-available interactive HTML export for slides / judging packet."""
     return fig.to_html(include_plotlyjs="cdn", full_html=True).encode("utf-8")
+
+
+def hpi_spark_svg(hpi: pd.DataFrame, highlight: str | None = None) -> str:
+    """Compact SVG spark of cohort HPI (sorted low→high). Selected = accent tick.
+
+    Pure SVG — no Plotly chrome. Safe for st.markdown(..., unsafe_allow_html=True).
+    """
+    df = hpi.dropna(subset=["hpi"]).copy()
+    if df.empty:
+        return ""
+    ordered = df.sort_values("hpi").reset_index(drop=True)
+    vals = [float(v) for v in ordered["hpi"].tolist()]
+    n = len(vals)
+    w, h, pad = 320, 36, 4
+    vmin, vmax = 0.0, 1.0
+    span = max(vmax - vmin, 1e-6)
+
+    def xy(i: int, v: float) -> tuple[float, float]:
+        x = pad + (i / max(n - 1, 1)) * (w - 2 * pad)
+        y = h - pad - ((v - vmin) / span) * (h - 2 * pad)
+        return x, y
+
+    pts = [xy(i, v) for i, v in enumerate(vals)]
+    polyline = " ".join(f"{x:.1f},{y:.1f}" for x, y in pts)
+    area = f"{pad:.1f},{h - pad:.1f} " + polyline + f" {w - pad:.1f},{h - pad:.1f}"
+
+    tick = ""
+    rank_label = "—"
+    hpi_val = "—"
+    if highlight and highlight in set(ordered["scientific_name"].astype(str)):
+        pos = int(ordered.index[ordered["scientific_name"] == highlight][0])
+        tx, ty = pts[pos]
+        tick = (
+            f'<circle cx="{tx:.1f}" cy="{ty:.1f}" r="3.5" fill="{ACCENT}" '
+            f'stroke="#fff" stroke-width="1.5"/>'
+        )
+        rank_label = f"{pos + 1}/{n}"
+        hpi_val = f"{vals[pos]:.3f}"
+
+    return (
+        f'<div class="hra-spark">'
+        f'<div class="spark-label">Cohort HPI · selected marked</div>'
+        f'<svg viewBox="0 0 {w} {h}" preserveAspectRatio="none" '
+        f'aria-label="HPI cohort sparkline">'
+        f'<polygon points="{area}" fill="{ACCENT}" fill-opacity="0.08"/>'
+        f'<polyline points="{polyline}" fill="none" stroke="{ACCENT}" '
+        f'stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'
+        f"{tick}"
+        f"</svg>"
+        f'<div class="spark-meta"><span>0</span>'
+        f'<span>{hpi_val} · rank {rank_label}</span>'
+        f"<span>1</span></div></div>"
+    )

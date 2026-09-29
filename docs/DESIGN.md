@@ -34,25 +34,25 @@ No third display font. No Poppins, Geist-as-brand, or decorative serifs.
 | **Section** | `h2` / `.hra-section` | 17–18px (`--fs-section`) | 600 | `--ink` |
 | **Body** | `p` / `.hra-body` | 14–15px (`--fs-body`) | 400 | `--ink`, line-height ~1.55 |
 | **Caption** | `.hra-caption` / `st.caption` | 12–13px (`--fs-caption`) | 400 | `--ink-secondary` |
-| **Mono metrics** | `.hra-metric .value` / `.hra-mono` | 20–24px (`--fs-metric`) | 500 | `--ink`, tabular-nums |
+| **Mono metrics** | `.hra-metric .value` / `.hra-mono` | 20–22px (`--fs-metric`) | 500 | `--ink`, tabular-nums |
 
-Card section labels (Where / Stress / …) stay uppercase 13px tertiary — not a fifth type role; they are caption-weight labels inside cards.
+Card section labels (Where / Stress / …) stay uppercase 12–13px tertiary — not a fifth type role; they are caption-weight labels inside cards.
 
 ### Spacing & shape
 - Page padding: 24–40px (`.block-container`)
-- Column gap: ≥20px (`stHorizontalBlock`)
-- Card gap: 16–24px
-- Section rhythm: 28–40px after header / steps
+- Column gap: ≥18px (`stHorizontalBlock`)
+- Card gap: 14–20px; denser dossier metric grid (`minmax(118px)`, 0.6rem gap)
+- Section rhythm: ~22–28px after header / steps; hairline dividers on header + continue row
 - Radius: **8px** default, **12px** max (panels, map iframe, chart wells)
 - Borders: 1px `--hairline`; prefer hairlines over shadows
-- Shadow (rare): `0 1px 2px rgba(0,0,0,0.04)` only
+- Shadow (rare): `0 1px 2px rgba(0,0,0,0.04)` on floating panels / chart wells only
 
 ### Layout anti-overlap rules
 - Hide Streamlit header/toolbar/deploy chrome (zero-height header).
 - Sidebar `z-index` above main; main canvas `overflow-x: hidden`.
 - Folium iframes and Plotly wells get hairline frames + internal padding so titles/legends never sit under map tiles or modebar.
 - Step indicator: ≥12px padding, ≥8px between steps/separators; wrap cleanly on narrow widths.
-- Map legend is a **panel above the map**, never overlaid on tiles; marker dots ≥10px with hairline stroke.
+- Map legend: **floating hairline panel** above the map (`.hra-legend` + rare hair shadow) and compact on-map Folium panel; marker dots ≥10px with hairline stroke.
 
 ### Charts (Plotly)
 - Paper/plot background: transparent inside a white chart well (CSS), or `#ffffff`.
@@ -60,11 +60,21 @@ Card section labels (Where / Stress / …) stay uppercase 13px tertiary — not 
 - Titles: 13px secondary ink; axis titles always set (not empty).
 - Legends: horizontal, **below** plot (`y < 0`) or with ≥48px top margin if above — never colliding with title or bars.
 - Heights: component bars ≥240px; waterfall ≥280px; HPI histogram ≥280px; compare ≥300px; decade ≥240px.
+- Soft bar `cornerradius` (2–3) on forest-accent bars; risk histogram stays flat-fill.
+- **Cohort HPI spark** (dossier): tiny SVG polyline under metrics — selected species as accent tick; no Plotly chrome.
 
-### Interaction
-- Focus ring: 2px `--accent` at 40% opacity
-- Buttons: flat fill `--accent` or ghost hairline; no glow
-- Map controls: minimal Folium defaults; legend as hairlined panel above map
+### Interaction & motion
+- Focus ring: 2px `--accent` at 40% opacity (`--focus-ring`)
+- Buttons: flat fill `--accent` or ghost hairline; no glow; **150ms** hover ease
+- Motion = **signal only** (`--dur: 150ms`, `--ease: cubic-bezier(0.25, 0.1, 0.25, 1)`):
+  - Step chips (active / done wash)
+  - Cards (border + hair shadow on hover)
+  - Sidebar radio selected wash
+  - Button / input hover + focus
+  - Optional **one-shot** map focus pulse (`.hra-pulse`, ~0.9s, plays once)
+- Honor `prefers-reduced-motion: reduce` (transitions/animations near-zero).
+- **Banned motion:** bounce, spring, page-wide fade-up, staggered card entrances, aurora blobs.
+- Map controls: minimal Folium defaults; legend as hairlined floating panel
 - Markers: white/ink stroke (`weight ≥ 1.5`) so centroids read on Esri gray canvas
 
 ## Banned (anti-slop)
@@ -81,9 +91,9 @@ Plain scientific English. Short dossier labels: **Where / Stress / Why it matter
 
 ## Map & dossier microcopy
 
-- **How to read this** — Map page only. 2–3 lines under the header strip: HPI color meaning + size cue. No emoji, no dual CTAs.
+- **How to read this** — Map page only. 1–2 lines under the header strip: HPI color meaning + size cue. No emoji, no dual CTAs.
 - **Weights transparency** — Methods expander table (R/C/H/P + weights + one plain sentence why). Match METHODS.md numbers.
 - **Demo talk track** — Sidebar under Demo mode only. Numbered 60-sec script; plain scientific English.
 - **IUCN badge** — Dossier chip: linked category when `iucn_status=ok`; otherwise muted `IUCN not linked`. Never show a fake LC/VU.
 - **Field brief** — HTML + PDF; same structure (Where / Stress / Why / What to do). Typography follows tokens above.
-
+- **Cohort spark** — Dossier only; “Cohort HPI · selected marked” with rank caption.
