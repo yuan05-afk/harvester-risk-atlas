@@ -73,3 +73,12 @@ def category_label(species: dict) -> str:
     if not iucn:
         return "Not recorded"
     return iucn["code"]
+
+
+def iucn_badge_text(species: dict) -> str:
+    """Cited category, or a muted label. Never reads the GBIF occurrence field."""
+    iucn = species.get("iucn")
+    code = iucn.get("code") if isinstance(iucn, dict) else None
+    if not code:
+        return "IUCN not linked"
+    return f"IUCN {code}"

@@ -199,6 +199,50 @@ CSS = f"""
     font-size: 0.78rem;
     color: #3a3a3c;
   }}
+  .read-strip {{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 1.4rem;
+    margin: 0.35rem 0 0.75rem;
+    padding: 0.65rem 0.9rem;
+    background: {PAPER};
+    border: 1px solid {LINE};
+    border-radius: 12px;
+  }}
+  .read-strip span {{
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: #3a3a3c;
+  }}
+  .read-strip strong {{
+    font-weight: 600;
+    color: {INK};
+    margin-right: 0.3rem;
+  }}
+  .badge {{
+    display: inline-block;
+    font-family: {SANS};
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1;
+    padding: 0.32rem 0.55rem;
+    border-radius: 980px;
+    border: 1px solid {LINE};
+    background: {PAPER};
+    color: {INK};
+    vertical-align: baseline;
+  }}
+  .badge-muted {{
+    color: {CAPTION};
+    background: {CANVAS};
+    border-color: {LINE};
+  }}
+  p.talk {{
+    max-width: 40rem;
+    margin-top: 0.2rem;
+  }}
   table.hra {{
     width: 100%;
     border-collapse: collapse;

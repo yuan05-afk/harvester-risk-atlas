@@ -5,14 +5,27 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-from hra.brief import brief_markdown
+from hra.brief import brief_html, brief_markdown, brief_pdf, talk_track
 from hra.charts import cohort_figure, compare_figure, decade_figure, waterfall_figure
-from hra.data import by_id, demo_species, load_catalog, species_list
+from hra.data import by_id, demo_species, iucn_badge_text, load_catalog, species_list
+from hra.methods import weights_html
 from hra.mapping import ESRI_GRAY, build_map
 from hra.scoring import score_record
 from hra.theme import FOREST, RISK_COLORS, STONE, risk_color
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _pdf_text(data: bytes) -> str:
+    import re
+    import zlib
+
+    from reportlab.pdfbase.pdfutils import asciiBase85Decode
+
+    parts = []
+    for chunk in re.findall(rb"stream\n(.*?)endstream", data, re.S):
+        parts.append(zlib.decompress(asciiBase85Decode(chunk.strip())).decode("latin1", errors="ignore"))
+    return "\n".join(parts)
 
 
 class CatalogTests(unittest.TestCase):
@@ -163,6 +176,63 @@ class BriefAndMapTests(unittest.TestCase):
         self.assertIn('class="genus">Arcangelisia</span>', compare_card_html(long_name))
         self.assertIn('class="epithet">flava</span>', compare_card_html(long_name))
         self.assertNotIn("ARCANGELISI", compare_card_html(long_name))
+
+    def test_iucn_badge_never_invents_a_category(self):
+        from hra.ui import how_to_read_html, iucn_badge_html
+
+        linked = demo_species()
+        missing = next(row for row in species_list() if row.get("iucn") is None)
+        self.assertEqual(iucn_badge_text(linked), f"IUCN {linked['iucn']['code']}")
+        self.assertEqual(iucn_badge_text(missing), "IUCN not linked")
+        self.assertNotIn("badge-muted", iucn_badge_html(linked))
+        self.assertIn("badge-muted", iucn_badge_html(missing))
+        self.assertIn("IUCN not linked", iucn_badge_html(missing))
+        ghost = {"iucn": None, "occurrences": {"gbif_occurrence_iucn_code": "CR"}}
+        self.assertEqual(iucn_badge_text(ghost), "IUCN not linked")
+        self.assertNotIn(ghost["occurrences"]["gbif_occurrence_iucn_code"], iucn_badge_html(ghost))
+        strip = how_to_read_html()
+        self.assertIn("read-strip", strip)
+        self.assertIn("HPI band", strip)
+        self.assertIn("not risk", strip)
+
+    def test_methods_weights_match_the_score_table(self):
+        page = weights_html()
+        self.assertIn(">CR<", page)
+        self.assertIn(">50<", page)
+        self.assertIn("at least 30", page)
+        self.assertIn("75 and above", page)
+        self.assertIn("not an IUCN index", page)
+
+    def test_field_brief_html_and_pdf(self):
+        linked = demo_species()
+        missing = next(row for row in species_list() if row.get("iucn") is None)
+        document = brief_html(linked, missing)
+        self.assertIn("<!DOCTYPE html>", document)
+        self.assertIn("IUCN CR", document)
+        self.assertIn("IUCN not linked", document)
+        self.assertIn(missing["scientific_name"], document)
+        self.assertNotIn("population decline", document.casefold())
+        pdf = brief_pdf(linked, missing)
+        self.assertTrue(pdf.startswith(b"%PDF"))
+        text = _pdf_text(pdf)
+        self.assertIn("IUCN CR", text)
+        self.assertIn("IUCN not linked", text)
+        self.assertIn(missing["scientific_name"], text)
+        self.assertNotIn("population decline", text.casefold())
+
+    def test_talk_track_uses_snapshot_figures(self):
+        primary = demo_species()
+        other = by_id("boswellia-sacra")
+        spoken = talk_track(primary, other)
+        words = spoken.split()
+        self.assertGreaterEqual(len(words), 120)
+        self.assertLessEqual(len(words), 180)
+        self.assertIn(str(primary["score"]["hpi"]), spoken)
+        self.assertIn(str(other["score"]["hpi"]), spoken)
+        self.assertIn(primary["scientific_name"], spoken)
+        self.assertIn(other["scientific_name"], spoken)
+        self.assertIn("IUCN not linked", spoken)
+        self.assertNotIn("population decline", spoken.casefold())
 
     def test_map_uses_esri_gray(self):
         atlas = build_map(species_list()[:2])

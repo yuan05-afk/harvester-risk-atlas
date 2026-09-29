@@ -8,7 +8,7 @@ import textwrap
 import streamlit as st
 from streamlit_folium import st_folium
 
-from hra.brief import brief_markdown
+from hra.brief import brief_html, brief_markdown, brief_pdf, talk_track
 from hra.charts import cohort_figure, compare_figure, decade_bins, decade_figure, waterfall_figure
 from hra.data import (
     CatalogError,
@@ -16,10 +16,12 @@ from hra.data import (
     category_label,
     demo_species,
     display_name,
+    iucn_badge_text,
     label_name,
     load_catalog,
     species_list,
 )
+from hra.methods import weights_html
 from hra.mapping import build_map
 from hra.theme import CSS, risk_color
 
@@ -123,7 +125,7 @@ def _sidebar(rows: list[dict]) -> None:
             other = next(row for row in rows if row["id"] == "boswellia-sacra")
             st.caption(
                 f"Demo path: Map, then Dossier, then Brief. {display_name(demo)} stays selected "
-                f"and is compared with {display_name(other)}."
+                f"and is compared with {display_name(other)}. Open the talk track on the page."
             )
         labels = {}
         for row in rows:
@@ -159,7 +161,6 @@ def _metric_row(species: dict) -> None:
     iucn = species.get("iucn")
     hpi = "—" if score["hpi"] is None else str(score["hpi"])
     band = "Not scored" if score["band"] is None else score["band"]
-    category = "Not recorded" if not iucn else iucn["code"]
     category_note = "No P141 statement in this snapshot" if not iucn else iucn["label"]
     st.markdown(
         "<div class='metric-row'>"
@@ -170,7 +171,7 @@ def _metric_row(species: dict) -> None:
         f"<div class='metric-value' style='color:{risk_color(score['band'])}'>{html.escape(band)}</div>"
         f"<div class='metric-note'>Color is used for this band only</div></div>"
         f"<div><div class='metric-label'>IUCN</div>"
-        f"<div class='metric-value'>{html.escape(category)}</div>"
+        f"<div style='margin-top:0.45rem'>{iucn_badge_html(species)}</div>"
         f"<div class='metric-note'>{html.escape(category_note)}</div></div>"
         "</div>",
         unsafe_allow_html=True,
@@ -220,11 +221,47 @@ def _catalog_table(rows: list[dict], selected: str) -> None:
         body.append(
             f"<tr class='{klass}'><td>{html.escape(name)}</td>"
             f"<td>{html.escape(row['scientific_name'])}</td>"
-            f"<td class='num'>{html.escape(category_label(row))}</td>"
+            f"<td>{iucn_badge_html(row)}</td>"
             f"<td class='num'>{html.escape(hpi)}</td>"
             f"<td>{html.escape(band)}</td></tr>"
         )
     st.markdown(header + "".join(body) + "</tbody></table>", unsafe_allow_html=True)
+
+
+def iucn_badge_html(species: dict) -> str:
+    text = iucn_badge_text(species)
+    kind = "badge badge-muted" if text == "IUCN not linked" else "badge"
+    return f'<span class="{kind}">{html.escape(text)}</span>'
+
+
+def how_to_read_html() -> str:
+    return (
+        "<div class='read-strip'>"
+        "<span><strong>Color</strong> HPI band for that species</span>"
+        "<span><strong>Number</strong> Records in the cluster, not risk</span>"
+        "<span><strong>Next</strong> Select a point, then open the dossier</span>"
+        "</div>"
+    )
+
+
+def _weights_expander() -> None:
+    with st.expander("Methods · HPI weights"):
+        st.markdown(weights_html(), unsafe_allow_html=True)
+
+
+def _demo_talk() -> None:
+    if not st.session_state.get("demo"):
+        return
+    primary = by_id(st.session_state.get("species"))
+    other = by_id(st.session_state.get("compare"))
+    if primary is None or other is None or primary["id"] == other["id"]:
+        return
+    with st.expander("60-second talk track"):
+        st.markdown(
+            f"<p class='body talk'>{html.escape(talk_track(primary, other))}</p>",
+            unsafe_allow_html=True,
+        )
+        st.caption("Read at a calm pace. About one minute. Every figure is taken from this snapshot.")
 
 
 def _legend() -> None:
@@ -279,6 +316,7 @@ def page_map(rows: list[dict]) -> None:
     with filters[1]:
         st.selectbox("Category", ["All", "CR", "EN", "VU", "NT", "LC", "Not recorded"], key="category")
     shown = _filtered(rows)
+    st.markdown(how_to_read_html(), unsafe_allow_html=True)
     with st.container(border=True):
         if not shown:
             _empty("No species match", "Clear the search or choose All categories. The catalog itself is unchanged.")
@@ -326,7 +364,7 @@ def page_map(rows: list[dict]) -> None:
                     f"<p class='body'><strong>{html.escape(label_name(selected) or selected['scientific_name'])}</strong></p>"
                     f"<p class='caption'>{html.escape(selected['scientific_name'])}</p>"
                     f"<p class='metric-value' style='color:{risk_color(score['band'])}'>{html.escape(summary)}</p>"
-                    f"<p class='caption'>IUCN {html.escape(category_label(selected))}</p>",
+                    f"<p class='caption'>{iucn_badge_html(selected)}</p>",
                     unsafe_allow_html=True,
                 )
                 if st.button("Open dossier", type="primary"):
@@ -412,6 +450,7 @@ def page_dossier(species: dict | None) -> None:
         if (species.get("occurrences") or {}).get("year_facet_truncated"):
             note += " The year facet hit its cap, so the bars may be incomplete."
         st.markdown(f"<p class='caption'>{html.escape(note)}</p>", unsafe_allow_html=True)
+    _weights_expander()
     with st.container(border=True):
         st.markdown("<h2 class='section-title'>Sources</h2>", unsafe_allow_html=True)
         iucn = species.get("iucn")
@@ -475,7 +514,7 @@ def compare_card_html(species: dict) -> str:
         {title}
         <p class="card-binomial">{_binomial_html(scientific)}</p>
         <p class="metric-value" style="color:{risk_color(score['band'])}">{html.escape(value)}</p>
-        <p class="metric-note">IUCN {html.escape(category_label(species))}</p>
+        <p class="metric-note">{iucn_badge_html(species)}</p>
     </div>
     """
     return markdown_html(fragment)
@@ -516,10 +555,25 @@ def page_brief(rows: list[dict]) -> None:
             if paragraph.startswith("#"):
                 continue
             st.markdown(f"<p class='body'>{html.escape(paragraph)}</p>", unsafe_allow_html=True)
-        st.download_button(
-            "Download brief",
+        _weights_expander()
+        stem = f"brief-{left['id']}-{right['id']}"
+        html_col, pdf_col, note_col = st.columns(3)
+        html_col.download_button(
+            "Download HTML",
+            data=brief_html(left, right),
+            file_name=f"{stem}.html",
+            mime="text/html",
+        )
+        pdf_col.download_button(
+            "Download PDF",
+            data=brief_pdf(left, right),
+            file_name=f"{stem}.pdf",
+            mime="application/pdf",
+        )
+        note_col.download_button(
+            "Download note",
             data=text,
-            file_name=f"brief-{left['id']}-{right['id']}.md",
+            file_name=f"{stem}.md",
             mime="text/markdown",
         )
     del rows
@@ -537,6 +591,7 @@ def main() -> None:
         _empty("Snapshot not built", str(exc))
         return
     _sidebar(rows)
+    _demo_talk()
     step = st.session_state.get("step") or "Map"
     if step == "Dossier":
         page_dossier(by_id(st.session_state.get("species")))

@@ -11,6 +11,8 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
+Pinned versions and a Cloud sketch are in [DEPLOY.md](DEPLOY.md). The brief page downloads the same note as HTML and as a PDF.
+
 The app reads `data/catalog.json`. It does not need a network connection at runtime. Refresh the snapshot with:
 
 ```bash

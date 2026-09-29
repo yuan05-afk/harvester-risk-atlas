@@ -28,6 +28,11 @@ Track 3 workflow is Map → Dossier → Brief. Demo mode keeps *Aquilaria malacc
 | Compare chart title on the legend | “Component comparison” sat on the species legend, and a later pass still left the green swatch on that word | The heading is outside the figure. Every Plotly legend is horizontal, on paper coordinates, at y=−0.28 under the axes. Compare categories are on the Y axis so “Listing” and “Concentration” stay whole |
 | Right compare card showed markup | An indented multiline HTML string was read as a Markdown code fence | Both cards use the same dedented HTML, and no line is indented |
 | Long binomials broke mid-word | A narrow card could split a name into pieces such as “ARCANGELISI” / “A FLAVA” | Genus and epithet stay whole words, in italics, with no uppercase transform |
+| Map had no reading key | Marker color and cluster counts were explained only under the map | A how-to-read strip sits above the map: color is the HPI band, the number counts records, then open the dossier |
+| Weights were only in the README | A live demo could not show the point table | Dossier and Brief open “Methods · HPI weights” from the same scoring table |
+| Demo mode had no script | The toggle named the two species and stopped | A 60-second talk track, shown only in demo mode, speaks the snapshot figures for those two records |
+| Brief was markdown only | A field copy could not be handed over as a page | HTML download stays, and reportlab writes a PDF of the same note |
+| IUCN gap looked like a category | “Not recorded” could be read as an assessment | The badge shows the cited code, or a muted “IUCN not linked”. A GBIF occurrence field is not used |
 
 ## Smoke
 
