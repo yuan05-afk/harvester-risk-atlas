@@ -8,6 +8,21 @@ Vernacular→scientific search is a thin helper only — not a second product.
 
 > **Not medical advice.** Not a harvest permit. IUCN categories are never invented.
 
+## For judges
+
+EthnoHACK 2026 · **Track 3: Biodiversity & Sustainability**
+
+| | |
+|--|--|
+| **Live demo** | https://harvester-risk-atlas.streamlit.app/ |
+| **One-pager** | [`docs/JUDGING.md`](docs/JUDGING.md) |
+| **Video script** | [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md) (60–90s Demo mode) |
+| **Devpost checklist** | [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md) |
+| **Methods** | [`docs/METHODS.md`](docs/METHODS.md) |
+
+**Click path:** open demo → sidebar **Demo mode** → Map → Dossier → Field brief.  
+Repo is currently **private** — make public (or share judge access) before Devpost close.
+
 ## Design
 
 Calm Apple-minimal research UI: map + data as hero. See [`docs/DESIGN.md`](docs/DESIGN.md).
@@ -61,10 +76,13 @@ scripts/             fetch_gbif, fetch_climate, fetch_protected_areas, fetch_iuc
 data/raw/            seed_species.csv (+ GBIF / WorldClim zip / WDPCA)
 data/processed/      occurrences, features, HPI, SEA bioclim clips, PA gpkg, iucn_status
 notebooks/           EDA
-docs/METHODS.md      formula & licenses
-docs/DESIGN.md       UI tokens & bans
-STATUS.md            what works / blockers / Nov hack plan
-DEPLOY.md            Streamlit Cloud notes
+docs/METHODS.md              formula & licenses
+docs/DESIGN.md               UI tokens & bans
+docs/JUDGING.md              Track 3 one-pager for judges
+docs/VIDEO_SCRIPT.md         60–90s Demo mode spoken script
+docs/SUBMISSION_CHECKLIST.md Devpost deliverables
+STATUS.md                    what works / blockers / Nov hack plan
+DEPLOY.md                    Streamlit Cloud notes
 ```
 
 ## Stack

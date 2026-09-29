@@ -1,6 +1,6 @@
 # STATUS — Harvester Risk Atlas
 
-Last updated: 2026-09-29 ~20:20 (Asia/Manila)
+Last updated: 2026-09-29 ~20:35 (Asia/Manila)
 
 ## What works now
 
@@ -55,6 +55,20 @@ Last updated: 2026-09-29 ~20:20 (Asia/Manila)
 - Map basemap: **Esri World Gray Canvas** (free, no key)
 
 ## Changelog (2026-09-29)
+
+### Judging packet docs (2026-09-29 ~20:35 Asia/Manila) — local only, no GitHub push
+
+| Item | Status |
+|------|--------|
+| `docs/JUDGING.md` — Track 3 one-pager (problem, HPI, workflow, licenses, AI, demo URL, Demo mode path) | Done |
+| `docs/VIDEO_SCRIPT.md` — 60–90s spoken script matching Demo mode | Done |
+| `docs/SUBMISSION_CHECKLIST.md` — Devpost deliverables; **repo private flagged** | Done |
+| README **For judges** section + layout links | Done |
+| No browser / no git push | Observed |
+
+**Flag for submit:** GitHub repo still private — publicize or share judge access before Devpost close.
+
+
 
 ### Demo polish + PDF brief (2026-09-29 ~20:20 Asia/Manila) — local only
 
@@ -122,7 +136,7 @@ Files: `src/harvester_risk_atlas/charts.py`, `app/streamlit_app.py`, `STATUS.md`
 3. Optional: DENR open PA layers if license-cleared; keep WDPCA citation.
 4. Tighten seed list with POWO synonyms; fix mint complex.
 5. Deploy Streamlit Cloud (see `DEPLOY.md`); keep disclaimer + AI/OSS disclosure.
-6. Judging packet: METHODS one-pager, demo video Map → Dossier → brief (use Demo mode).
+6. Judging packet drafted (`docs/JUDGING.md`, `VIDEO_SCRIPT.md`, `SUBMISSION_CHECKLIST.md`) — still need public repo + record/upload video + ≤10 slides.
 7. HPI weight sensitivity in notebook for oral defense.
 8. Optional: `pip install kaleido` for PNG slide exports.
 
