@@ -1,0 +1,435 @@
+/* Harvester Risk Atlas — Apple-minimal research UI (see docs/DESIGN.md) */
+
+:root {
+  --ink: #1d1d1f;
+  --ink-secondary: #6e6e73;
+  --ink-tertiary: #86868b;
+  --paper: #f5f5f7;
+  --surface: #ffffff;
+  --hairline: #d2d2d7;
+  --accent: #2d6a4f;
+  --accent-soft: #e8f0eb;
+  --risk-low: #40916c;
+  --risk-mid: #b08968;
+  --risk-high: #9b2226;
+  --mono-bg: #f0f0f2;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+html, body, [class*="css"] {
+  font-family: var(--font-ui) !important;
+  color: var(--ink);
+}
+
+.stApp {
+  background: var(--paper);
+}
+
+/* Hide Streamlit chrome noise */
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; }
+header[data-testid="stHeader"] {
+  background: transparent;
+}
+div[data-testid="stToolbar"] { display: none; }
+
+/* Hide Streamlit heading link anchors (hover # icons) */
+[data-testid="stHeaderActionElements"] {
+  display: none !important;
+}
+
+.block-container {
+  padding-top: 1.5rem !important;
+  padding-bottom: 3rem !important;
+  max-width: 1120px;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+  font-family: var(--font-ui) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em;
+  color: var(--ink) !important;
+}
+h1 { font-size: 1.75rem !important; line-height: 1.2 !important; margin-bottom: 0.25rem !important; }
+h2 { font-size: 1.25rem !important; margin-top: 1.75rem !important; }
+h3 { font-size: 1.05rem !important; }
+
+p, li, label, .stMarkdown {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+/* Header band */
+.hra-header {
+  padding: 0.5rem 0 1.75rem 0;
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 1.5rem;
+}
+.hra-kicker {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+  margin-bottom: 0.35rem;
+}
+.hra-sub {
+  color: var(--ink-secondary);
+  font-size: 0.9375rem;
+  max-width: 42rem;
+  margin: 0.35rem 0 0 0;
+}
+
+/* Disclaimer */
+.hra-disclaimer {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 0.8125rem;
+  color: var(--ink-secondary);
+  margin: 1rem 0 1.5rem 0;
+}
+
+/* Metric wells — denser on dossier */
+.hra-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 1.25rem 0;
+}
+.hra-metric {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+}
+.hra-metric .label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+  margin-bottom: 0.35rem;
+}
+.hra-metric .value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.hra-metric .hint {
+  font-size: 0.75rem;
+  color: var(--ink-secondary);
+  margin-top: 0.25rem;
+}
+
+/* HPI band badges — semantic risk only */
+.hra-band {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--ink);
+}
+.hra-band.low { color: var(--risk-low); border-color: #b7e4c7; background: #f1faf4; }
+.hra-band.mid { color: #7a5c3e; border-color: #e6d5c3; background: #faf6f1; }
+.hra-band.high { color: var(--risk-high); border-color: #e8bcbc; background: #faf1f1; }
+
+/* Cards / sections */
+.hra-card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: 1.15rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.hra-card h3 {
+  margin: 0 0 0.5rem 0 !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary) !important;
+}
+.hra-card p { margin: 0; color: var(--ink); }
+
+.hra-actions {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+.hra-actions li {
+  margin-bottom: 0.4rem;
+  color: var(--ink);
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+  background: var(--surface) !important;
+  border-right: 1px solid var(--hairline);
+}
+section[data-testid="stSidebar"] .block-container {
+  padding-top: 1.25rem !important;
+}
+
+/* Inputs */
+div[data-baseweb="select"] > div,
+.stTextInput input {
+  border-radius: var(--radius) !important;
+  border-color: var(--hairline) !important;
+  font-family: var(--font-ui) !important;
+}
+.stTextInput input:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px rgba(45, 106, 79, 0.25) !important;
+}
+
+/* Primary button */
+.stButton > button[kind="primary"],
+.stButton > button {
+  border-radius: var(--radius) !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--hairline) !important;
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+}
+.stButton > button[kind="primary"] {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+}
+.stButton > button:hover {
+  border-color: var(--accent) !important;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"] {
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--hairline);
+}
+.stTabs [data-baseweb="tab"] {
+  font-weight: 500;
+  color: var(--ink-secondary);
+  padding: 0.5rem 0.85rem;
+}
+.stTabs [aria-selected="true"] {
+  color: var(--ink) !important;
+}
+
+/* Dataframes */
+div[data-testid="stDataFrame"] {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* Map legend */
+.hra-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  color: var(--ink-secondary);
+  margin: 0.5rem 0 1rem 0;
+}
+.hra-legend span::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.35rem;
+  vertical-align: middle;
+}
+.hra-legend .l-low::before { background: var(--risk-low); }
+.hra-legend .l-mid::before { background: var(--risk-mid); }
+.hra-legend .l-high::before { background: var(--risk-high); }
+
+/* Mono snippets */
+code, .hra-mono {
+  font-family: var(--font-mono) !important;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85em;
+  background: var(--mono-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+/* Streamlit metric override denser */
+div[data-testid="stMetric"] {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+}
+div[data-testid="stMetricValue"] {
+  font-family: var(--font-mono) !important;
+  font-variant-numeric: tabular-nums;
+}
+div[data-testid="stMetricLabel"] {
+  color: var(--ink-tertiary) !important;
+}
+
+/* —— Guided workflow step indicator —— */
+.hra-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin: 0 0 1.25rem 0;
+  padding: 0.65rem 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  font-size: 0.8125rem;
+  color: var(--ink-secondary);
+}
+.hra-steps .step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 6px;
+}
+.hra-steps .step .num {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  color: var(--ink-tertiary);
+  background: var(--paper);
+}
+.hra-steps .step.active {
+  color: var(--ink);
+  background: var(--accent-soft);
+}
+.hra-steps .step.active .num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.hra-steps .step.done .num {
+  background: var(--accent-soft);
+  border-color: #b7e4c7;
+  color: var(--accent);
+}
+.hra-steps .sep {
+  color: var(--hairline);
+  margin: 0 0.35rem;
+  font-weight: 300;
+}
+
+/* Continue affordance row */
+.hra-continue {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin: 1rem 0 0.25rem 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--hairline);
+  font-size: 0.8125rem;
+  color: var(--ink-secondary);
+}
+
+/* Archetype / meta chips */
+.hra-chip {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.18rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid var(--hairline);
+  background: var(--accent-soft);
+  color: var(--accent);
+  margin-right: 0.35rem;
+  margin-top: 0.35rem;
+}
+.hra-chip.muted {
+  background: var(--mono-bg);
+  color: var(--ink-secondary);
+  border-color: var(--hairline);
+}
+
+/* Data gaps panel */
+.hra-gaps {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.15rem;
+  margin: 1rem 0;
+}
+.hra-gaps h3 {
+  margin: 0 0 0.65rem 0 !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary) !important;
+}
+.hra-gaps ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+.hra-gaps li {
+  margin-bottom: 0.35rem;
+  line-height: 1.45;
+}
+.hra-gaps .gap-flag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: var(--mono-bg);
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  color: var(--ink-secondary);
+}
+
+/* Demo narrative captions */
+.hra-demo-caption {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.65rem 0.9rem;
+  margin: 0.75rem 0 1rem 0;
+  font-size: 0.875rem;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.hra-demo-caption .tag {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+/* Compare metric table */
+.hra-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 0.75rem 0 1.25rem 0;
+}
+@media (max-width: 700px) {
+  .hra-compare-grid { grid-template-columns: 1fr; }
+}

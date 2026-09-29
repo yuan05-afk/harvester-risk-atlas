@@ -1,0 +1,21 @@
+Harvester Risk Atlas — processed data provenance (EthnoHACK 2026 Track 3)
+Generated: 2026-09-29 Asia/Manila
+
+worldclim_sea/*.tif
+  Source: WorldClim 2.1 10-arcmin bioclim (bio1, bio12, bio15)
+  URL: https://geodata.ucdavis.edu/climate/worldclim/2_1/base/wc2.1_10m_bio.zip
+  Clip: SEA bbox lon 95–141, lat −11–28
+  Cite: Fick & Hijmans (2017). License: WorldClim research / non-commercial terms.
+
+pa_wdpca_phl.gpkg
+  Source: UNEP-WCMC Protected & Conserved Areas (WDPCA) Philippines via HDX
+  URL: https://data.humdata.org/dataset/unep_wdpca_phl
+  License: Protected Planet / WDPA terms — research & education; cite Protected Planet.
+  Not a DENR permitting product.
+
+iucn_status.csv
+  Source: IUCN Red List API v4 when IUCN_API_TOKEN set; otherwise all rows not_queried.
+  Signup: https://api.iucnredlist.org/users/sign_up
+  Categories are NEVER invented.
+
+Natural Earth parks (raw/) are US-centric and NOT used in HPI scoring.

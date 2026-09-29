@@ -1,0 +1,35 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+*.egg-info/
+dist/
+build/
+.DS_Store
+.pytest_cache/
+.mypy_cache/
+data/raw/gbif_*.json
+data/raw/gbif_*.csv
+!data/raw/seed_species.csv
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+# Keep shipped demo parquet
+!data/processed/species_features.parquet
+!data/processed/occurrences_sample.parquet
+!data/processed/hpi_scores.csv
+*.log
+.streamlit/secrets.toml
+
+# Large raw downloads (regenerate via scripts/fetch_*)
+data/raw/worldclim/
+data/raw/protected_areas/ne_10m_*
+data/raw/protected_areas/mpa_ph/
+data/raw/protected_areas/*.zip
+# Keep processed demo climate/PA/HPI
+!data/processed/worldclim_sea/
+!data/processed/pa_wdpca_phl.gpkg
+!data/processed/iucn_status.csv
+!data/processed/hpi_scores.parquet
+!data/processed/species_features.csv

@@ -1,0 +1,4458 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.4 2390de5a",
+  "osm3s": {
+    "timestamp_osm_base": "2026-09-29T10:47:02Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "way",
+  "id": 27757414,
+  "center": {
+    "lat": 9.2283405,
+    "lon": 118.4415596
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Rasa Island",
+    "natural": "coastline",
+    "place": "island",
+    "wikidata": "Q25247763"
+  }
+},
+{
+  "type": "way",
+  "id": 37121623,
+  "center": {
+    "lat": 7.0710832,
+    "lon": 122.0755000
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "heritage:website": "https://aseanbiodiversity.org/asean-heritage-parks/pasonanca-natural-park",
+    "int_name": "52nd ASEAN Heritage Park",
+    "leisure": "nature_reserve",
+    "name": "Pasonanca Natural Park",
+    "name:abbr": "PaNP",
+    "nipas_category": "natural park",
+    "operator": "Pasonanca Natural Park Protected Area Management Office",
+    "operator:type": "government",
+    "protect_class": "5",
+    "source": "PBCPP, 2002"
+  }
+},
+{
+  "type": "way",
+  "id": 37121625,
+  "center": {
+    "lat": 16.2830000,
+    "lon": 120.3500000
+  },
+  "tags": {
+    "addr:province": "La Union",
+    "alt_name": "Agoo Eco Park",
+    "boundary": "protected_area",
+    "contact:mobile": "+63 916 590 0538; +63 909 686 9445",
+    "name": "Agoo-Damortis Protected Landscape and Seascape",
+    "nipas_category": "protected landscape and seascape",
+    "old_name": "Agoo-damortis National Seashore Park",
+    "opening_hours": "05:00-18:30",
+    "protect_class": "2",
+    "protection_title": "National Park",
+    "related_law": "Philippine Presidential Proclamation № 277, s. 2000",
+    "source": "PBCPP, 2002"
+  }
+},
+{
+  "type": "way",
+  "id": 37121634,
+  "center": {
+    "lat": 6.5814500,
+    "lon": 122.0539500
+  },
+  "tags": {
+    "boundary": "national_park",
+    "leisure": "nature_reserve",
+    "name": "Basilan Natural Biotic Area",
+    "nipas_category": "natural biotic area",
+    "source": "PBCPP, 2002"
+  }
+},
+{
+  "type": "way",
+  "id": 37121640,
+  "center": {
+    "lat": 18.5323534,
+    "lon": 122.1443856
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Palaui Island Marine Reserve",
+    "nipas_category": "marine reserve",
+    "protect_class": "5",
+    "related_law": "Philippine Presidential Proclamation № 447, s. 1994",
+    "source": "PBCPP, 2002",
+    "url": "https://officialgazette.gov.ph/1994/08/16/proclamation-no-447-s-1994"
+  }
+},
+{
+  "type": "way",
+  "id": 37121642,
+  "center": {
+    "lat": 6.3637185,
+    "lon": 125.0510483
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Mount Matutum Protected Landscape",
+    "protect_class": "5",
+    "protection_title": "Protected Landscape"
+  }
+},
+{
+  "type": "way",
+  "id": 37121648,
+  "center": {
+    "lat": 10.7494886,
+    "lon": 122.1403257
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Sibalom Natural Park",
+    "nipas_category": "natural park",
+    "old_name": "Tipulu-an Mau-it Rivers Watershed Forest Reserve",
+    "protect_class": "2",
+    "source": "PBCPP, 2002",
+    "start_date": "2000-04-23",
+    "wikidata": "Q18358369",
+    "wikipedia": "en:Sibalom Natural Park"
+  }
+},
+{
+  "type": "way",
+  "id": 37400780,
+  "center": {
+    "lat": 14.6506138,
+    "lon": 121.0438488
+  },
+  "tags": {
+    "addr:city": "Quezon City",
+    "addr:postcode": "1100",
+    "addr:street": "North Avenue",
+    "barrier": "wall",
+    "boundary": "protected_area",
+    "governance_type": "government_managed",
+    "leisure": "park",
+    "name": "Ninoy Aquino Parks & Wildlife Center",
+    "previously": "node:22352349",
+    "protect_class": "5",
+    "protection_title": "Protected Area",
+    "related_law": "Proclamation No. 723 (Year 2004)",
+    "short_name": "NAPWC",
+    "website": "https://www.bmb.gov.ph/403-ninoy-aquino-parks-and-wildlife-center",
+    "wikidata": "Q7039114",
+    "wikipedia": "en:Ninoy Aquino Parks and Wildlife Center"
+  }
+},
+{
+  "type": "way",
+  "id": 47239036,
+  "center": {
+    "lat": 10.2088344,
+    "lon": 123.9857779
+  },
+  "tags": {
+    "boundary": "national_park",
+    "leisure": "nature_reserve",
+    "name": "Hilutungan Sanctuary",
+    "sport": "scuba_diving"
+  }
+},
+{
+  "type": "way",
+  "id": 80915940,
+  "center": {
+    "lat": 16.6123670,
+    "lon": 120.2831846
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 83502330,
+  "center": {
+    "lat": 13.2572186,
+    "lon": 123.6841665
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Mayon Volcano Natural Park",
+    "opening_hours": "24/7",
+    "protect_class": "5",
+    "protection_title": "Protected Area",
+    "source": "srtm",
+    "start_date": "1938-07-20",
+    "wikidata": "Q15252301",
+    "wikipedia": "en:Mayon Volcano Natural Park"
+  }
+},
+{
+  "type": "way",
+  "id": 84147933,
+  "center": {
+    "lat": 12.7741654,
+    "lon": 124.0569037
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Bulusan Volcano Natural Park",
+    "note": "boundary approximate",
+    "old_name": "Bulusan Volcano National Park",
+    "protect_class": "5",
+    "protection_title": "Natural Park",
+    "start_date": "1935-06-07",
+    "was:protection_title": "National Park",
+    "wikidata": "Q338828",
+    "wikipedia": "en:Bulusan Volcano Natural Park"
+  }
+},
+{
+  "type": "way",
+  "id": 105250305,
+  "center": {
+    "lat": 9.1540344,
+    "lon": 123.4955206
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Maite Marine Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 105563281,
+  "center": {
+    "lat": 9.7990497,
+    "lon": 118.6956638
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Palawan Wildlife Rescue and Conservation Center"
+  }
+},
+{
+  "type": "way",
+  "id": 109500305,
+  "center": {
+    "lat": 14.4844007,
+    "lon": 120.9773918
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "salt": "no",
+    "tidal": "yes",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 112753721,
+  "center": {
+    "lat": 14.6434916,
+    "lon": 120.3120084
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "National Power Corporation Conservation Park"
+  }
+},
+{
+  "type": "way",
+  "id": 117767269,
+  "center": {
+    "lat": 14.8503969,
+    "lon": 120.3574373
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Roosevelt Protected Landscape",
+    "nipas_category": "protected_landscape",
+    "protect_class": "5",
+    "protection_object": "nature",
+    "protection_title": "Protected Landscape",
+    "related_law": "Republic Act No. 11038 (Year 2018)",
+    "short_name": "RPL",
+    "site_ownership": "national",
+    "source": "survey",
+    "valid_from": "2018-06-22"
+  }
+},
+{
+  "type": "way",
+  "id": 126419898,
+  "center": {
+    "lat": 11.3402682,
+    "lon": 124.1232727
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Coral Garden Marine Protected Area",
+    "sport": "scuba_diving",
+    "tourism": "attraction"
+  }
+},
+{
+  "type": "way",
+  "id": 151678329,
+  "center": {
+    "lat": 16.1999569,
+    "lon": 120.0300047
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Hundred Islands National Park",
+    "nipas_category": "national_park",
+    "protect_class": "2",
+    "protection_object": "nature",
+    "protection_title": "National Park",
+    "related_law": "Executive Order No. 436, s. 2005;Republic Act № 3655",
+    "related_law:url": "https://officialgazette.gov.ph/2005/06/21/executive-order-no-436-s-2005/",
+    "short_name": "HINL",
+    "site_ownership": "national",
+    "valid_from": "2005-06-21",
+    "wikidata": "Q1155369",
+    "wikipedia": "en:Hundred Islands National Park"
+  }
+},
+{
+  "type": "way",
+  "id": 170189459,
+  "center": {
+    "lat": 10.5113804,
+    "lon": 122.5105135
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Coastal Shelf/Shallow Zone",
+    "source": "Bing"
+  }
+},
+{
+  "type": "way",
+  "id": 180931368,
+  "center": {
+    "lat": 13.6982469,
+    "lon": 120.8294154
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "note": "approximate, fix borders"
+  }
+},
+{
+  "type": "way",
+  "id": 181365709,
+  "center": {
+    "lat": 12.6713889,
+    "lon": 120.4791666
+  },
+  "tags": {
+    "addr:city": "Sablayan",
+    "boundary": "national_park",
+    "leisure": "nature_reserve",
+    "name": "Apo Reef Natural Park",
+    "note": "Senate Bill 2393 official boundaries",
+    "wikidata": "Q618756"
+  }
+},
+{
+  "type": "way",
+  "id": 229053507,
+  "center": {
+    "lat": 14.4902573,
+    "lon": 120.9801601
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Las Piñas-Parañaque Critical Habitat and Ecotourism Area",
+    "ramsar": "yes",
+    "wikidata": "Q18356372",
+    "wikimedia_commons": "Category:Las Piñas–Parañaque Critical Habitat and Ecotourism Area",
+    "wikipedia": "en:Las Piñas–Parañaque Critical Habitat and Ecotourism Area"
+  }
+},
+{
+  "type": "way",
+  "id": 229484670,
+  "center": {
+    "lat": 16.6850235,
+    "lon": 121.5498375
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Santiago City Oval"
+  }
+},
+{
+  "type": "way",
+  "id": 239845956,
+  "center": {
+    "lat": 5.9917035,
+    "lon": 116.0900872
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Kinabalu Wetland Conservation Society",
+    "name:en": "Kinabalu Wetland Conservation Society"
+  }
+},
+{
+  "type": "way",
+  "id": 244530661,
+  "center": {
+    "lat": 11.3231465,
+    "lon": 124.1087384
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Coral Gardens"
+  }
+},
+{
+  "type": "way",
+  "id": 244531732,
+  "center": {
+    "lat": 11.3472894,
+    "lon": 124.1056222
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fixme": "name",
+    "leisure": "nature_reserve",
+    "name": "Marine Protected Area",
+    "sport": "scuba_diving",
+    "tourism": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 245738684,
+  "center": {
+    "lat": 16.6945797,
+    "lon": 121.5575154
+  },
+  "tags": {
+    "boundary": "protected_area"
+  }
+},
+{
+  "type": "way",
+  "id": 245738809,
+  "center": {
+    "lat": 16.6963103,
+    "lon": 121.5550672
+  },
+  "tags": {
+    "boundary": "protected_area"
+  }
+},
+{
+  "type": "way",
+  "id": 245806651,
+  "center": {
+    "lat": 16.7855161,
+    "lon": 121.5336170
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Preserved area"
+  }
+},
+{
+  "type": "way",
+  "id": 246734046,
+  "center": {
+    "lat": 11.1721093,
+    "lon": 125.0118929
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "park",
+    "name": "MacArthur Park",
+    "name:en": "MacArthur Park",
+    "name:war": "Parke ni MacArthur",
+    "official_name:en": "MacArthur Landing Memorial National Park",
+    "official_name:war": "Parke Nasodnon hin Paghinomdom han Paglugsong ni MacArthur",
+    "wikidata": "Q18157528",
+    "wikimedia_commons": "Category:Leyte Landing Memorial",
+    "wikipedia": "en:MacArthur Landing Memorial National Park"
+  }
+},
+{
+  "type": "way",
+  "id": 247488427,
+  "center": {
+    "lat": 9.9055723,
+    "lon": 123.8359871
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "protect_class": "14",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 251114201,
+  "center": {
+    "lat": 9.8989274,
+    "lon": 123.8491639
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "protect_class": "14",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 251114205,
+  "center": {
+    "lat": 9.9055676,
+    "lon": 123.8596571
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "protect_class": "14",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 251114207,
+  "center": {
+    "lat": 9.9056253,
+    "lon": 123.8562560
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "protect_class": "14",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 251114209,
+  "center": {
+    "lat": 9.9067516,
+    "lon": 123.8597530
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "protect_class": "14",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 257523484,
+  "center": {
+    "lat": 11.5962430,
+    "lon": 122.7886600
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Culajao Mangrove Ecopark",
+    "natural": "wetland",
+    "tourism": "yes",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 276547000,
+  "center": {
+    "lat": 11.8134529,
+    "lon": 121.9997937
+  },
+  "tags": {
+    "boundary": "national_park",
+    "leisure": "nature_reserve",
+    "name": "Northwest Panay Peninsula Natural Park",
+    "nipas_category": "natural park",
+    "wikidata": "Q1485013"
+  }
+},
+{
+  "type": "way",
+  "id": 280149159,
+  "center": {
+    "lat": 8.8910092,
+    "lon": 119.9098277
+  },
+  "tags": {
+    "area": "yes",
+    "boundary": "national_park",
+    "leisure": "nature_reserve",
+    "name": "Tubbataha Reefs Natural Park",
+    "name:ar": "شعاب توباتها المرجانية",
+    "name:de": "Naturpark Tubbataha-Riffe",
+    "name:en": "Tubbataha Reefs Natural Park",
+    "name:es": "Parque Marino del Arrecife de Tubbataha",
+    "name:fa": "آب‌سنگ مرجانی توباتا",
+    "name:pt": "Parque Marinho do Recife de Tubbataha",
+    "name:tl": "Bahurang Tubbataha",
+    "wikidata": "Q927108",
+    "wikimedia_commons": "Category:Tubbataha Reef",
+    "wikipedia": "en:Tubbataha Reef"
+  }
+},
+{
+  "type": "way",
+  "id": 318022647,
+  "center": {
+    "lat": 12.0312742,
+    "lon": 125.4399837
+  },
+  "tags": {
+    "landuse": "farmland",
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 332241392,
+  "center": {
+    "lat": 10.7005803,
+    "lon": 122.5428729
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 332241393,
+  "center": {
+    "lat": 10.7011262,
+    "lon": 122.5440612
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 332866085,
+  "center": {
+    "lat": 14.4920980,
+    "lon": 120.9843377
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "tidal": "no",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 348898221,
+  "center": {
+    "lat": 14.7014752,
+    "lon": 121.2589546
+  },
+  "tags": {
+    "alt_name": "Marikina Watershed Reservation",
+    "area": "yes",
+    "boundary": "protected_area",
+    "name": "Upper Marikina River Basin Protected Landscape",
+    "protect_class": "5",
+    "protection_title": "Upper Marikina River Basin Protected Landscape",
+    "related_law": "Presidential Proclamation No. 296 (year 2011)",
+    "short_name": "UMRBPL",
+    "source": "technical description"
+  }
+},
+{
+  "type": "way",
+  "id": 360857218,
+  "center": {
+    "lat": 10.7013808,
+    "lon": 122.5481774
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 360857258,
+  "center": {
+    "lat": 10.6995285,
+    "lon": 122.5435702
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 368465634,
+  "center": {
+    "lat": 16.2455771,
+    "lon": 121.2135024
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Naruron Falls Watershed"
+  }
+},
+{
+  "type": "way",
+  "id": 399276557,
+  "center": {
+    "lat": 4.1130062,
+    "lon": 118.6305838
+  },
+  "tags": {
+    "access": "private",
+    "leisure": "nature_reserve",
+    "name": "Taman Pulau Sipadan",
+    "name:en": "Sipadan Island Park",
+    "name:ms": "Taman Pulau Sipadan",
+    "name:zh": "西巴丹岛公园",
+    "name:zh-Hans": "西巴丹岛公园",
+    "name:zh-Hant": "西巴丹島公園",
+    "protect_class": "2",
+    "tourism": "attraction",
+    "website": "https://www.sabahparks.org.my/index.php/the-parks/sipadan-island-park",
+    "wikidata": "Q1412482",
+    "wikipedia": "en:Sipadan"
+  }
+},
+{
+  "type": "way",
+  "id": 399328523,
+  "center": {
+    "lat": 8.6073717,
+    "lon": 125.9318550
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Puting Buhangin Cave Landscape"
+  }
+},
+{
+  "type": "way",
+  "id": 417779313,
+  "center": {
+    "lat": 12.3651921,
+    "lon": 123.6551929
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Buntod Marine Sanctuary"
+  }
+},
+{
+  "type": "way",
+  "id": 434345941,
+  "center": {
+    "lat": 8.7968758,
+    "lon": 124.9747228
+  },
+  "tags": {
+    "boundary": "national_park",
+    "comment": "Park boundary based on technical description on Proclamation 1249",
+    "leisure": "nature_reserve",
+    "name": "Mount Balatukan Range Natural Park",
+    "nipas_category": "Natural Park",
+    "related_law": "Philippine Proclamation No. 1249, s. 2007"
+  }
+},
+{
+  "type": "way",
+  "id": 434363711,
+  "center": {
+    "lat": 11.0622286,
+    "lon": 123.6466960
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Luyongbaybay Marine Sanctuary",
+    "note": "10 hectares",
+    "protect_class": "14",
+    "protection_title": "marine sanctuary"
+  }
+},
+{
+  "type": "way",
+  "id": 445712231,
+  "center": {
+    "lat": 13.9817436,
+    "lon": 120.6188016
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Binubusan Marine Protected Area"
+  }
+},
+{
+  "type": "way",
+  "id": 445712235,
+  "center": {
+    "lat": 13.9880644,
+    "lon": 120.6221091
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Kay Reya Marine Protected Area"
+  }
+},
+{
+  "type": "way",
+  "id": 448606600,
+  "center": {
+    "lat": 14.5952516,
+    "lon": 121.1667259
+  },
+  "tags": {
+    "addr:city": "Antipolo",
+    "addr:postcode": "1870",
+    "addr:street": "Daang Bakal Street",
+    "alt_name": "Hinulugang Taktak National Park",
+    "alt_name:en": "Hinulugang Taktak National Park",
+    "alt_name:tl": "Pambansang Liwasan ng Hinulugang Taktak",
+    "boundary": "protected_area",
+    "governance_type": "government_managed",
+    "leisure": "park",
+    "name": "Hinulugang Taktak Protected Landscape",
+    "name:en": "Hinulugang Taktak Protected Landscape",
+    "name:tl": "Protektadong Tanawin ng Hinulugang Taktak",
+    "protect_class": "5",
+    "protection_title": "Protected Landscape",
+    "related_law": "Proclamation No. 412 (Year 2000)",
+    "short_name": "HTPL"
+  }
+},
+{
+  "type": "way",
+  "id": 480323614,
+  "center": {
+    "lat": 10.8746231,
+    "lon": 122.2882270
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Bucari Pine Forest"
+  }
+},
+{
+  "type": "way",
+  "id": 489716853,
+  "center": {
+    "lat": 9.5141992,
+    "lon": 123.6819949
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Balicasag Fish Sanctuary",
+    "protection_title": "Marine Protected Area"
+  }
+},
+{
+  "type": "way",
+  "id": 493731189,
+  "center": {
+    "lat": 14.7338939,
+    "lon": 121.1900296
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Pamitinan Protected Landscape",
+    "related_law": "Proclamation No. 901 s.1996",
+    "wikidata": "Q1240315",
+    "wikimedia_commons": "Category:Pamitinan Protected Landscape",
+    "wikipedia": "en:Pamitinan Protected Landscape"
+  }
+},
+{
+  "type": "way",
+  "id": 499086161,
+  "center": {
+    "lat": 6.2473491,
+    "lon": 116.6134290
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "heritage": "1",
+    "heritage:operator": "whc",
+    "heritage:website": "https://whc.unesco.org/en/list/1012/",
+    "leisure": "nature_reserve",
+    "name": "Taman Kinabalu",
+    "name:de": "Nationalpark Kinabalu",
+    "name:en": "Kinabalu Park",
+    "name:es": "Parque nacional de Kinabalu",
+    "name:fr": "Parc national du Kinabalu",
+    "name:id": "Taman Nasional Kinabalu",
+    "name:ms": "Taman Nasional Kinabalu",
+    "name:nl": "Nationaal park Kinabalu",
+    "name:pt": "Parque Nacional do Kinabalu",
+    "protect_class": "98",
+    "ref:whc": "1012",
+    "start_date": "2000",
+    "whc:criteria": "(ix);(x)",
+    "whc:inscription_date": "2000",
+    "wikidata": "Q834893"
+  }
+},
+{
+  "type": "way",
+  "id": 507994434,
+  "center": {
+    "lat": 10.7201808,
+    "lon": 123.2172616
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Northern Negros Natural Park",
+    "note": "rough estimation of polygon, imagery not clear",
+    "operator": "Department of Environment and Natural Resources",
+    "protection_title": "prohibition of altering its natural features",
+    "wikidata": "Q2001025",
+    "wikipedia": "en:Northern Negros Natural Park"
+  }
+},
+{
+  "type": "way",
+  "id": 508368331,
+  "center": {
+    "lat": 9.8728766,
+    "lon": 122.3768165
+  },
+  "tags": {
+    "description": "tags in parent relation",
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 510203085,
+  "center": {
+    "lat": 9.0773056,
+    "lon": 123.2710310
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Apo Island Protected Landscape and Seascape",
+    "operator": "Protected Area Management Board",
+    "protection_title": "marine and landscape"
+  }
+},
+{
+  "type": "way",
+  "id": 515205488,
+  "center": {
+    "lat": 10.6946615,
+    "lon": 122.5716683
+  },
+  "tags": {
+    "boundary": "protected_area"
+  }
+},
+{
+  "type": "way",
+  "id": 542860055,
+  "center": {
+    "lat": 16.1720181,
+    "lon": 120.0117795
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Bued Mangrove Forest Park",
+    "natural": "wetland",
+    "tourism": "yes",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 542884941,
+  "center": {
+    "lat": 14.1380119,
+    "lon": 121.2119919
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "governance_type": "government_managed",
+    "leisure": "nature_reserve",
+    "name": "Mount Makiling Forest Reserve",
+    "name:en": "Mount Makiling Forest Reserve",
+    "protect_class": "97",
+    "protection_object": "nature",
+    "protection_title": "Forest Reserve",
+    "related_law": "Republic Act No. 6967 (Year 1990)",
+    "short_name": "MMFR"
+  }
+},
+{
+  "type": "way",
+  "id": 550902024,
+  "center": {
+    "lat": 11.7190826,
+    "lon": 122.3865587
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fee": "yes",
+    "leisure": "nature_reserve",
+    "managed": "yes",
+    "name": "Bakhawan Eco-Park",
+    "natural": "wetland",
+    "operator": "Kalibo Save the Mangroves Association",
+    "operator:type": "consortium",
+    "protect_class": "6",
+    "tourism": "yes",
+    "wetland": "mangrove",
+    "wikidata": "Q16766044"
+  }
+},
+{
+  "type": "way",
+  "id": 596697058,
+  "center": {
+    "lat": 15.7915280,
+    "lon": 124.2665275
+  },
+  "tags": {
+    "boundary": "national_park",
+    "governance_type": "government_managed",
+    "leisure": "nature_reserve",
+    "name": "Philippine Rise Marine Resource Reserve",
+    "name:en": "Philippine Rise Marine Resource Reserve",
+    "nipas_category": "resource_reserve",
+    "protect_class": "6",
+    "protection_title": "Resource Reserve",
+    "related_law": "Proclamation No. 489 (Year 2018)",
+    "short_name": "PRMRR",
+    "valid_from": "2018-05-15",
+    "wikidata": "Q56886760"
+  }
+},
+{
+  "type": "way",
+  "id": 597926764,
+  "center": {
+    "lat": 10.2743476,
+    "lon": 123.8774291
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "landuse": "commercial",
+    "name": "Cebu South Road Properties",
+    "protect_class": "23",
+    "wikipedia": "en:South Road Properties"
+  }
+},
+{
+  "type": "way",
+  "id": 603167845,
+  "center": {
+    "lat": 13.4552612,
+    "lon": 123.7105505
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Corangon Shoal",
+    "natural": "sand"
+  }
+},
+{
+  "type": "way",
+  "id": 612082067,
+  "center": {
+    "lat": 13.5943204,
+    "lon": 124.3082361
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Batalay Mangrove Ecopark",
+    "natural": "wetland",
+    "previously": "node:5630363023",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 621334608,
+  "center": {
+    "lat": 16.5824350,
+    "lon": 120.9790202
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "description": "Forest Reserve",
+    "ele": "1500",
+    "landuse": "forest"
+  }
+},
+{
+  "type": "way",
+  "id": 627626390,
+  "center": {
+    "lat": 17.0322871,
+    "lon": 121.2930019
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "landuse": "forest",
+    "leaf_cycle": "mixed",
+    "leaf_type": "mixed",
+    "note": "1500 masl and above",
+    "protect_class": "6",
+    "protection_title": "Forest Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 631800976,
+  "center": {
+    "lat": 12.3685034,
+    "lon": 123.7915261
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Bongsanglay Natural Park"
+  }
+},
+{
+  "type": "way",
+  "id": 631800977,
+  "center": {
+    "lat": 11.8917609,
+    "lon": 123.6620997
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Naro Island Wildlife Sanctuary"
+  }
+},
+{
+  "type": "way",
+  "id": 631805603,
+  "center": {
+    "lat": 11.9081091,
+    "lon": 123.6058163
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Chico Island Wildlife Sanctuary"
+  }
+},
+{
+  "type": "way",
+  "id": 632709776,
+  "center": {
+    "lat": 13.7765657,
+    "lon": 123.8891262
+  },
+  "tags": {
+    "addr:city": "Caramoan",
+    "leisure": "nature_reserve",
+    "name": "Caramoan National Park",
+    "note": "Republic of the Philippines Proclamation No. 291, s. 1938",
+    "wikidata": "Q1035375"
+  }
+},
+{
+  "type": "way",
+  "id": 636799810,
+  "center": {
+    "lat": 10.7544789,
+    "lon": 124.8308061
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Mt. Pangasugan Ranges Protected Landscape",
+    "protect_class": "5"
+  }
+},
+{
+  "type": "way",
+  "id": 643277047,
+  "center": {
+    "lat": 10.8762694,
+    "lon": 124.8740208
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Mahagnao Volcano Natural Park"
+  }
+},
+{
+  "type": "way",
+  "id": 643765336,
+  "center": {
+    "lat": 10.2439274,
+    "lon": 124.0342244
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Olango Island Wildlife Sanctuary",
+    "ramsar": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 647369850,
+  "center": {
+    "lat": 7.1207400,
+    "lon": 124.0869335
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Datu Atiyakaw Heritage Park"
+  }
+},
+{
+  "type": "way",
+  "id": 666853611,
+  "center": {
+    "lat": 7.1653625,
+    "lon": 125.6927388
+  },
+  "tags": {
+    "contact:phone": "+63 82 221 8925",
+    "leisure": "nature_reserve",
+    "name": "Monfort Bat Sanctuary",
+    "wikidata": "Q6899368",
+    "wikimedia_commons": "Category:Monfort Bat Sanctuary",
+    "wikipedia": "en:Monfort Bat Sanctuary"
+  }
+},
+{
+  "type": "way",
+  "id": 669608022,
+  "center": {
+    "lat": 10.7326953,
+    "lon": 122.5962578
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Hinactacan Mangrove Eco-Park",
+    "natural": "wetland",
+    "protect_class": "6",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 671511068,
+  "center": {
+    "lat": 9.6623095,
+    "lon": 124.0749661
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Loboc Wildlife Park",
+    "tourism": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 680237251,
+  "center": {
+    "lat": 10.4163736,
+    "lon": 122.5025420
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Taklong Island National Marine Reserve",
+    "name:abbr": "TINMAR",
+    "operator": "UP-Visayas",
+    "protect_class": "6",
+    "related_law": "Presidential Proclamation № 525, s. 1990",
+    "url": "https://officialgazette.gov.ph/1990/02/08/proclamation-no-525-s-1990/"
+  }
+},
+{
+  "type": "way",
+  "id": 682342175,
+  "center": {
+    "lat": 8.9332019,
+    "lon": 125.4684041
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Dumalagan Tree Park"
+  }
+},
+{
+  "type": "way",
+  "id": 692493520,
+  "center": {
+    "lat": 8.0225338,
+    "lon": 124.2974603
+  },
+  "tags": {
+    "boundary": "national_park",
+    "leisure": "nature_reserve",
+    "name": "Sacred Mountain National Park",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 747980455,
+  "center": {
+    "lat": 9.2907272,
+    "lon": 126.1978276
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Uba Marine Protected Area",
+    "source": "local knowledge"
+  }
+},
+{
+  "type": "way",
+  "id": 784703094,
+  "center": {
+    "lat": 15.1534871,
+    "lon": 120.7160771
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 784703335,
+  "center": {
+    "lat": 15.1525288,
+    "lon": 120.7126793
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 791737990,
+  "center": {
+    "lat": 14.9931624,
+    "lon": 120.5411446
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 827569169,
+  "center": {
+    "lat": 14.3551323,
+    "lon": 120.9225512
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 913752517,
+  "center": {
+    "lat": 15.6158712,
+    "lon": 120.3563727
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "San Jose Bantay Bato"
+  }
+},
+{
+  "type": "way",
+  "id": 913752518,
+  "center": {
+    "lat": 15.5980809,
+    "lon": 120.3563779
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Caocaoayan Bantay Bato"
+  }
+},
+{
+  "type": "way",
+  "id": 914876234,
+  "center": {
+    "lat": 15.5685578,
+    "lon": 120.3976014
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Bantay Lima"
+  }
+},
+{
+  "type": "way",
+  "id": 921660061,
+  "center": {
+    "lat": 11.8022813,
+    "lon": 122.2053427
+  },
+  "tags": {
+    "fee": "yes",
+    "leisure": "nature_reserve",
+    "name": "Katunggan It Ibajay Mangrove Ecopark",
+    "natural": "wetland",
+    "tourism": "yes",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 927955439,
+  "center": {
+    "lat": 14.4022164,
+    "lon": 120.9468002
+  },
+  "tags": {
+    "addr:barangay": "Anabu I-G",
+    "addr:city": "Imus",
+    "addr:province": "Cavite",
+    "alt_name": "Imus Retarding Basin;Imus River Retention Basin",
+    "basin": "detention",
+    "boundary": "protected_area",
+    "name": "Imus River Basin",
+    "natural": "water",
+    "protect_class": "15",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 952184756,
+  "center": {
+    "lat": 15.5847790,
+    "lon": 120.3800904
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Mapandan Hill"
+  }
+},
+{
+  "type": "way",
+  "id": 952184757,
+  "center": {
+    "lat": 15.6095536,
+    "lon": 120.3843419
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Pob. Sur Hill"
+  }
+},
+{
+  "type": "way",
+  "id": 952184758,
+  "center": {
+    "lat": 15.5599848,
+    "lon": 120.3595258
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Gossood Hill"
+  }
+},
+{
+  "type": "way",
+  "id": 952184761,
+  "center": {
+    "lat": 15.5737248,
+    "lon": 120.3699317
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 952832150,
+  "center": {
+    "lat": 15.6176027,
+    "lon": 120.3670250
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Sinigpit Hill"
+  }
+},
+{
+  "type": "way",
+  "id": 952832151,
+  "center": {
+    "lat": 15.6187001,
+    "lon": 120.3642943
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Ciano Park"
+  }
+},
+{
+  "type": "way",
+  "id": 958766205,
+  "center": {
+    "lat": 15.6965385,
+    "lon": 120.3273785
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 958766206,
+  "center": {
+    "lat": 15.7083316,
+    "lon": 120.3326931
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Mount Cgndong"
+  }
+},
+{
+  "type": "way",
+  "id": 958766207,
+  "center": {
+    "lat": 15.7063990,
+    "lon": 120.3278087
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 958766208,
+  "center": {
+    "lat": 15.7214434,
+    "lon": 120.3069307
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 959041361,
+  "center": {
+    "lat": 15.5307353,
+    "lon": 120.4012576
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Paniknol Hill"
+  }
+},
+{
+  "type": "way",
+  "id": 959941436,
+  "center": {
+    "lat": 15.3582833,
+    "lon": 120.7212318
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 986886991,
+  "center": {
+    "lat": 9.2732461,
+    "lon": 117.9803073
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Lipuun Point Reservation",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 988540979,
+  "center": {
+    "lat": 10.5234458,
+    "lon": 124.6480140
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Cuatro Islas Protected Landscape and Seascape",
+    "operator": "DENR Region VIII",
+    "wikidata": "Q31556606",
+    "wikimedia_commons": "Category:Cuatro Islas",
+    "wikipedia": "en:Cuatro Islas"
+  }
+},
+{
+  "type": "way",
+  "id": 988582114,
+  "center": {
+    "lat": 8.7441417,
+    "lon": 123.2211388
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Aliguay Island Protected Landscape and Seascape",
+    "related_law": "Proclamation No. 106, s. 1999",
+    "wikidata": "Q45059278",
+    "wikipedia": "en:Aliguay"
+  }
+},
+{
+  "type": "way",
+  "id": 988609943,
+  "center": {
+    "lat": 8.8570418,
+    "lon": 123.4153917
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Selinog Island Protected Landscape and Seascape",
+    "source:law": "https://lawphil.net/executive/proc/proc2000/proc_276_2000.html",
+    "wikidata": "Q2268350"
+  }
+},
+{
+  "type": "way",
+  "id": 1010290244,
+  "center": {
+    "lat": 10.1230269,
+    "lon": 123.2761690
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 1026275700,
+  "center": {
+    "lat": 9.1761869,
+    "lon": 124.8265797
+  },
+  "tags": {
+    "fee": "yes",
+    "leisure": "nature_reserve",
+    "name": "Mantigue Island Nature Park",
+    "operator:type": "government",
+    "short_name": "Minap"
+  }
+},
+{
+  "type": "way",
+  "id": 1029989826,
+  "center": {
+    "lat": 16.3641882,
+    "lon": 120.6761544
+  },
+  "tags": {
+    "fee": "yes",
+    "leisure": "nature_reserve",
+    "name": "Itogon Eco-Tourism Park"
+  }
+},
+{
+  "type": "way",
+  "id": 1037492409,
+  "center": {
+    "lat": 6.3180985,
+    "lon": 126.1911133
+  },
+  "tags": {
+    "is_in": "Buso-buso;Lavigan;Governor Generoso",
+    "leisure": "nature_reserve",
+    "name": "Basarte Mangrove Park",
+    "natural": "wetland",
+    "previously": "node 6146856290",
+    "tourism": "attraction",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1051212238,
+  "center": {
+    "lat": 10.0036176,
+    "lon": 125.2025389
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fixme": "clarify exact area of marine protected place (as water_point was here before to mark it)",
+    "name": "Nueve Estrella Norte Marine Protected Area"
+  }
+},
+{
+  "type": "way",
+  "id": 1067464801,
+  "center": {
+    "lat": 9.4637180,
+    "lon": 122.8112805
+  },
+  "tags": {
+    "addr:place": "Nangka",
+    "contact:facebook": "BayawanNatureReserve",
+    "leisure": "nature_reserve",
+    "name": "Bayawan Nature Reserve",
+    "operator:type": "consortium",
+    "source": "extrapolation",
+    "source_ref": "https://osm.org/note/3211946"
+  }
+},
+{
+  "type": "way",
+  "id": 1070824818,
+  "center": {
+    "lat": 11.1495579,
+    "lon": 123.7503413
+  },
+  "tags": {
+    "addr:place": "Obo-ob",
+    "addr:town": "Bantayan",
+    "alt_name": "Omagieca Obo-ob Mangrove Garden",
+    "leisure": "nature_reserve",
+    "name": "Obo-ob Mangrove Garden",
+    "name:de": "Obo-ob Mangrovenwald",
+    "note": "Geometry is approximated",
+    "operator": "Omagieca",
+    "operator:type": "community",
+    "previously": "node:5606145422",
+    "tourism": "yes",
+    "website": "https://bantayanisland.com/listings/mangrove-eco-park/"
+  }
+},
+{
+  "type": "way",
+  "id": 1076548088,
+  "center": {
+    "lat": 16.4793673,
+    "lon": 121.1324930
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Bangan Hill"
+  }
+},
+{
+  "type": "way",
+  "id": 1076548089,
+  "center": {
+    "lat": 16.5028111,
+    "lon": 121.1487414
+  },
+  "tags": {
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 1086320434,
+  "center": {
+    "lat": 15.5305849,
+    "lon": 120.4150097
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Trebor Hill Nature Park"
+  }
+},
+{
+  "type": "way",
+  "id": 1110196071,
+  "center": {
+    "lat": 13.3194449,
+    "lon": 123.5869333
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Mt. Masaraga Watershed Forest Reserve",
+    "operator": "CENRO-Guinobatan"
+  }
+},
+{
+  "type": "way",
+  "id": 1116519645,
+  "center": {
+    "lat": 8.1368998,
+    "lon": 124.8573186
+  },
+  "tags": {
+    "boundary": "national_park",
+    "description": "Declared as ASEAN Heritage Park in 2009",
+    "leisure": "nature_reserve",
+    "name": "Mount Kitanglad Range Natural Park",
+    "nipas_category": "natural park",
+    "operator": "DENR",
+    "source": "Republic Act No. 8978 of 2000"
+  }
+},
+{
+  "type": "way",
+  "id": 1117331062,
+  "center": {
+    "lat": 14.5785197,
+    "lon": 121.0129300
+  },
+  "tags": {
+    "boundary": "protected_area"
+  }
+},
+{
+  "type": "way",
+  "id": 1119579150,
+  "center": {
+    "lat": 12.8099242,
+    "lon": 121.1345472
+  },
+  "tags": {
+    "boundary": "national_park",
+    "description": "Established in 1970 through Republic Act No. 6148.  ASEAN Heritage Park in 1984.",
+    "leisure": "nature_reserve",
+    "name": "Mounts Iglit-Baco National Park",
+    "wikidata": "Q1950528",
+    "wikipedia": "en:Mounts Iglit–Baco National Park"
+  }
+},
+{
+  "type": "way",
+  "id": 1119619735,
+  "center": {
+    "lat": 9.1919838,
+    "lon": 124.7021641
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Timpoong - Hibok-Hibok Natural Monument",
+    "protect_class": "3",
+    "protection_title": "Natural Monument",
+    "related_law": "Proclamation No. 570",
+    "start_date": "2004-03-09",
+    "wikidata": "Q24944732",
+    "wikipedia": "en:Timpoong and Hibok-Hibok Natural Monument"
+  }
+},
+{
+  "type": "way",
+  "id": 1120154773,
+  "center": {
+    "lat": 6.6130771,
+    "lon": 126.1772267
+  },
+  "tags": {
+    "boundary": "national_park",
+    "leisure": "nature_reserve",
+    "name": "Mount Hamiguitan Range Wildlife Sanctuary",
+    "protect_class": "1",
+    "protection_title": "Wildlife Sanctuary",
+    "related_law": "Republic Act 9303",
+    "short_name": "MHRWS",
+    "start_date": "2004-07-30",
+    "wikidata": "Q17494587",
+    "wikipedia": "en:Mount Hamiguitan Range Wildlife Sanctuary"
+  }
+},
+{
+  "type": "way",
+  "id": 1122435934,
+  "center": {
+    "lat": 13.1676901,
+    "lon": 121.3479759
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "designation": "national_park",
+    "leisure": "nature_reserve",
+    "name": "Naujan Lake National Park",
+    "protect_class": "4",
+    "ramsar": "yes",
+    "related_law": "Presidential Proclamation № 262, s. 1962",
+    "start_date": "1999-12-11",
+    "website": "https://pais.bmb.gov.ph/home/info/DENRR4B0013",
+    "wikidata": "Q1800842"
+  }
+},
+{
+  "type": "way",
+  "id": 1123238169,
+  "center": {
+    "lat": 13.9248760,
+    "lon": 123.5887228
+  },
+  "tags": {
+    "addr:city": "Garchitorena",
+    "alt_name": "Malabungot Wilderness Area",
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Malabungot Protected Landscape and Seascape",
+    "note": "Boundary description in law is very inaccurate; current shape is an assumed approximation",
+    "protect_class": "5",
+    "protection_title": "Protected Landscape and Seascape",
+    "related_law": "Proclamation No. 288, s. 2000",
+    "source": "https://www.officialgazette.gov.ph/2000/04/23/proclamation-no-288-s-2000/",
+    "start_date": "2000-04-23"
+  }
+},
+{
+  "type": "way",
+  "id": 1123536220,
+  "center": {
+    "lat": 8.0590468,
+    "lon": 124.3981069
+  },
+  "tags": {
+    "boundary": "national_park",
+    "description": "Designated as National Park at National level in 1965. It covers 9.74 km2 and it is managed by DENR-BARMM.",
+    "leisure": "nature_reserve",
+    "name": "Rungkunan National Park",
+    "operator": "DENR-BARMM",
+    "wikidata": "Q7379858",
+    "wikipedia": "en:Rungkunan National Park"
+  }
+},
+{
+  "type": "way",
+  "id": 1123584109,
+  "center": {
+    "lat": 8.1174592,
+    "lon": 122.4410630
+  },
+  "tags": {
+    "boundary": "national_park",
+    "description": "Declared a protected area in April 2000. Covers the 100-hectare (250-acre) Murcielagos Island with a buffer zone covering 151 hectares (370 acres) of surrounding municipal waters including Bayangan Island.",
+    "leisure": "nature_reserve",
+    "name": "Murcielagos Island Protected Landscape and Seascape",
+    "wikidata": "Q25054401",
+    "wikipedia": "en:Murcielagos Island"
+  }
+},
+{
+  "type": "way",
+  "id": 1123598416,
+  "center": {
+    "lat": 10.6348162,
+    "lon": 124.9248673
+  },
+  "tags": {
+    "boundary": "national_park",
+    "description": "Declared a national park in 1937 by virtue of Proclamation No. 142.",
+    "leisure": "nature_reserve",
+    "name": "Kuapnit Balinsasayaw National Park"
+  }
+},
+{
+  "type": "way",
+  "id": 1123677523,
+  "center": {
+    "lat": 10.4122312,
+    "lon": 123.8822474
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "description": "Designated as Protected Landscape at National level in 2007. It covers 286.85 km2.",
+    "leisure": "nature_reserve",
+    "name": "Central Cebu Protected Landscape",
+    "wikidata": "Q1053663",
+    "wikipedia": "en:Central Cebu Protected Landscape"
+  }
+},
+{
+  "type": "way",
+  "id": 1123839227,
+  "center": {
+    "lat": 11.7436523,
+    "lon": 125.1169623
+  },
+  "tags": {
+    "boundary": "national_park",
+    "description": "With a size of 333,300 hectares this is the Philippine's largest terrestrial protected area.",
+    "leisure": "nature_reserve",
+    "name": "Samar Island Natural Park",
+    "start_date": "2003-08-13",
+    "wikidata": "Q55632422",
+    "wikipedia": "en:Samar Island Natural Park"
+  }
+},
+{
+  "type": "way",
+  "id": 1124931697,
+  "center": {
+    "lat": 11.0727734,
+    "lon": 124.6872092
+  },
+  "tags": {
+    "boundary": "protected_area"
+  }
+},
+{
+  "type": "way",
+  "id": 1125330829,
+  "center": {
+    "lat": 7.7383241,
+    "lon": 126.2471379
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "description": "Designated as Protected Landscape at National level in 2018. It covers 103.03 km2.",
+    "leisure": "nature_reserve",
+    "name": "Aliwagwag Protected Landscape",
+    "operator": "DENR-PAMB"
+  }
+},
+{
+  "type": "way",
+  "id": 1125548989,
+  "center": {
+    "lat": 10.2193229,
+    "lon": 124.3140626
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "description": "Established in 1999",
+    "leisure": "nature_reserve",
+    "name": "Talibon Group of Islands Protected Landscape and Seascape"
+  }
+},
+{
+  "type": "way",
+  "id": 1127822598,
+  "center": {
+    "lat": 9.8318943,
+    "lon": 124.1379473
+  },
+  "tags": {
+    "boundary": "protected_area"
+  }
+},
+{
+  "type": "way",
+  "id": 1127951462,
+  "center": {
+    "lat": 6.8720870,
+    "lon": 122.0579290
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "is_in": "Zamboanga del Sur",
+    "name": "Great and Little Santa Cruz Islands Protected Landscape & Seascape",
+    "protect_class": "5",
+    "protection_title": "Marine Reserve",
+    "related_law": "Presidential Proclamation № 271 s 2000",
+    "related_law:url": "https://www.officialgazette.gov.ph/2000/04/23/proclamation-no-271-s-2000/",
+    "source": "interpolation",
+    "wikipedia": "en:Great Santa Cruz Island"
+  }
+},
+{
+  "type": "way",
+  "id": 1128349812,
+  "center": {
+    "lat": 8.6366379,
+    "lon": 123.6379554
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "is_in": "Baliangao;Misamis Occidental",
+    "name": "Baliangao Protected Landscape & Seascape",
+    "old_name": "Baliangao Wetland Park",
+    "protect_class": "5",
+    "protection_title": "Protected Landscape and Seascape",
+    "related_law": "Presidential Proclamation № 418, s. 2000",
+    "related_law:url": "https://officialgazette.gov.ph/2000/11/22/proclamation-no-418-s-2000/",
+    "source": "interpolation",
+    "start_date": "1991",
+    "wikidata": "Q24956116",
+    "wikimedia_commons": "Category:Baliangao Protected Landscape and Seascape",
+    "wikipedia": "en:Baliangao Protected Landscape and Seascape"
+  }
+},
+{
+  "type": "way",
+  "id": 1158563232,
+  "center": {
+    "lat": 14.1928676,
+    "lon": 121.0642570
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Nuvali Wildlife and Bird Sanctuary",
+    "natural": "wood"
+  }
+},
+{
+  "type": "way",
+  "id": 1167881752,
+  "center": {
+    "lat": 14.6786559,
+    "lon": 121.2467288
+  },
+  "tags": {
+    "addr:place": "Purok 5",
+    "contact:email": "GNP@mountpurronaturereserve.com",
+    "contact:phone": "+638542-3005;+639088812701",
+    "is_in": "Purok 5;Calawis;Antipolo",
+    "leisure": "nature_reserve",
+    "name": "Mount Purro Nature Reserve",
+    "note": "geometry is approximated",
+    "website": "https://www.mountpurronaturereserve.com/"
+  }
+},
+{
+  "type": "way",
+  "id": 1193569245,
+  "center": {
+    "lat": 14.0634748,
+    "lon": 121.4768443
+  },
+  "tags": {
+    "boundary": "protected_area"
+  }
+},
+{
+  "type": "way",
+  "id": 1193569246,
+  "center": {
+    "lat": 14.0192211,
+    "lon": 121.4442716
+  },
+  "tags": {
+    "boundary": "protected_area"
+  }
+},
+{
+  "type": "way",
+  "id": 1194909491,
+  "center": {
+    "lat": 13.9924056,
+    "lon": 121.8114973
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Quezon Protected Landscape",
+    "nipas_category": "protected_landscape",
+    "protect_class": "5",
+    "protection_object": "nature",
+    "protection_title": "Protected Landscape",
+    "related_law": "Republic Act No. 11038 (Year 2018)",
+    "short_name": "QPL",
+    "site_ownership": "national",
+    "type": "boundary",
+    "valid_from": "2018-06-22",
+    "wikidata": "Q923213",
+    "wikipedia": "en:Quezon Protected Landscape"
+  }
+},
+{
+  "type": "way",
+  "id": 1203073491,
+  "center": {
+    "lat": 6.9153755,
+    "lon": 126.2612209
+  },
+  "tags": {
+    "is_in:barangay": "Dahican",
+    "is_in:city": "Mati",
+    "leisure": "nature_reserve",
+    "name": "Guang-Guang Mangrove Park"
+  }
+},
+{
+  "type": "way",
+  "id": 1218684594,
+  "center": {
+    "lat": 9.6915237,
+    "lon": 123.9526235
+  },
+  "tags": {
+    "barrier": "fence",
+    "leisure": "nature_reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 1294895961,
+  "center": {
+    "lat": 14.7106742,
+    "lon": 122.3500096
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Sadong Mangroves Eco-park",
+    "tourism": "attraction"
+  }
+},
+{
+  "type": "way",
+  "id": 1317165362,
+  "center": {
+    "lat": 11.0912571,
+    "lon": 124.4373270
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fixme": "exact boundaries",
+    "leisure": "nature_reserve",
+    "name": "Palompon Watershed Forest Reserve",
+    "note": "boundaries estimated using opentopomap",
+    "protection_title": "Watershed Forest Reserve",
+    "related_law": "Proclamation No. 212 (1988)",
+    "start_date": "1988-01-29"
+  }
+},
+{
+  "type": "way",
+  "id": 1327090841,
+  "center": {
+    "lat": 11.0450591,
+    "lon": 124.3730053
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Tabuk Marine Park Fish and Bird Sanctuary",
+    "note": "boundary approximate, marked by small spherical buoys"
+  }
+},
+{
+  "type": "way",
+  "id": 1350320195,
+  "center": {
+    "lat": 10.7019943,
+    "lon": 122.5459314
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350320196,
+  "center": {
+    "lat": 10.7025375,
+    "lon": 122.5479050
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350320197,
+  "center": {
+    "lat": 10.6997936,
+    "lon": 122.5429439
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350320198,
+  "center": {
+    "lat": 10.7001915,
+    "lon": 122.5445150
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350320199,
+  "center": {
+    "lat": 10.7006157,
+    "lon": 122.5457592
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350320200,
+  "center": {
+    "lat": 10.7008773,
+    "lon": 122.5465115
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350320201,
+  "center": {
+    "lat": 10.7011241,
+    "lon": 122.5472508
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350320202,
+  "center": {
+    "lat": 10.7014430,
+    "lon": 122.5493744
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350320203,
+  "center": {
+    "lat": 10.7010859,
+    "lon": 122.5517009
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350320204,
+  "center": {
+    "lat": 10.7013314,
+    "lon": 122.5544086
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350561529,
+  "center": {
+    "lat": 10.7017096,
+    "lon": 122.5560462
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350561530,
+  "center": {
+    "lat": 10.7012840,
+    "lon": 122.5586073
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350561531,
+  "center": {
+    "lat": 10.7010531,
+    "lon": 122.5609238
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350578917,
+  "center": {
+    "lat": 10.7012427,
+    "lon": 122.5614982
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350578918,
+  "center": {
+    "lat": 10.7019591,
+    "lon": 122.5628092
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350578919,
+  "center": {
+    "lat": 10.7035762,
+    "lon": 122.5655316
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350578920,
+  "center": {
+    "lat": 10.7048441,
+    "lon": 122.5673106
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350600889,
+  "center": {
+    "lat": 10.7053299,
+    "lon": 122.5680789
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350612115,
+  "center": {
+    "lat": 10.7040823,
+    "lon": 122.5691073
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350612116,
+  "center": {
+    "lat": 10.7031902,
+    "lon": 122.5694021
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350612117,
+  "center": {
+    "lat": 10.6995537,
+    "lon": 122.5705930
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350612118,
+  "center": {
+    "lat": 10.6990243,
+    "lon": 122.5707261
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350612119,
+  "center": {
+    "lat": 10.6983854,
+    "lon": 122.5708489
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350612120,
+  "center": {
+    "lat": 10.6975351,
+    "lon": 122.5709556
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350612123,
+  "center": {
+    "lat": 10.7023074,
+    "lon": 122.5706247
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350612124,
+  "center": {
+    "lat": 10.7026027,
+    "lon": 122.5705785
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350612128,
+  "center": {
+    "lat": 10.7062817,
+    "lon": 122.5692510
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350612137,
+  "center": {
+    "lat": 10.7065335,
+    "lon": 122.5687190
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1350612138,
+  "center": {
+    "lat": 10.7064114,
+    "lon": 122.5679958
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "way",
+  "id": 1384383140,
+  "center": {
+    "lat": 6.2615529,
+    "lon": 124.7023129
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Allah Valley Watershed Forest Reserve",
+    "note": "alignment approximate",
+    "protect_class": "12",
+    "protection_title": "Watershed Forest Reserve",
+    "related_law": "Proclamation No. 2455",
+    "start_date": "1985-09-24",
+    "wikidata": "Q4705597",
+    "wikipedia": "en:Allah Valley"
+  }
+},
+{
+  "type": "way",
+  "id": 1416904941,
+  "center": {
+    "lat": 5.4089916,
+    "lon": 117.2745251
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name:en": "Tangkulap Forest Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 1416904942,
+  "center": {
+    "lat": 5.3462271,
+    "lon": 117.4810928
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Deramakot Forest Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 1416922025,
+  "center": {
+    "lat": 5.2218818,
+    "lon": 118.7052735
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Tabin Wildlife Reserve",
+    "name:ms": "Taman Hidupan Liar Tabin",
+    "name:zh": "塔宾野生动物保护区",
+    "wikidata": "Q1576324",
+    "wikipedia": "en:Tabin Wildlife Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 1418008830,
+  "center": {
+    "lat": 4.9398911,
+    "lon": 117.6910937
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Danum Valley Conservation Area"
+  }
+},
+{
+  "type": "way",
+  "id": 1419403992,
+  "center": {
+    "lat": 13.3603635,
+    "lon": 122.5342870
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "San Francisco Protected Landscape",
+    "nipas_category": "protected_landscape",
+    "old_name": "Mulanay Watershed Forest Reserve",
+    "protect_class": "5",
+    "protection_object": "nature",
+    "protection_title": "Protected Landscape",
+    "related_law": "Republic Act No. 12229 (Year 2025)",
+    "short_name": "SFPL",
+    "site_ownership": "national",
+    "valid_from": "2025-08-15"
+  }
+},
+{
+  "type": "way",
+  "id": 1427661886,
+  "center": {
+    "lat": 13.9226178,
+    "lon": 122.9483199
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Bicol Natural Park",
+    "nipas_category": "natural_park",
+    "protect_class": "2",
+    "protection_object": "nature",
+    "protection_title": "Natural Park",
+    "related_law": "Republic Act No. 11038 (Year 2018)",
+    "short_name": "BNP",
+    "site_ownership": "national",
+    "type": "boundary",
+    "valid_from": "2018-06-22",
+    "wikidata": "Q856847",
+    "wikimedia_commons": "Bicol Natural Park",
+    "wikipedia": "en:Bicol Natural Park"
+  }
+},
+{
+  "type": "way",
+  "id": 1428774912,
+  "center": {
+    "lat": 15.1814556,
+    "lon": 117.7939444
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "黄岩岛国家级自然保护区",
+    "name:en": "Huangyan Island National Nature Reserve",
+    "name:ja": "黄岩島国立自然保護区",
+    "name:zh": "黄岩岛国家级自然保护区",
+    "name:zh-Hans": "黄岩岛国家级自然保护区",
+    "name:zh-Hant": "黃岩島國家級自然保護區",
+    "source": "《国家林草局公布黄岩岛国家级自然保护区面积、范围和功能分区（国家林业和草原局公告 2025年第12号）》之附件；《国务院关于新建黄岩岛国家级自然保护区的批复（国函〔2025〕87号）》"
+  }
+},
+{
+  "type": "way",
+  "id": 1442072137,
+  "center": {
+    "lat": 9.2842074,
+    "lon": 123.6432085
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "description": "area=14 ha",
+    "fee": "yes",
+    "fixme": "geometry",
+    "name": "Tulapos Marine Sanctuary",
+    "natural": "reef",
+    "previously": "n5646691622",
+    "protect_class": "6",
+    "start_date": "1986",
+    "tourism": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1443528784,
+  "center": {
+    "lat": 14.0823235,
+    "lon": 121.3893008
+  },
+  "tags": {
+    "alt_name": "Malabanban-Cabunsod Watershed",
+    "boundary": "protected_area",
+    "name": "Malabanan Watershed Forest Reserve",
+    "nipas_category": "watershed_forest_reserve",
+    "protect_class": "12",
+    "protected_area": "watershed_reserve",
+    "protection_title": "Watershed Forest Reserve",
+    "related_law": "Proclamation No. 82 (Year 1999)",
+    "start_date": "1999-02-24"
+  }
+},
+{
+  "type": "way",
+  "id": 1443847965,
+  "center": {
+    "lat": 14.1306657,
+    "lon": 122.0401803
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "description": "Geometry derived from technical description",
+    "landuse": "reservoir_watershed",
+    "leisure": "nature_reserve",
+    "name": "Alabat Watershed Forest Reserve",
+    "related_law": "Philippine Presidential Proclamation № 156, s.1987",
+    "start_date": "1987"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644023,
+  "center": {
+    "lat": 9.0932330,
+    "lon": 123.1919490
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "12",
+    "name": "Dalakit MPA",
+    "operator": "LGU Zamboanguita",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644024,
+  "center": {
+    "lat": 9.0408320,
+    "lon": 123.0082885
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "9",
+    "name": "Salag MPA",
+    "operator": "LGU Siaton",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644025,
+  "center": {
+    "lat": 9.1098890,
+    "lon": 123.2109445
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "6",
+    "name": "Basak South MPA",
+    "operator": "LGU Zamboanguita",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644026,
+  "center": {
+    "lat": 9.0600860,
+    "lon": 123.1398540
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "11",
+    "name": "Andulay MPA",
+    "operator": "LGU Siaton",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644027,
+  "center": {
+    "lat": 9.0843820,
+    "lon": 123.1754760
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "8",
+    "name": "Latason MPA",
+    "operator": "LGU Zamboanguita",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644028,
+  "center": {
+    "lat": 9.3087160,
+    "lon": 122.8729035
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "5",
+    "name": "Cawitan Core MPA",
+    "operator": "LGU Santa Catalina",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644029,
+  "center": {
+    "lat": 9.1207540,
+    "lon": 123.2153765
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "2",
+    "name": "Malatapay MPA",
+    "operator": "LGU Zamboanguita",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644030,
+  "center": {
+    "lat": 9.0718945,
+    "lon": 123.1591485
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "7",
+    "name": "Gac-Ang Lutoban MPA",
+    "operator": "LGU Zamboanguita",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644031,
+  "center": {
+    "lat": 9.2957015,
+    "lon": 122.8736245
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "4",
+    "name": "Cawitan Buffer MPA",
+    "operator": "LGU Santa Catalina",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644032,
+  "center": {
+    "lat": 9.1394485,
+    "lon": 123.2309470
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "1",
+    "name": "Mojon MPA",
+    "operator": "LGU Zamboanguita",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644033,
+  "center": {
+    "lat": 9.2236200,
+    "lon": 122.8794150
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "3",
+    "name": "Manalongon MPA",
+    "operator": "LGU Santa Catalina",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1471644034,
+  "center": {
+    "lat": 9.1019315,
+    "lon": 123.2077430
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fid": "10",
+    "name": "Guinsan MPA",
+    "operator": "LGU Zamboanguita",
+    "protect_class": "4",
+    "protection_title": "Marine Sanctuary",
+    "source": "Marine Conservation Phillipines"
+  }
+},
+{
+  "type": "way",
+  "id": 1488466921,
+  "center": {
+    "lat": 14.3995661,
+    "lon": 120.8986162
+  },
+  "tags": {
+    "alt_name": "Lancaster General Trias Retarding Basin 2",
+    "basin": "detention",
+    "boundary": "protected_area",
+    "name": "General Trias Retarding Basin 2",
+    "natural": "water",
+    "official_name": "General Trias Retarding Basin II",
+    "protect_class": "15",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 1498358632,
+  "center": {
+    "lat": 7.0273218,
+    "lon": 125.3785032
+  },
+  "tags": {
+    "access": "private",
+    "addr:barangay": "Eden",
+    "addr:city": "Davao City",
+    "addr:district": "Toril District",
+    "addr:place": "Sitio Bombaran",
+    "addr:postcode": "8000",
+    "addr:province": "Davao del Sur",
+    "contact:website": "https://www.philippineeaglefoundation.org/",
+    "leisure": "nature_reserve",
+    "name": "National Bird Breeding Sanctuary",
+    "operator": "Philippiine Eagle Foundation",
+    "operator:short": "PEF",
+    "operator:type": "ngo",
+    "short_name": "NBBS"
+  }
+},
+{
+  "type": "way",
+  "id": 1503613447,
+  "center": {
+    "lat": 6.1216591,
+    "lon": 116.2678607
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Tamparuli Domestic Forest",
+    "old_name": "Tamparuli Protection Forest",
+    "operator": "SFD",
+    "protect_class": "5",
+    "protection_title": "Domestic Forest",
+    "source": "https://sabaes.sabah.gov.my/about/resource-manager",
+    "start_date": "2014"
+  }
+},
+{
+  "type": "way",
+  "id": 1509233769,
+  "center": {
+    "lat": 4.4547644,
+    "lon": 118.1258696
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Mount Wullersdorf Forest Reserve",
+    "operator": "Sabah Forestry Department (SFD)",
+    "protect_class": "1a",
+    "protection_title": "National Forest",
+    "start_date": "1992"
+  }
+},
+{
+  "type": "way",
+  "id": 1509626853,
+  "center": {
+    "lat": 4.6243013,
+    "lon": 118.7330178
+  },
+  "tags": {
+    "alt_name": "Semporna Islands Park",
+    "boundary": "protected_area",
+    "name": "Taman Marin Tun Sakaran",
+    "name:en": "Tun Sakaran Marine Park",
+    "name:ms": "Taman Marin Tun Sakaran",
+    "name:zh": "敦沙卡兰海洋公园",
+    "name:zh-Hans": "敦沙卡兰海洋公园",
+    "name:zh-Hant": "敦沙卡蘭海洋公園",
+    "operator": "Sabah Parks",
+    "protect_class": "5",
+    "protection_title": "Marine Park",
+    "start_date": "2004",
+    "website": "https://www.sabahparks.org.my/index.php/the-parks/tun-sakaran-marine-park",
+    "wikidata": "Q7852775",
+    "wikipedia": "en:Tun Sakaran Marine Park"
+  }
+},
+{
+  "type": "way",
+  "id": 1510002652,
+  "center": {
+    "lat": 4.5687722,
+    "lon": 118.4200929
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Segarong Forest Reserve",
+    "operator": "Sabah Forestry Department (SFD)",
+    "protect_class": "Ia",
+    "protection_title": "Forest Reserve"
+  }
+},
+{
+  "type": "way",
+  "id": 1547632783,
+  "center": {
+    "lat": 9.2548349,
+    "lon": 126.1125675
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Lanuza Marine Park and Sanctuary",
+    "operator": "Muncipality of Lanuza"
+  }
+},
+{
+  "type": "way",
+  "id": 1549258518,
+  "center": {
+    "lat": 12.8065431,
+    "lon": 123.4573520
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Ticao-Burias Pass Protected Seascape"
+  }
+},
+{
+  "type": "relation",
+  "id": 1588398,
+  "center": {
+    "lat": 14.7431614,
+    "lon": 121.1020258
+  },
+  "tags": {
+    "alt_name": "Novaliches Watershed",
+    "fixme": "improve boundary alignment, currently it follows admin boundaries instead of actual watershed outline",
+    "landuse": "reservoir_watershed",
+    "leisure": "nature_reserve",
+    "name": "La Mesa Watershed Reservation",
+    "type": "multipolygon",
+    "wikidata": "Q21190750",
+    "wikipedia": "en:La Mesa Watershed Reservation"
+  }
+},
+{
+  "type": "relation",
+  "id": 2421478,
+  "center": {
+    "lat": 16.6109257,
+    "lon": 120.2842759
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 3080552,
+  "center": {
+    "lat": 15.5247728,
+    "lon": 119.9146744
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Masinloc and Oyon Bay Protected Landscape and Seascape",
+    "nipas_category": "marine reserve",
+    "protect_class": "7",
+    "related_law": "Presidential Proclamation № 231 s. 1993;Republic Act № 11038",
+    "source": "PBCPP, 2002",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 3319945,
+  "center": {
+    "lat": 14.5738901,
+    "lon": 121.0977925
+  },
+  "tags": {
+    "addr:city": "Pasig",
+    "addr:street": "F. Legaspi Street",
+    "alt_name": "Pasig City Rainforest Park",
+    "boundary": "protected_area",
+    "governance_type": "government_managed",
+    "landuse": "recreation_ground",
+    "leisure": "nature_reserve",
+    "name": "Maybunga Rainforest Park",
+    "old_name": "Pasig Central Park;Pasig City Rainforest Adventure Experience;Pasig City RAVE",
+    "opening_hours": "Mo-Su 08:00-17:00",
+    "operator": "Pasig City Government",
+    "operator:type": "public",
+    "protect_class": "21",
+    "related_law": "Pasig City Ordinance № 6, s. 2023 (Pasig City Rainforest Park Ordinance)",
+    "site_ownership": "municipal",
+    "type": "multipolygon",
+    "wikidata": "Q28450836",
+    "wikipedia": "en:Pasig Rainforest Park"
+  }
+},
+{
+  "type": "relation",
+  "id": 3515342,
+  "center": {
+    "lat": 12.6713889,
+    "lon": 120.4793055
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Apo Reef Natural Park Buffer Zone",
+    "note": "Senate Bill 2393 official boundaries",
+    "protection_title": "buffer zone",
+    "type": "boundary"
+  }
+},
+{
+  "type": "relation",
+  "id": 4028421,
+  "center": {
+    "lat": 8.8959664,
+    "lon": 119.9105402
+  },
+  "tags": {
+    "area": "yes",
+    "boundary": "protected_area",
+    "name": "Tubbataha Reefs Natural Park Buffer Zone",
+    "note": "Republic Act 10067 Tubbataha Reefs National Park (TRNP) Act of 2009",
+    "protection_title": "buffer zone",
+    "type": "boundary"
+  }
+},
+{
+  "type": "relation",
+  "id": 4674422,
+  "center": {
+    "lat": 14.4972336,
+    "lon": 120.9845068
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "salt": "no",
+    "tidal": "yes",
+    "type": "multipolygon",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "relation",
+  "id": 4701235,
+  "center": {
+    "lat": 14.4894512,
+    "lon": 120.9774041
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "type": "multipolygon",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "relation",
+  "id": 4701238,
+  "center": {
+    "lat": 14.4837044,
+    "lon": 120.9736659
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "natural": "wetland",
+    "type": "multipolygon",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "relation",
+  "id": 6019752,
+  "center": {
+    "lat": 8.3023810,
+    "lon": 125.8614905
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Agusan Marsh Wildlife Sanctuary",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 6320415,
+  "center": {
+    "lat": 6.0008522,
+    "lon": 116.0227450
+  },
+  "tags": {
+    "boundary": "national_park",
+    "leisure": "nature_reserve",
+    "name": "Tunku Abdul Rahman National Park",
+    "name:zh": "东姑阿都拉曼国家公园",
+    "type": "boundary",
+    "wikidata": "Q1097024",
+    "wikipedia": "en:Tunku Abdul Rahman National Park"
+  }
+},
+{
+  "type": "relation",
+  "id": 7030137,
+  "center": {
+    "lat": 20.6840736,
+    "lon": 116.8088489
+  },
+  "tags": {
+    "boundary": "national_park",
+    "governance_type": "government_manages",
+    "leisure": "nature_reserve",
+    "name": "東沙環礁國家公園",
+    "name:de": "Nationalpark Dongsha-Atoll",
+    "name:en": "Dongsha Atoll National Park",
+    "name:zh": "東沙環礁國家公園",
+    "operator": "內政部營建署海洋國家公園管理處",
+    "protect_class": "2",
+    "protection_title": "國家公園",
+    "related_law": "國家公園法",
+    "site_ownership": "public",
+    "start_date": "2007-01-17",
+    "type": "boundary",
+    "website": "https://www.marine.gov.tw/",
+    "wikidata": "Q5296018",
+    "wikipedia": "zh:東沙環礁國家公園"
+  }
+},
+{
+  "type": "relation",
+  "id": 7122504,
+  "center": {
+    "lat": 20.7037326,
+    "lon": 116.7192409
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "governance_type": "government_manages",
+    "leisure": "nature_reserve",
+    "name": "東沙島潟湖特別景觀區",
+    "name:en": "Dongsha Island Lagoon Special Scenic Area",
+    "operator": "內政部營建署海洋國家公園管理處",
+    "protect_class": "2",
+    "protection_title": "國家公園特別景觀區",
+    "related_law": "國家公園法",
+    "site_ownership": "public",
+    "start_date": "2007-01-17",
+    "type": "boundary"
+  }
+},
+{
+  "type": "relation",
+  "id": 7122505,
+  "center": {
+    "lat": 20.6916667,
+    "lon": 116.7083334
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "governance_type": "government_manages",
+    "leisure": "nature_reserve",
+    "name": "南北水道及東沙島周邊海域特別景觀區",
+    "name:en": "Special Landscape Area for the North and South Watercourses and the Surrounding Waters of Dongsha Island",
+    "operator": "內政部營建署海洋國家公園管理處",
+    "protect_class": "2",
+    "protection_title": "國家公園海域特別景觀區",
+    "related_law": "國家公園法",
+    "site_ownership": "public",
+    "start_date": "2007-01-17",
+    "type": "boundary"
+  }
+},
+{
+  "type": "relation",
+  "id": 7122506,
+  "center": {
+    "lat": 20.6916667,
+    "lon": 116.8500000
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "governance_type": "government_manages",
+    "leisure": "nature_reserve",
+    "name": "環礁海域生態保護區",
+    "operator": "內政部營建署海洋國家公園管理處",
+    "protect_class": "1",
+    "protection_title": "國家公園海域生態保護區",
+    "related_law": "國家公園法",
+    "site_ownership": "public",
+    "start_date": "2007-01-17",
+    "type": "boundary"
+  }
+},
+{
+  "type": "relation",
+  "id": 7137867,
+  "center": {
+    "lat": 16.8848830,
+    "lon": 121.0069953
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "crop": "rice",
+    "ethnic_group": "Ifugao peoples",
+    "heritage": "1",
+    "heritage:operator": "whc",
+    "landuse": "farmland",
+    "name": "Hungduan Rice Terraces",
+    "produce": "rice",
+    "protect_class": "5",
+    "protection_object": "cultural landscape",
+    "protection_title": "World Heritage Site",
+    "ref:whc": "722",
+    "site_ownership": "community",
+    "source": "https://whc.unesco.org/en/list/722;local knowledge",
+    "type": "multipolygon",
+    "whc:criteria": "(iii),(iv),(v)",
+    "whc:inscription_date": "1995"
+  }
+},
+{
+  "type": "relation",
+  "id": 7419396,
+  "center": {
+    "lat": 11.0253425,
+    "lon": 123.5091551
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Sagay Marine Reserve",
+    "natural": "reef",
+    "operator": "Protected Area Management Board",
+    "protect_class": "Marine Reserve",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 7427513,
+  "center": {
+    "lat": 9.8728766,
+    "lon": 122.3768165
+  },
+  "tags": {
+    "contact:email": "experience@danjuganisland.ph",
+    "contact:phone": "+639085254108; +639152347145",
+    "contact:website": "http://danjuganisland.ph",
+    "description": "tags in parent relation",
+    "leisure": "nature_reserve",
+    "operator": "Philippine Reef and Rainforest Conservation Foundation",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 7575218,
+  "center": {
+    "lat": 16.7754023,
+    "lon": 121.0586421
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "crop": "rice",
+    "description": "One of the 5 terraces clusters of the Rice Terraces of the Philippine Cordilleras",
+    "ethnic_group": "Ifugao peoples",
+    "heritage": "1",
+    "heritage:operator": "whc",
+    "name": "Nagacadan Rice Terraces",
+    "produce": "rice",
+    "protect_class": "5",
+    "protected": "yes",
+    "protection_object": "cultural landscape",
+    "protection_title": "World Heritage Site",
+    "ref:whc": "722",
+    "site:type": "heritage",
+    "site_ownership": "community",
+    "source": "https://whc.unesco.org/en/list/722;local knowledge",
+    "type": "multipolygon",
+    "whc:criteria": "(iii),(iv),(v)",
+    "whc:inscription_date": "1995",
+    "wikidata": "Q29908614"
+  }
+},
+{
+  "type": "relation",
+  "id": 7598641,
+  "center": {
+    "lat": 14.5802338,
+    "lon": 121.0125612
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "heritage": "2",
+    "heritage:operator": "nhcp",
+    "historic": "heritage",
+    "name": "Santa Ana Heritage Zone",
+    "protect_class": "22",
+    "start_date": "2014-05-12",
+    "type": "boundary",
+    "wikidata": "Q40734701"
+  }
+},
+{
+  "type": "relation",
+  "id": 7628655,
+  "center": {
+    "lat": 16.9101620,
+    "lon": 121.1215974
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "crop": "rice",
+    "description": "One of the 5 terraces clusters of the Rice Terraces of the Philippine Cordilleras",
+    "heritage": "1",
+    "heritage:operator": "whc",
+    "international_convention": "World Heritage Site",
+    "landuse": "farmland",
+    "name": "Bangaan Rice Terraces",
+    "name:fr": "Rizières en terrasses des cordillères des Philippines",
+    "produce": "rice",
+    "protect_class": "5, 98;cultural landscape",
+    "protected_area": "yes",
+    "ref:whc": "722",
+    "site:type": "heritage",
+    "source": "https://whc.unesco.org/en/list/722;local knowledge",
+    "type": "multipolygon",
+    "whc:criteria": "(iii),(iv),(v)",
+    "whc:inscription_date": "1995",
+    "wikidata": "Q29908600"
+  }
+},
+{
+  "type": "relation",
+  "id": 8167057,
+  "center": {
+    "lat": 16.9314268,
+    "lon": 121.1350659
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "crop": "rice",
+    "heritage": "1",
+    "heritage:operator": "whc",
+    "international_convention": "World Heritage Site",
+    "landuse": "farmland",
+    "name": "Batad Rice Terraces",
+    "official_name": "Rice Terraces of the Philippines Cordilleras",
+    "protect_class": "98",
+    "ref:whc": "722",
+    "source": "https://whc.unesco.org/en/list/722",
+    "tourism": "yes",
+    "type": "boundary",
+    "whc:criteria": "(iii),(iv),(v)",
+    "whc:inscription_date": "1995"
+  }
+},
+{
+  "type": "relation",
+  "id": 8171344,
+  "center": {
+    "lat": 16.9633915,
+    "lon": 121.2227185
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "crop": "rice",
+    "description": "One of the 5 terraces clusters of the Rice Terraces of the Philippine Cordilleras",
+    "ethnic_group": "Ifugao peoples",
+    "heritage": "1",
+    "heritage:operator": "whc",
+    "landuse": "farmland",
+    "name": "Mayoyao Rice Terraces",
+    "produce": "rice",
+    "protect_class": "5",
+    "protected": "yes",
+    "protection_object": "cultural landscape",
+    "protection_title": "World Heritage Site",
+    "ref:whc": "722",
+    "site:type": "heritage",
+    "site_ownership": "community",
+    "source": "https://whc.unesco.org/en/list/722;local knowledge",
+    "type": "multipolygon",
+    "whc:criteria": "(iii),(iv),(v)",
+    "whc:inscription_date": "1995",
+    "wikidata": "Q29908605"
+  }
+},
+{
+  "type": "relation",
+  "id": 8732513,
+  "center": {
+    "lat": 14.2781300,
+    "lon": 120.9678195
+  },
+  "tags": {
+    "addr:city": "Dasmariñas",
+    "addr:country": "PH",
+    "addr:housenumber": "60A-27",
+    "addr:neighbourhood": "Washington Place",
+    "addr:postcode": "4114",
+    "addr:province": "Cavite",
+    "addr:street": "New Orleans",
+    "addr:village": "Sampaloc 2",
+    "blind:description:en": "Warning!: Several steps without any handrails could cause serious injury, and special assistance required.",
+    "boundary": "protected_area",
+    "fine:smoking": "10,000 PHP",
+    "garden:type": "community",
+    "landuse": "allotments",
+    "leisure": "garden",
+    "lit": "yes",
+    "name": "Washington Place Serenity Garden",
+    "note": "Known issue: No barrier-free design for wheelchair",
+    "opening_hours": "24/7",
+    "operator": "Washington Place Homeowners' Association, Inc.",
+    "operator:type": "association",
+    "owner": "Washington Place Homeowners' Association, Inc.",
+    "previously": "way:490996227",
+    "protect_class": "21",
+    "smoking": "no",
+    "source": "DP24 Integrated Media;WPHOAI",
+    "type": "multipolygon",
+    "wheelchair": "no",
+    "wheelchair:description:en": "Warning!: No wheelchair accessibility on this garden."
+  }
+},
+{
+  "type": "relation",
+  "id": 9079816,
+  "center": {
+    "lat": 8.3100915,
+    "lon": 123.6624044
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Mount Malindang Range Natural Park",
+    "natural": "wood",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 9223438,
+  "center": {
+    "lat": 16.5145939,
+    "lon": 121.1324771
+  },
+  "tags": {
+    "area": "yes",
+    "leisure": "nature_reserve",
+    "name": "Bangan Hill National Park",
+    "source": "Republic Act No. 7954",
+    "type": "multipolygon",
+    "wikidata": "Q806458",
+    "wikipedia": "en:Bangan Hill National Park"
+  }
+},
+{
+  "type": "relation",
+  "id": 9521056,
+  "center": {
+    "lat": 10.4492397,
+    "lon": 123.1528395
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Mount Kanlaon Natural Park",
+    "name:es": "Parque Nacional de Monte Canlaón",
+    "name:hil": "Palaliwaliwahang Kinatubo sang Bolkang Kanlaon",
+    "name:id": "Taman Nasional Gunung api Kanlaon",
+    "name:ja": "カンラオン火山自然公園",
+    "name:ja-Latn": "Kanraon-kazan shizen kōen",
+    "name:ms": "Taman Negara Gunung api Kanlaon",
+    "name:tl": "Liwasang Likas ng Bulkang Kanlaon",
+    "name:zh": "坎拉翁火山自然公園",
+    "name:zh-Hans": "坎拉翁火山自然公园",
+    "name:zh-Latn": "Kǎnlāwēng huǒshān zìrán gōngyuán",
+    "source": "PBCPP, 2002",
+    "type": "multipolygon",
+    "wikidata": "Q1723814",
+    "wikipedia": "en:Kanlaon"
+  }
+},
+{
+  "type": "relation",
+  "id": 9664856,
+  "center": {
+    "lat": 8.4240961,
+    "lon": 124.7036179
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fixme": "boundary is only a guess, align with actual boundary",
+    "leisure": "nature_reserve",
+    "name": "Mapawa Nature Park",
+    "type": "boundary"
+  }
+},
+{
+  "type": "relation",
+  "id": 10002721,
+  "center": {
+    "lat": 6.1627388,
+    "lon": 118.0821793
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Turtle Islands Park",
+    "name:es": "Parque nacional de las Islas Tortuga",
+    "name:ms": "Taman Kepulauan Penyu",
+    "operator": "Sabah Parks",
+    "type": "multipolygon",
+    "website": "https://www.sabahparks.org.my/index.php/the-parks/turtle-islands-park",
+    "wikidata": "Q2780219",
+    "wikipedia": "en:Parque nacional de las Islas Tortuga"
+  }
+},
+{
+  "type": "relation",
+  "id": 10095068,
+  "center": {
+    "lat": 11.9629829,
+    "lon": 120.1800375
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fishing": "no",
+    "name": "CYC Marine Protected Area",
+    "name:etymology": "Coron Youth Club",
+    "natural": "reef",
+    "protect_class": "14",
+    "short_name": "CYC MPA",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 11023308,
+  "center": {
+    "lat": 4.2502446,
+    "lon": 126.7938139
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Suaka Margasatwa Karakelang",
+    "name:en": "Karakelang Wildlife Reserve",
+    "natural": "wood",
+    "operator": "Balai Besar Konservasi Sumber Daya Alam Sulawesi Selatan",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 11292730,
+  "center": {
+    "lat": 6.2301585,
+    "lon": 118.2940290
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Turtle Islands Wildlife Sanctuary",
+    "name:de": "Wildschutzgebiet Schildkröteninseln",
+    "nipas_category": "wildlife sanctuary",
+    "source": "PBCPP, 2002",
+    "type": "boundary",
+    "wikidata": "Q108208399",
+    "wikipedia": "en:Turtle Islands Wildlife Sanctuary"
+  }
+},
+{
+  "type": "relation",
+  "id": 12686506,
+  "center": {
+    "lat": 14.3538463,
+    "lon": 120.8873403
+  },
+  "tags": {
+    "alt_name": "Lancaster General Trias Retarding Basin 1",
+    "basin": "detention",
+    "boundary": "protected_area",
+    "name": "General Trias Retarding Basin 1",
+    "natural": "water",
+    "official_name": "General Trias Retarding Basin I",
+    "protect_class": "15",
+    "type": "multipolygon",
+    "water": "basin"
+  }
+},
+{
+  "type": "relation",
+  "id": 13050256,
+  "center": {
+    "lat": 10.8219731,
+    "lon": 122.9503469
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Balaring Mangrove Eco-tourism Park",
+    "natural": "wetland",
+    "tourism": "yes",
+    "type": "multipolygon",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "relation",
+  "id": 13258147,
+  "center": {
+    "lat": 14.4197672,
+    "lon": 120.9476816
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Buhay na Tubig Retention Basin",
+    "natural": "water",
+    "protect_class": "15",
+    "type": "multipolygon",
+    "water": "basin"
+  }
+},
+{
+  "type": "relation",
+  "id": 13317199,
+  "center": {
+    "lat": 9.9665167,
+    "lon": 124.0224142
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Clarin Mangrove Eco-tour",
+    "source": "DTI GIZ Private Sector Promotion Program (SMEDSEP)",
+    "source:name": "extrapolated from OSMaPaaralan, node/1758067854",
+    "tourism": "yes",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 13325617,
+  "center": {
+    "lat": 10.2257626,
+    "lon": 124.3859021
+  },
+  "tags": {
+    "admin_level": "6",
+    "boundary": "protected_area",
+    "description": "Giant Clam protected area",
+    "name": "Talibon Marine Wildlife Sanctuary and Park",
+    "note": "2021-10. Estimated outline based on buoys from imagery.",
+    "type": "boundary"
+  }
+},
+{
+  "type": "relation",
+  "id": 13592467,
+  "center": {
+    "lat": 16.3967217,
+    "lon": 120.6062187
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "landuse": "reservoir_watershed",
+    "name": "Hillside Barangay Watershed",
+    "related_law": "Baguio City Ordinance No. 18 S. 2016 A.19 S. 110 PA. 5",
+    "type": "boundary"
+  }
+},
+{
+  "type": "relation",
+  "id": 13880181,
+  "center": {
+    "lat": 9.1022477,
+    "lon": 123.5579622
+  },
+  "tags": {
+    "description": "\"Marine reserve\"",
+    "leisure": "nature_reserve",
+    "note:2022": "Extent is based on buoys visible in aerial imagery.",
+    "previously": "node:5618801623",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 13887430,
+  "center": {
+    "lat": 9.1319400,
+    "lon": 124.7974970
+  },
+  "tags": {
+    "addr:street": "Camiguin Circumferential Road",
+    "leisure": "nature_reserve",
+    "name": "Katunggan Park",
+    "natural": "wetland",
+    "previously": "node:5630475021",
+    "tourism": "attraction",
+    "type": "multipolygon",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "relation",
+  "id": 13990879,
+  "center": {
+    "lat": 11.4927491,
+    "lon": 119.8724078
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "description": "reef, marine protected area, local tourism office tries to charge an admission fee of 250 Piso pp",
+    "fixme": "name;geometry",
+    "name": "Linapacan Marine Protected Area",
+    "natural": "reef",
+    "previously": "node:503170100",
+    "protect_class": "6",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 14008965,
+  "center": {
+    "lat": 12.2431520,
+    "lon": 121.9823715
+  },
+  "tags": {
+    "alt_name": "Looc Fish Sanctuary",
+    "boundary": "protected_area",
+    "name": "Looc Bay Marine Refuge & Sanctuary",
+    "protect_class": "6",
+    "short_name": "Looc Marine Sanctuary",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 14012770,
+  "center": {
+    "lat": 14.1350306,
+    "lon": 120.5888330
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fishing": "no",
+    "fixme": "related_law",
+    "leisure": "nature_reserve",
+    "note": "a local, community-based marine sanctuary for biodiversity conservation, also for propagating giant clams (\"kimo\", \"taclobo\") for dispersion to other parts of the municipality.",
+    "protect_class": "14",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 14027350,
+  "center": {
+    "lat": 8.5489778,
+    "lon": 124.3201153
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Initao-Libertad Protected Landscape and Seascape",
+    "operator": "DENR",
+    "protect_class": "6",
+    "related_law": "Proclamation № 260, s. 2002",
+    "related_law:url": "https://www.officialgazette.gov.ph/2002/09/16/proclamation-no-260-s-2002",
+    "type": "multipolygon",
+    "wikidata": "Q23305742",
+    "wikipedia": "en:Initao–Libertad Protected Landscape and Seascape"
+  }
+},
+{
+  "type": "relation",
+  "id": 14065420,
+  "center": {
+    "lat": 9.1883379,
+    "lon": 123.5888232
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "landuse": "forest",
+    "loc_name": "Mount Bandilaan Natural Park",
+    "name": "Mount Bandilaan Nature Park",
+    "note": "Managed by the DENR, and as of 2025, this area has not been proclaimed as a \"natural park.\" There are a number of proposals, but no law has been passed to that effect.",
+    "official_name": "Siquijor Forest Reserve",
+    "protect_class": "5",
+    "related_law": "Philippine Presidential Proclamation № 523, s.1940",
+    "related_law:url": "https://lawphil.net/executive/proc/proc1940/proc_523_1940.html",
+    "relation": "14065420",
+    "size": "212 ha",
+    "start_date": "1940-03-12",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 14078634,
+  "center": {
+    "lat": 7.8011498,
+    "lon": 123.2697608
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "fixme": "verify boundary",
+    "leisure": "nature_reserve",
+    "name": "Mount Timolan Protected Landscape",
+    "old_name": "Zamboanga del Sur Provincial Park",
+    "operator": "Department of Environment and Natural Resources",
+    "operator:short": "DENR",
+    "operator:type": "government",
+    "operator:wikidata": "Q3277331",
+    "protect_class": "5",
+    "protection_title": "Protected Landscape",
+    "related_law": "Proclamation Order No. 354",
+    "start_date": "2000-08-14",
+    "type": "boundary",
+    "wikidata": "Q19830645",
+    "wikipedia": "en:Mount Timolan Protected Landscape"
+  }
+},
+{
+  "type": "relation",
+  "id": 14196693,
+  "center": {
+    "lat": 13.1364619,
+    "lon": 121.4731919
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Calima Mangrove Park",
+    "natural": "wetland",
+    "tourism": "yes",
+    "type": "multipolygon",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "relation",
+  "id": 14240928,
+  "center": {
+    "lat": 9.7318920,
+    "lon": 123.8729042
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Postan Mangrove Forest",
+    "natural": "wetland",
+    "previously": "node:1758102199",
+    "source": "DTI GIZ Private Sector Promotion Program (SMEDSEP)",
+    "type": "multipolygon",
+    "wetland": "mangrove"
+  }
+},
+{
+  "type": "relation",
+  "id": 14268365,
+  "center": {
+    "lat": 11.0083249,
+    "lon": 124.5695508
+  },
+  "tags": {
+    "addr:city": "Ormoc",
+    "addr:postcode": "6541",
+    "addr:street": "Purok 8",
+    "addr:village": "Naungan",
+    "alt_name": "NSJMPA Mangrove Park",
+    "description": "It is a place you can hang out with friends, family, and a lover.",
+    "leisure": "nature_reserve",
+    "name": "Nungan Mangrove Eco Park",
+    "opening_hours": "24/7",
+    "operator": "Naungan San Juan Mangrove Planters Association",
+    "operator:type": "community",
+    "previously": "way:995100061",
+    "type": "multipolygon",
+    "was:landuse": "residential"
+  }
+},
+{
+  "type": "relation",
+  "id": 14412298,
+  "center": {
+    "lat": 5.8435092,
+    "lon": 117.9573849
+  },
+  "tags": {
+    "leisure": "nature_reserve",
+    "name": "Kabili-Sepilok Forest Reserve",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 14455407,
+  "center": {
+    "lat": 7.8800456,
+    "lon": 125.0708595
+  },
+  "tags": {
+    "landuse": "forest",
+    "leisure": "nature_reserve",
+    "name": "Mount Musuan Zoological and Botanical Garden",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 14735082,
+  "center": {
+    "lat": 13.7042061,
+    "lon": 120.8795644
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "note": "approximate, fix borders",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 15048955,
+  "center": {
+    "lat": 11.0727734,
+    "lon": 124.6984020
+  },
+  "tags": {
+    "description": "designated as Natural Park at National level in 2018. It covers 22.58 km2.",
+    "leisure": "nature_reserve",
+    "name": "Lake Danao Natural Park",
+    "operator": "DENR-PAMB",
+    "type": "multipolygon",
+    "wikidata": "Q1159272",
+    "wikipedia": "en:Lake Danao (Leyte)"
+  }
+},
+{
+  "type": "relation",
+  "id": 15057167,
+  "center": {
+    "lat": 8.3024102,
+    "lon": 125.8614905
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "description": "Category: NIPAS Wildlife Sanctuary",
+    "leisure": "nature_reserve",
+    "name": "Agusan Marsh Wildlife Sanctuary",
+    "note": "Sec. 3, SBN 1044, 2013",
+    "source:ref": "www.senate.gov.ph/lis/bill_res.aspx?congress=15&q=SBN-3265",
+    "type": "multipolygon",
+    "wikidata": "Q398765",
+    "wikipedia": "en:Agusan Marsh Wildlife Sanctuary"
+  }
+},
+{
+  "type": "relation",
+  "id": 15087417,
+  "center": {
+    "lat": 12.6113974,
+    "lon": 124.4131968
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "magic_wand": "yes",
+    "name": "Biri-LaRoSa Protected Landscape and Seascapes",
+    "protect_class": "6",
+    "related_law": "Philippine Republic Act №s 7586, 11038",
+    "source": "interpolation",
+    "type": "multipolygon",
+    "wikidata": "Q24957430",
+    "wikimedia_commons": "Category:Biri Larosa Protected Landscape and Seascape"
+  }
+},
+{
+  "type": "relation",
+  "id": 15100639,
+  "center": {
+    "lat": 8.6799092,
+    "lon": 123.4116201
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "José Rizal Memorial Protected Landscape",
+    "protect_class": "6",
+    "related_law": "Presidential Proclamation № 279, s. 2000",
+    "related_law:url": "https://officialgazette.gov.ph/2000/04/23/proclamation-no-279-s-2000",
+    "source": "extrapolation",
+    "start_date": "2000-04-23",
+    "type": "boundary",
+    "wikidata": "Q1704121",
+    "wikimedia_commons": "Category:Rizal Shrine, Dapitan City",
+    "wikipedia": "en:José Rizal Memorial Protected Landscape"
+  }
+},
+{
+  "type": "relation",
+  "id": 15100961,
+  "center": {
+    "lat": 9.7271007,
+    "lon": 124.2056482
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Rajah Sikatuna Protected Landscape",
+    "nipas_category": "protected landscape",
+    "protect_class": "2",
+    "related_law": "Presidential Proclamation № 129, s. 1987;Presidential Proclamation № 287, s. 2000",
+    "source": "PBCPP, 2002",
+    "type": "multipolygon",
+    "wikidata": "Q1330147",
+    "wikipedia": "en:Rajah Sikatuna Protected Landscape"
+  }
+},
+{
+  "type": "relation",
+  "id": 15100962,
+  "center": {
+    "lat": 9.8318943,
+    "lon": 124.1379473
+  },
+  "tags": {
+    "description": "Designated as Natural Monument at National level in 1988. It covers 140.89 km2.",
+    "leisure": "nature_reserve",
+    "name": "Chocolate Hills Natural Monument",
+    "type": "multipolygon",
+    "wikidata": "Q977422",
+    "wikipedia": "en:Chocolate Hills"
+  }
+},
+{
+  "type": "relation",
+  "id": 15426219,
+  "center": {
+    "lat": 6.6800998,
+    "lon": 124.0345676
+  },
+  "tags": {
+    "addr:barangay": "Taguisa",
+    "addr:city": "Lebak",
+    "addr:postcode": "9807",
+    "addr:province": "Sultan Kudarat",
+    "attraction": "yes",
+    "contact:facebook": "https://www.facebook.com/lebakecopark",
+    "leisure": "nature_reserve",
+    "name": "Katunggan Coastal Eco Park",
+    "note": "Boundary of the eco park is larger, but no additonal information is available.",
+    "official_name": "Lebak Katunggan Coastal Eco Park",
+    "operator": "Municipality of Lebak",
+    "operator:type": "government",
+    "operator:wikidata": "Q173460",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 15695944,
+  "center": {
+    "lat": 15.6479823,
+    "lon": 120.3127611
+  },
+  "tags": {
+    "contact:email": "lgusanclemente@gmail.com",
+    "is_in": "Canding;Maasin;San ClementeTarlac",
+    "leisure": "nature_reserve",
+    "name": "Canding Eco-Tourism Park",
+    "phone": "+63459341244",
+    "type": "multipolygon",
+    "website": "https://sanclementetarlac.gov.ph/"
+  }
+},
+{
+  "type": "relation",
+  "id": 15695945,
+  "center": {
+    "lat": 15.6061788,
+    "lon": 120.3249114
+  },
+  "tags": {
+    "addr:city": "San Jose",
+    "addr:postcode": "2304",
+    "leisure": "nature_reserve",
+    "name": "Calao Nature Reserve",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 16145806,
+  "center": {
+    "lat": 14.0634748,
+    "lon": 121.4768443
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "name": "Mounts Banahaw–San Cristobal Protected Landscape",
+    "nipas_category": "protected_landscape",
+    "protect_class": "5",
+    "protection_object": "nature",
+    "protection_title": "Protected Landscape",
+    "related_law": "Proclamation No. 411 (Year 2003)",
+    "short_name": "MBSCPL",
+    "site_ownership": "national",
+    "type": "boundary",
+    "valid_from": "2003-06-25",
+    "wikidata": "Q20031360"
+  }
+},
+{
+  "type": "relation",
+  "id": 16859126,
+  "center": {
+    "lat": 14.8234944,
+    "lon": 120.6075422
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leisure": "nature_reserve",
+    "name": "Sasmuan Pampanga Coastal Wetlands",
+    "ramsar": "yes",
+    "type": "boundary",
+    "wikidata": "Q106513411"
+  }
+},
+{
+  "type": "relation",
+  "id": 18634581,
+  "center": {
+    "lat": 10.6946615,
+    "lon": 122.5716683
+  },
+  "tags": {
+    "alt_name": "Historic Commercial District of Iloilo",
+    "alt_name:en": "Calle Real Heritage Zone",
+    "alt_name:tl": "Makasaysayang Distrito Komersyo ng Iloilo",
+    "boundary": "protected_area",
+    "heritage": "2",
+    "heritage:operator": "nhcp",
+    "historic": "heritage",
+    "name": "Iloilo Central Business District",
+    "protect_class": "22",
+    "start_date": "2014-06-16",
+    "type": "boundary",
+    "wikidata": "Q44755371",
+    "wikipedia": "en:Iloilo Central Business District"
+  }
+},
+{
+  "type": "relation",
+  "id": 19166636,
+  "center": {
+    "lat": 12.2569972,
+    "lon": 124.4961690
+  },
+  "tags": {
+    "boundary": "protected_area",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "broadleaved",
+    "name": "Calbayog Pan-as–Hayiban Protected Landscape",
+    "natural": "wood",
+    "old_name": "Pan-as Falls–Hayiban Watershed Forest Reserve",
+    "operator": "Protected Area Management Board",
+    "operator:short": "PAMB",
+    "operator:type": "government",
+    "protect_class": "2",
+    "short_name": "CPHPL",
+    "start_date": "1967-12-15",
+    "type": "multipolygon",
+    "wikidata": "Q23048132",
+    "wikipedia": "en:Calbayog Pan-as–Hayiban Protected Landscape"
+  }
+},
+{
+  "type": "relation",
+  "id": 19224649,
+  "center": {
+    "lat": 14.0106454,
+    "lon": 120.9931317
+  },
+  "tags": {
+    "alt_name": "Taal Volcano Natural Park",
+    "description": "covers 4537ha",
+    "leisure": "nature_reserve",
+    "name": "Taal Volcano National Park",
+    "protect_class": "2",
+    "source": "https://visitphilippines.org/taal-volcano-national-park",
+    "start_date": "1967",
+    "type": "multipolygon"
+  }
+},
+{
+  "type": "relation",
+  "id": 20683126,
+  "center": {
+    "lat": 11.2102153,
+    "lon": 125.0169307
+  },
+  "tags": {
+    "addr:city": "Tacloban City",
+    "leisure": "nature_reserve",
+    "name": "Paraiso Mangrove Eco Park and Sanctuary",
+    "type": "multipolygon"
+  }
+}
+
+  ]
+}
