@@ -12,7 +12,17 @@ from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
+SRC = ROOT / "src"
+# Streamlit (local + Cloud) can keep stale package modules in sys.modules across
+# script reruns. After UI polish adds new exports (e.g. hpi_spark_svg,
+# render_field_brief_pdf), a cached older module raises ImportError:
+#   cannot import name '…' from 'harvester_risk_atlas.…'
+# Drop our package from the cache, then prefer the repo src/ tree.
+if SRC.is_dir():
+    sys.path.insert(0, str(SRC))
+for _mod in list(sys.modules):
+    if _mod == "harvester_risk_atlas" or _mod.startswith("harvester_risk_atlas."):
+        del sys.modules[_mod]
 
 from harvester_risk_atlas.config import (  # noqa: E402
     HPI_CSV,
@@ -759,8 +769,10 @@ def main():
         st.session_state["page"] = st.session_state["nav_radio"]
     if "selected" not in st.session_state:
         st.session_state["selected"] = None
+    qp = st.query_params
+    demo_qp = qp.get("demo", "").lower() in ("1", "true", "yes") or "demo" in qp
     if "demo_mode" not in st.session_state:
-        st.session_state["demo_mode"] = False
+        st.session_state["demo_mode"] = demo_qp
 
     with st.sidebar:
         st.markdown("**Navigate**")

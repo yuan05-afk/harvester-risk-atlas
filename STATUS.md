@@ -57,6 +57,23 @@ Last updated: 2026-09-29 ~20:55 (Asia/Manila)
 
 ## Changelog (2026-09-29)
 
+
+### Cloud ImportError fix (2026-09-29 ~21:12 Asia/Manila) — local fix, needs push
+
+| Item | Status |
+|------|--------|
+| Root cause | Streamlit kept stale `harvester_risk_atlas.*` in `sys.modules` after polish added `hpi_spark_svg` / earlier `render_field_brief_pdf` → in-app `ImportError: cannot import name …` |
+| Fix | Bust package modules before import in `app/streamlit_app.py`; add `-e .` to `requirements.txt` for Cloud src install |
+| Smoke | Stale-module repro fixed; AppTest Map + Dossier no exceptions; Cloud-style editable import OK |
+
+Files: `app/streamlit_app.py`, `requirements.txt`, `DEPLOY.md`.
+
+**Push recommendation:** yes — CloudAgent should push to `main`, then reboot the Streamlit Cloud app once.
+
+
+
+
+
 ### Demo visual polish — motion + denser UI (2026-09-29 ~20:55 Asia/Manila) — local only
 
 | Item | Status |

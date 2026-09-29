@@ -55,6 +55,11 @@ print(len(pdf), 'bytes')
 - Hide the Deploy/toolbar chrome via `app/styles.css` (already applied).
 - Keep the disclaimer visible; disclose AI/OSS in README for judging.
 
+- After a push that adds new package exports (e.g. `hpi_spark_svg`), **reboot** the Cloud app
+  if you still see `ImportError: cannot import name …` — Streamlit can keep a stale module
+  cache across soft reloads. `requirements.txt` includes `-e .` so the `src/` package installs.
+
+
 ## App entry
 
 `scripts/run_app.sh` runs:

@@ -24,3 +24,6 @@ reportlab==4.2.5
 # kaleido==0.2.1
 # Fallback PDF engine if reportlab unavailable
 # fpdf2==2.8.2
+
+# Install local package (src/ layout) so Cloud does not rely only on sys.path
+-e .
