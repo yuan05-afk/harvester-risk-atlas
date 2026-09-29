@@ -1,29 +1,64 @@
-# Deploy
+# Deploy — Harvester Risk Atlas (Streamlit Community Cloud)
 
-Streamlit Community Cloud serves this app from **`app/streamlit_app.py`** on `main`.
+Brief notes for a public demo. Offline demo data ships under `data/processed/`.
 
-https://harvester-risk-atlas.streamlit.app/
+## Streamlit Community Cloud
 
-## Streamlit Cloud
+1. Push this repo to GitHub (public or private with Cloud access).
+2. [share.streamlit.io](https://share.streamlit.io) → **New app**.
+3. Settings:
+   - **Main file path:** `app/streamlit_app.py`
+   - **Python version:** 3.11 or 3.12
+   - **Requirements file:** `requirements.txt`
+4. Deploy. First build installs pinned deps (~2–4 min).
 
-1. Keep the GitHub repository **private**. Community Cloud can deploy a private repo when the GitHub account that owns the app is connected.
-2. App settings:
-   - Repository: `yuan05-afk/harvester-risk-atlas`
-   - Branch: `main`
-   - Main file path: `app/streamlit_app.py`
-   - Python: 3.11 or newer
-3. Dependencies come from `requirements.txt` at the repo root. That file includes `reportlab`, which the field-brief PDF download uses.
-4. Optional secret, not required for the shipped demo: `IUCN_API_TOKEN`. Without it the badge stays **Not recorded**. Categories are never filled in.
-5. A push to `main` is what Cloud rebuilds. If the live app stays on an older commit, reboot it from the app dashboard.
+No secrets are required for the offline demo. Optional secrets (Cloud → App settings → Secrets):
 
-There is no root `app.py`. Do not point Cloud at one.
-
-## Local
-
-```bash
-pip install -r requirements.txt
-pip install -e .
-streamlit run app/streamlit_app.py
+```toml
+IUCN_API_TOKEN = "…"          # live Red List categories only
+# OPENAI_API_KEY = "…"        # only if ENABLE_LLM_NAMES=1
 ```
 
-`scripts/run_app.sh` starts the same file.
+Without `IUCN_API_TOKEN` the dossier shows **IUCN not linked** — categories are never invented.
+
+## Local parity check
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
+scripts/run_app.sh   # → http://localhost:8501
+```
+
+## PDF field brief
+
+On the **Field brief** page: download HTML (always) and PDF (reportlab).
+
+Smoke test without Streamlit:
+
+```bash
+python -c "
+from harvester_risk_atlas.pdf_brief import render_field_brief_pdf
+from harvester_risk_atlas.hpi import dossier_actions
+import pandas as pd
+row = pd.read_csv('data/processed/hpi_scores.csv').iloc[1].to_dict()
+pdf = render_field_brief_pdf(row, dossier_actions(row))
+open('/tmp/field_brief_smoke.pdf','wb').write(pdf)
+print(len(pdf), 'bytes')
+"
+```
+
+## Cloud notes
+
+- `rasterio` / `geopandas` wheels are prebuilt on manylinux; Cloud usually fine. If a build fails on GDAL, pin older `rasterio`/`geopandas` or omit live rebuild scripts (demo uses shipped parquet/csv/gpkg).
+- Large WorldClim zips are **not** needed at runtime — SEA clips are under `data/processed/worldclim_sea/`.
+- Hide the Deploy/toolbar chrome via `app/styles.css` (already applied).
+- Keep the disclaimer visible; disclose AI/OSS in README for judging.
+
+## App entry
+
+`scripts/run_app.sh` runs:
+
+```bash
+streamlit run app/streamlit_app.py --server.port 8501
+```

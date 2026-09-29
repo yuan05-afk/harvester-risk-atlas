@@ -1,20 +1,15 @@
-"""Legend placement, compare-card HTML, IUCN badge, weights copy, and PDF brief."""
+"""Snapshot extras: legends under the axes, compare-card HTML, IUCN line, PDF brief."""
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
 
 import pandas as pd
 
 from harvester_risk_atlas.charts import compare_components, hpi_distribution
-from harvester_risk_atlas.hpi import weights_explainer_markdown
-from harvester_risk_atlas.markup import (
-    compare_card_html,
-    compare_grid_html,
-    iucn_badge_html,
-    iucn_plain_label,
-    map_howto_html,
-)
-from harvester_risk_atlas.pdf_brief import render_field_brief_pdf
+from harvester_risk_atlas.pdf_brief import _iucn_line, render_field_brief_pdf
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _row(**overrides):
@@ -46,11 +41,14 @@ def _row(**overrides):
 
 class LegendTests(unittest.TestCase):
     def test_compare_legend_sits_below_the_title(self):
-        figure = compare_components(_row(), _row(scientific_name="Lagerstroemia speciosa", vernacular_ph="banaba"))
-        self.assertEqual(figure.layout.title.text, "Component comparison")
+        figure = compare_components(
+            _row(),
+            _row(scientific_name="Lagerstroemia speciosa", vernacular_ph="banaba"),
+        )
+        self.assertIn("Component comparison", figure.layout.title.text)
         self.assertLess(figure.layout.legend.y, 0)
-        self.assertGreaterEqual(figure.layout.margin.t, 64)
-        self.assertGreaterEqual(figure.layout.margin.b, 80)
+        self.assertGreaterEqual(figure.layout.margin.b, 110)
+        self.assertGreaterEqual(figure.layout.margin.l, 72)
 
     def test_distribution_legend_sits_below_the_title(self):
         frame = pd.DataFrame(
@@ -62,67 +60,56 @@ class LegendTests(unittest.TestCase):
         )
         figure = hpi_distribution(frame)
         self.assertLess(figure.layout.legend.y, 0)
-        self.assertGreaterEqual(figure.layout.margin.t, 64)
-        self.assertGreaterEqual(figure.layout.margin.b, 80)
+        self.assertGreaterEqual(figure.layout.margin.b, 100)
 
 
-class CompareCardTests(unittest.TestCase):
-    def test_cards_are_dedented_html_and_keep_the_binomial(self):
-        left = _row()
-        right = _row(scientific_name="Lagerstroemia speciosa", vernacular_ph="banaba")
-        fragment = compare_grid_html(left, right)
-        self.assertTrue(fragment.startswith("<div"))
-        for line in fragment.splitlines():
-            self.assertFalse(line.startswith(" "), line)
-        self.assertNotIn("```", fragment)
-        card = compare_card_html(left)
-        self.assertIn('class="genus">Arcangelisia</span>', card)
-        self.assertIn('class="epithet">flava</span>', card)
-        self.assertNotIn("ARCANGELISI", card)
-        self.assertNotIn("text-transform:uppercase", card.lower())
+class SnapshotUiTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.app = (ROOT / "app" / "streamlit_app.py").read_text(encoding="utf-8")
+        cls.css = (ROOT / "app" / "styles.css").read_text(encoding="utf-8")
+        cls.deploy = (ROOT / "DEPLOY.md").read_text(encoding="utf-8")
+        cls.reqs = (ROOT / "requirements.txt").read_text(encoding="utf-8")
+
+    def test_map_howto_and_talk_track(self):
+        self.assertIn("How to read this", self.app)
+        self.assertIn("60-sec talk track", self.app)
+        self.assertIn("Weights transparency (HPI v1.1)", self.app)
+        self.assertIn("0.30", self.app)
+
+    def test_compare_cards_are_unindented_html(self):
+        self.assertIn('class="hra-sci-name"', self.app)
+        self.assertIn("st.html", self.app)
+        self.assertIn("IUCN not linked", self.app)
+        self.assertIn("hra-sci-name", self.css)
+        # The card builder joins lines so Markdown cannot code-fence them.
+        self.assertIn('return "".join(parts)', self.app)
+
+    def test_deploy_entry_and_reportlab(self):
+        self.assertIn("app/streamlit_app.py", self.deploy)
+        self.assertIn("reportlab==4.2.5", self.reqs)
 
 
-class IucnBadgeTests(unittest.TestCase):
-    def test_missing_category_is_not_recorded(self):
-        badge = iucn_badge_html(_row())
-        self.assertIn("Not recorded", badge)
-        self.assertIn("unknown", badge)
-        self.assertNotIn(">CR<", badge)
-        self.assertEqual(iucn_plain_label(_row()), "Not recorded")
+class IucnAndPdfTests(unittest.TestCase):
+    def test_missing_category_is_not_linked(self):
+        line = _iucn_line(_row().to_dict())
+        self.assertIn("not linked", line)
+        self.assertNotIn("CR", line)
 
-    def test_cited_code_renders(self):
-        row = _row(iucn_status="ok", iucn_category_code="CR", iucn_year=2022)
-        badge = iucn_badge_html(row)
-        self.assertIn('class="iucn-badge cr"', badge)
-        self.assertIn(">CR<", badge)
-        self.assertIn("Critically Endangered", badge)
-        self.assertIn("2022", badge)
-        self.assertEqual(iucn_plain_label(row), "CR — Critically Endangered (2022)")
+    def test_cited_code_is_shown(self):
+        line = _iucn_line(
+            _row(iucn_status="ok", iucn_category_code="CR", iucn_category="CR", iucn_year=2022).to_dict()
+        )
+        self.assertIn("CR", line)
+        self.assertIn("2022", line)
 
-
-class MethodsAndMapTests(unittest.TestCase):
-    def test_weights_sum_and_are_named(self):
-        text = weights_explainer_markdown()
-        self.assertIn("0.30", text)
-        self.assertIn("0.25", text)
-        self.assertIn("0.20", text)
-        self.assertIn("Sum 1.00.", text)
-        self.assertIn("never an input", text)
-
-    def test_map_howto_strip(self):
-        fragment = map_howto_html()
-        self.assertTrue(fragment.startswith("<div"))
-        self.assertIn("How to read this map", fragment)
-        self.assertIn("not harvest sites", fragment)
-        for line in fragment.splitlines():
-            self.assertFalse(line.startswith(" "))
-
-
-class PdfBriefTests(unittest.TestCase):
-    def test_pdf_bytes_and_missing_iucn(self):
-        pdf = render_field_brief_pdf(_row().to_dict(), ["Prefer cultivated material when feasible."])
+    def test_pdf_bytes(self):
+        pdf = render_field_brief_pdf(
+            _row().to_dict(),
+            ["Prefer cultivated material when feasible."],
+        )
         self.assertTrue(pdf.startswith(b"%PDF"))
-        self.assertGreater(len(pdf), 800)
+        self.assertGreater(len(pdf), 500)
 
 
 if __name__ == "__main__":

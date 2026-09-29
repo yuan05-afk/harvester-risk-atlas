@@ -217,23 +217,6 @@ def hpi_formula_markdown() -> str:
     )
 
 
-def weights_explainer_markdown() -> str:
-    """Methods-page copy for the weights expander. Weights are the live config."""
-    w = HPI_WEIGHTS
-    total = float(sum(w.values()))
-    return (
-        "| Component | Weight | What it captures |\n"
-        "|-----------|--------|------------------|\n"
-        f"| Rarity | {w['rarity']:.2f} | Few GBIF records and an endemism cue |\n"
-        f"| Climate stress | {w['climate_stress']:.2f} | Tight or shifted WorldClim niche in the SEA clip |\n"
-        f"| Harvest proxy | {w['harvest_proxy']:.2f} | Accessibility and recent-record pattern. Not a volume |\n"
-        f"| Protected-area gap | {w['pa_gap']:.2f} | Share of sample points outside WDPCA Philippines polygons |\n\n"
-        f"**Sum {total:.2f}.** These weights are a documented choice. "
-        "They are not an IUCN index and not a harvest quota. "
-        "IUCN category is never an input."
-    )
-
-
 def dossier_actions(row: dict[str, Any]) -> list[str]:
     """Non-prescriptive stewardship suggestions for field briefs."""
     actions = [

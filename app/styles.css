@@ -17,58 +17,153 @@
   --radius-lg: 12px;
   --font-ui: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* Type scale (strict hierarchy) */
+  --fs-title: 1.875rem;   /* 30px */
+  --fs-section: 1.125rem; /* 18px */
+  --fs-body: 0.9375rem;   /* 15px */
+  --fs-caption: 0.8125rem;/* 13px */
+  --fs-metric: 1.5rem;    /* 24px mono */
 }
 
 html, body, [class*="css"] {
   font-family: var(--font-ui) !important;
   color: var(--ink);
+  -webkit-font-smoothing: antialiased;
 }
 
 .stApp {
   background: var(--paper);
+  overflow-x: hidden;
 }
 
-/* Hide Streamlit chrome noise */
+/* —— Hide Streamlit chrome that causes overlap / clutter —— */
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
 header[data-testid="stHeader"] {
-  background: transparent;
+  background: transparent !important;
+  height: 0 !important;
+  min-height: 0 !important;
 }
-div[data-testid="stToolbar"] { display: none; }
+div[data-testid="stToolbar"] { display: none !important; }
+div[data-testid="stDecoration"] { display: none !important; }
+div[data-testid="stStatusWidget"] { display: none !important; }
+[data-testid="stHeaderActionElements"] { display: none !important; }
+.stDeployButton { display: none !important; }
+button[kind="header"] { display: none !important; }
 
-/* Hide Streamlit heading link anchors (hover # icons) */
-[data-testid="stHeaderActionElements"] {
-  display: none !important;
-}
-
+/* Main canvas padding — keep content clear of sidebar & edges */
 .block-container {
-  padding-top: 1.5rem !important;
-  padding-bottom: 3rem !important;
+  padding-top: 1.75rem !important;
+  padding-bottom: 3.5rem !important;
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
   max-width: 1120px;
 }
 
-/* Typography */
-h1, h2, h3, h4 {
-  font-family: var(--font-ui) !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.02em;
-  color: var(--ink) !important;
+/* Column gaps — prevent card/chart collisions */
+div[data-testid="stHorizontalBlock"] {
+  gap: 1.25rem !important;
+  align-items: flex-start !important;
 }
-h1 { font-size: 1.75rem !important; line-height: 1.2 !important; margin-bottom: 0.25rem !important; }
-h2 { font-size: 1.25rem !important; margin-top: 1.75rem !important; }
-h3 { font-size: 1.05rem !important; }
+div[data-testid="column"] {
+  min-width: 0 !important; /* avoid flex overflow overlap */
+}
 
-p, li, label, .stMarkdown {
-  font-size: 0.9375rem;
+/* Vertical element rhythm */
+div[data-testid="stVerticalBlock"] > div {
+  margin-bottom: 0;
+}
+div[data-testid="stPlotlyChart"],
+div[data-testid="stDataFrame"],
+iframe {
+  margin-top: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+/* Folium / iframe: hairline frame so map never bleeds under text */
+iframe {
+  border: 1px solid var(--hairline) !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden !important;
+  background: var(--surface);
+}
+
+/* Plotly: keep modebar from colliding with titles */
+.js-plotly-plot .plotly .modebar {
+  top: 2px !important;
+  right: 2px !important;
+}
+div[data-testid="stPlotlyChart"] {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: 0.5rem 0.35rem 0.25rem 0.35rem;
+  overflow: hidden;
+}
+
+/* —— Typography (strict hierarchy) —— */
+h1, .hra-title {
+  font-family: var(--font-ui) !important;
+  font-size: var(--fs-title) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.025em;
+  line-height: 1.2 !important;
+  color: var(--ink) !important;
+  margin: 0 0 0.35rem 0 !important;
+}
+h2, .hra-section {
+  font-family: var(--font-ui) !important;
+  font-size: var(--fs-section) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.015em;
+  line-height: 1.3 !important;
+  color: var(--ink) !important;
+  margin: 1.75rem 0 0.65rem 0 !important;
+}
+h3 {
+  font-family: var(--font-ui) !important;
+  font-size: 1.0rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em;
+  color: var(--ink) !important;
+  margin: 1.25rem 0 0.5rem 0 !important;
+}
+h4 {
+  font-family: var(--font-ui) !important;
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+  margin: 1rem 0 0.4rem 0 !important;
+}
+
+p, li, label, .stMarkdown, .hra-body {
+  font-size: var(--fs-body);
   line-height: 1.55;
   color: var(--ink);
+  font-weight: 400;
+}
+
+.hra-caption,
+.stCaption,
+[data-testid="stCaptionContainer"] {
+  font-size: var(--fs-caption) !important;
+  line-height: 1.45 !important;
+  color: var(--ink-secondary) !important;
+  font-weight: 400;
+}
+
+.hra-mono,
+.hra-mono-metric {
+  font-family: var(--font-mono) !important;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Header band */
 .hra-header {
-  padding: 0.5rem 0 1.75rem 0;
+  padding: 0.25rem 0 1.5rem 0;
   border-bottom: 1px solid var(--hairline);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+  clear: both;
 }
 .hra-kicker {
   font-size: 0.75rem;
@@ -76,38 +171,41 @@ p, li, label, .stMarkdown {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-tertiary);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
 }
 .hra-sub {
   color: var(--ink-secondary);
-  font-size: 0.9375rem;
+  font-size: var(--fs-body);
   max-width: 42rem;
-  margin: 0.35rem 0 0 0;
+  margin: 0.4rem 0 0 0;
+  line-height: 1.55;
 }
 
-/* Disclaimer */
+/* Disclaimer — clear of map/charts */
 .hra-disclaimer {
   background: var(--surface);
   border: 1px solid var(--hairline);
   border-radius: var(--radius);
-  padding: 0.75rem 1rem;
-  font-size: 0.8125rem;
+  padding: 0.85rem 1.1rem;
+  font-size: var(--fs-caption);
   color: var(--ink-secondary);
-  margin: 1rem 0 1.5rem 0;
+  margin: 0 0 1.25rem 0;
+  line-height: 1.5;
 }
 
-/* Metric wells — denser on dossier */
+/* Metric wells */
 .hra-metrics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 0.75rem;
-  margin: 1rem 0 1.25rem 0;
+  gap: 0.85rem;
+  margin: 1rem 0 1.35rem 0;
 }
 .hra-metric {
   background: var(--surface);
   border: 1px solid var(--hairline);
   border-radius: var(--radius);
-  padding: 0.85rem 1rem;
+  padding: 0.9rem 1rem;
 }
 .hra-metric .label {
   font-size: 0.6875rem;
@@ -115,20 +213,22 @@ p, li, label, .stMarkdown {
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--ink-tertiary);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.2;
 }
 .hra-metric .value {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 1.375rem;
+  font-size: var(--fs-metric);
   font-weight: 500;
   color: var(--ink);
-  line-height: 1.2;
+  line-height: 1.15;
 }
 .hra-metric .hint {
   font-size: 0.75rem;
   color: var(--ink-secondary);
-  margin-top: 0.25rem;
+  margin-top: 0.3rem;
+  line-height: 1.3;
 }
 
 /* HPI band badges — semantic risk only */
@@ -136,11 +236,13 @@ p, li, label, .stMarkdown {
   display: inline-block;
   font-size: 0.75rem;
   font-weight: 500;
-  padding: 0.2rem 0.55rem;
+  padding: 0.22rem 0.6rem;
   border-radius: 6px;
   border: 1px solid var(--hairline);
   background: var(--surface);
   color: var(--ink);
+  line-height: 1.3;
+  vertical-align: middle;
 }
 .hra-band.low { color: var(--risk-low); border-color: #b7e4c7; background: #f1faf4; }
 .hra-band.mid { color: #7a5c3e; border-color: #e6d5c3; background: #faf6f1; }
@@ -153,33 +255,51 @@ p, li, label, .stMarkdown {
   border-radius: var(--radius-lg);
   padding: 1.15rem 1.25rem;
   margin-bottom: 1rem;
+  overflow: hidden;
 }
 .hra-card h3 {
-  margin: 0 0 0.5rem 0 !important;
+  margin: 0 0 0.55rem 0 !important;
   font-size: 0.8125rem !important;
   font-weight: 600 !important;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-tertiary) !important;
+  line-height: 1.3 !important;
 }
-.hra-card p { margin: 0; color: var(--ink); }
+.hra-card p { margin: 0; color: var(--ink); font-size: var(--fs-body); line-height: 1.55; }
 
 .hra-actions {
   margin: 0;
-  padding-left: 1.1rem;
+  padding-left: 1.15rem;
 }
 .hra-actions li {
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.45rem;
   color: var(--ink);
+  line-height: 1.5;
 }
 
-/* Sidebar */
+/* Sidebar — clear of main canvas */
 section[data-testid="stSidebar"] {
   background: var(--surface) !important;
   border-right: 1px solid var(--hairline);
+  z-index: 100;
+}
+section[data-testid="stSidebar"] > div:first-child {
+  padding-top: 1.35rem !important;
+  padding-left: 1.1rem !important;
+  padding-right: 1.1rem !important;
 }
 section[data-testid="stSidebar"] .block-container {
   padding-top: 1.25rem !important;
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+  font-size: var(--fs-body);
+}
+section[data-testid="stSidebar"] hr {
+  margin: 0.85rem 0 !important;
+  border-color: var(--hairline);
 }
 
 /* Inputs */
@@ -214,13 +334,14 @@ div[data-baseweb="select"] > div,
 
 /* Tabs */
 .stTabs [data-baseweb="tab-list"] {
-  gap: 0.25rem;
+  gap: 0.35rem;
   border-bottom: 1px solid var(--hairline);
+  margin-bottom: 0.75rem;
 }
 .stTabs [data-baseweb="tab"] {
   font-weight: 500;
   color: var(--ink-secondary);
-  padding: 0.5rem 0.85rem;
+  padding: 0.55rem 0.9rem;
 }
 .stTabs [aria-selected="true"] {
   color: var(--ink) !important;
@@ -233,27 +354,45 @@ div[data-testid="stDataFrame"] {
   overflow: hidden;
 }
 
-/* Map legend */
+/* —— Map legend (readable, clear of map) —— */
 .hra-legend {
   display: flex;
-  gap: 1rem;
+  gap: 1.35rem;
   flex-wrap: wrap;
-  font-size: 0.75rem;
+  align-items: center;
+  font-size: var(--fs-caption);
   color: var(--ink-secondary);
-  margin: 0.5rem 0 1rem 0;
+  margin: 0.35rem 0 1rem 0;
+  padding: 0.65rem 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  line-height: 1.4;
+}
+.hra-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
 }
 .hra-legend span::before {
   content: "";
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  margin-right: 0.35rem;
-  vertical-align: middle;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(29, 29, 31, 0.18);
+  box-sizing: border-box;
 }
 .hra-legend .l-low::before { background: var(--risk-low); }
 .hra-legend .l-mid::before { background: var(--risk-mid); }
 .hra-legend .l-high::before { background: var(--risk-high); }
+.hra-legend .l-note {
+  color: var(--ink-tertiary);
+  font-size: 0.75rem;
+}
+.hra-legend .l-note::before { display: none; }
 
 /* Mono snippets */
 code, .hra-mono {
@@ -265,7 +404,7 @@ code, .hra-mono {
   border-radius: 4px;
 }
 
-/* Streamlit metric override denser */
+/* Streamlit metric override */
 div[data-testid="stMetric"] {
   background: var(--surface);
   border: 1px solid var(--hairline);
@@ -284,29 +423,31 @@ div[data-testid="stMetricLabel"] {
 .hra-steps {
   display: flex;
   align-items: center;
-  gap: 0;
+  gap: 0.15rem;
   flex-wrap: wrap;
-  margin: 0 0 1.25rem 0;
-  padding: 0.65rem 0.85rem;
+  margin: 0 0 1.5rem 0;
+  padding: 0.8rem 1rem;
   background: var(--surface);
   border: 1px solid var(--hairline);
   border-radius: var(--radius);
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
   color: var(--ink-secondary);
+  line-height: 1.3;
 }
 .hra-steps .step {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.2rem 0.45rem;
+  gap: 0.45rem;
+  padding: 0.3rem 0.55rem;
   border-radius: 6px;
+  white-space: nowrap;
 }
 .hra-steps .step .num {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 500;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.35rem;
+  height: 1.35rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -314,6 +455,7 @@ div[data-testid="stMetricLabel"] {
   border: 1px solid var(--hairline);
   color: var(--ink-tertiary);
   background: var(--paper);
+  flex-shrink: 0;
 }
 .hra-steps .step.active {
   color: var(--ink);
@@ -331,8 +473,9 @@ div[data-testid="stMetricLabel"] {
 }
 .hra-steps .sep {
   color: var(--hairline);
-  margin: 0 0.35rem;
+  margin: 0 0.45rem;
   font-weight: 300;
+  flex-shrink: 0;
 }
 
 /* Continue affordance row */
@@ -341,10 +484,10 @@ div[data-testid="stMetricLabel"] {
   align-items: center;
   justify-content: flex-end;
   gap: 0.75rem;
-  margin: 1rem 0 0.25rem 0;
-  padding-top: 0.75rem;
+  margin: 1.25rem 0 0.25rem 0;
+  padding-top: 1rem;
   border-top: 1px solid var(--hairline);
-  font-size: 0.8125rem;
+  font-size: var(--fs-caption);
   color: var(--ink-secondary);
 }
 
@@ -353,13 +496,15 @@ div[data-testid="stMetricLabel"] {
   display: inline-block;
   font-size: 0.75rem;
   font-weight: 500;
-  padding: 0.18rem 0.55rem;
+  padding: 0.2rem 0.55rem;
   border-radius: 6px;
   border: 1px solid var(--hairline);
   background: var(--accent-soft);
   color: var(--accent);
   margin-right: 0.35rem;
   margin-top: 0.35rem;
+  line-height: 1.3;
+  vertical-align: middle;
 }
 .hra-chip.muted {
   background: var(--mono-bg);
@@ -372,11 +517,11 @@ div[data-testid="stMetricLabel"] {
   background: var(--surface);
   border: 1px solid var(--hairline);
   border-radius: var(--radius-lg);
-  padding: 1rem 1.15rem;
-  margin: 1rem 0;
+  padding: 1.05rem 1.2rem;
+  margin: 1.15rem 0;
 }
 .hra-gaps h3 {
-  margin: 0 0 0.65rem 0 !important;
+  margin: 0 0 0.7rem 0 !important;
   font-size: 0.8125rem !important;
   font-weight: 600 !important;
   letter-spacing: 0.04em;
@@ -390,7 +535,7 @@ div[data-testid="stMetricLabel"] {
   color: var(--ink);
 }
 .hra-gaps li {
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
   line-height: 1.45;
 }
 .hra-gaps .gap-flag {
@@ -407,8 +552,8 @@ div[data-testid="stMetricLabel"] {
   background: var(--accent-soft);
   border-left: 3px solid var(--accent);
   border-radius: 0 var(--radius) var(--radius) 0;
-  padding: 0.65rem 0.9rem;
-  margin: 0.75rem 0 1rem 0;
+  padding: 0.7rem 1rem;
+  margin: 0.5rem 0 1.15rem 0;
   font-size: 0.875rem;
   color: var(--ink);
   line-height: 1.5;
@@ -420,149 +565,167 @@ div[data-testid="stMetricLabel"] {
   text-transform: uppercase;
   color: var(--accent);
   display: block;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.25rem;
 }
 
 /* Compare metric table */
 .hra-compare-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin: 0.75rem 0 1.25rem 0;
+  gap: 1.25rem;
+  margin: 0.85rem 0 1.35rem 0;
+}
+/* Long binomials in compare cards — wrap at word boundaries, avoid ARCANGELISI/A FLAVA */
+.hra-compare-card {
+  overflow: visible;
+  min-width: 0;
+}
+.hra-compare-card .hra-sci-name,
+.hra-compare-grid .hra-sci-name {
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  font-style: italic !important;
+  color: var(--ink) !important;
+  line-height: 1.35 !important;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: auto;
+  white-space: normal;
+  max-width: 100%;
 }
 @media (max-width: 700px) {
   .hra-compare-grid { grid-template-columns: 1fr; }
-}
-.hra-compare-card {
-  min-width: 0;
-}
-.hra-compare-card .card-title,
-.hra-compare-card .card-binomial,
-.hra-compare-card .genus,
-.hra-compare-card .epithet {
-  text-transform: none;
-  letter-spacing: 0;
-  hyphens: manual;
-  overflow-wrap: normal;
-  word-break: normal;
-}
-.hra-compare-card .card-title {
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin: 0;
-}
-.hra-compare-card .card-binomial {
-  margin: 0.2rem 0 0.45rem 0;
-  font-size: 0.95rem;
-  font-style: italic;
-  color: #3a3a3c;
-  line-height: 1.3;
-}
-.hra-compare-card .genus,
-.hra-compare-card .epithet {
-  display: inline-block;
-  white-space: nowrap;
-  font-style: italic;
-}
-.hra-compare-card .epithet {
-  margin-left: 0.28em;
-}
-.hra-compare-card .metric-line,
-.hra-compare-card .components {
-  margin: 0.35rem 0 0 0;
-  font-size: 0.875rem;
-  color: var(--ink-secondary);
+  .block-container {
+    padding-left: 1.1rem !important;
+    padding-right: 1.1rem !important;
+  }
+  .hra-steps { gap: 0.25rem; }
+  .hra-steps .sep { margin: 0 0.2rem; }
 }
 
-/* Map how-to-read strip */
+/* Checkbox / radio label clarity */
+div[data-testid="stCheckbox"] label,
+div[data-testid="stRadio"] label {
+  font-size: var(--fs-body) !important;
+  color: var(--ink) !important;
+  line-height: 1.45 !important;
+}
+
+/* —— How to read this (Map only) —— */
 .hra-howto {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 1rem;
-  align-items: baseline;
   background: var(--surface);
   border: 1px solid var(--hairline);
   border-radius: var(--radius);
-  padding: 0.55rem 0.85rem;
-  margin: 0.25rem 0 0.65rem 0;
-  font-size: 0.8125rem;
+  padding: 0.7rem 1rem;
+  margin: 0 0 1rem 0;
+  font-size: var(--fs-caption);
   color: var(--ink-secondary);
-  line-height: 1.45;
+  line-height: 1.5;
+  max-width: 42rem;
 }
-.hra-howto .kicker {
+.hra-howto .tag {
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--ink-tertiary);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.hra-howto p {
+  margin: 0;
+  font-size: var(--fs-caption);
+  color: var(--ink-secondary);
+  line-height: 1.5;
 }
 
-/* Demo talk track */
-.hra-talk {
-  background: var(--surface);
-  border: 1px solid var(--hairline);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 var(--radius) var(--radius) 0;
-  padding: 0.7rem 0.95rem 0.45rem 0.95rem;
-  margin: 0.35rem 0 0.9rem 0;
-}
-.hra-talk .kicker {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.hra-talk ol {
-  margin: 0.35rem 0 0.25rem 1.15rem;
-  padding: 0;
-  font-size: 0.875rem;
-  color: var(--ink);
-}
-.hra-talk li {
-  margin-bottom: 0.28rem;
-}
-
-/* IUCN category badge — neutral when the snapshot has no cited code */
-.iucn-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  padding: 0.1rem 0.55rem 0.1rem 0.12rem;
-  background: var(--surface);
+/* —— IUCN badge (dossier) —— */
+.hra-iucn {
+  display: inline-block;
   font-size: 0.75rem;
-  line-height: 1.2;
-  vertical-align: middle;
-  text-transform: none;
-  letter-spacing: 0;
-}
-.iucn-badge .code {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  border-radius: 999px;
-  padding: 0.12rem 0.42rem;
-  background: #e8e8ed;
-  color: var(--ink-secondary);
-}
-.iucn-badge .name,
-.iucn-badge .year {
-  color: var(--ink);
   font-weight: 500;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid var(--hairline);
+  line-height: 1.3;
+  vertical-align: middle;
+  margin-right: 0.35rem;
+  margin-top: 0.35rem;
 }
-.iucn-badge .year {
-  color: var(--ink-secondary);
+.hra-iucn.linked {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: #b7e4c7;
+}
+.hra-iucn.unlinked {
+  background: var(--mono-bg);
+  color: var(--ink-tertiary);
+  border-color: var(--hairline);
   font-weight: 400;
 }
-.iucn-badge.cr .code { background: #d81e05; color: #fff; }
-.iucn-badge.en .code { background: #fc7f3f; color: #1d1d1f; }
-.iucn-badge.vu .code { background: #f9e814; color: #1d1d1f; }
-.iucn-badge.nt .code { background: #cce226; color: #1d1d1f; }
-.iucn-badge.lc .code { background: #60c659; color: #1d1d1f; }
-.iucn-badge.ex .code,
-.iucn-badge.ew .code { background: #1d1d1f; color: #fff; }
-.iucn-badge.dd .code,
-.iucn-badge.ne .code,
-.iucn-badge.unknown .code { background: #e8e8ed; color: #6e6e73; }
+
+/* —— Demo talk track —— */
+.hra-talktrack {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 0.75rem 0.9rem;
+  margin: 0.5rem 0 0.25rem 0;
+  font-size: 0.8125rem;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+}
+.hra-talktrack .tag {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+  display: block;
+  margin-bottom: 0.35rem;
+}
+.hra-talktrack ol {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+.hra-talktrack li {
+  margin-bottom: 0.35rem;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+/* —— Weights table in Methods expander —— */
+.hra-weights {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-caption);
+  margin: 0.5rem 0 0.75rem 0;
+}
+.hra-weights th,
+.hra-weights td {
+  text-align: left;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--ink);
+}
+.hra-weights th {
+  font-weight: 500;
+  color: var(--ink-tertiary);
+  font-size: 0.6875rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.hra-weights td.w {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.hra-weights-why {
+  font-size: var(--fs-caption);
+  color: var(--ink-secondary);
+  line-height: 1.5;
+  margin: 0;
+}

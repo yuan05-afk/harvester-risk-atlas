@@ -18,22 +18,13 @@ from harvester_risk_atlas.config import (  # noqa: E402
     HPI_CSV,
     OCCURRENCES_PARQUET,
     DATA_PROCESSED,
+    HPI_WEIGHTS,
 )
-from harvester_risk_atlas.hpi import (  # noqa: E402
-    dossier_actions,
-    hpi_formula_markdown,
-    weights_explainer_markdown,
-)
+from harvester_risk_atlas.hpi import dossier_actions, hpi_formula_markdown  # noqa: E402
 from harvester_risk_atlas.names import resolve_query  # noqa: E402
 from harvester_risk_atlas.pdf_brief import (  # noqa: E402
     render_field_brief_html,
     render_field_brief_pdf,
-)
-from harvester_risk_atlas.markup import (  # noqa: E402
-    compare_grid_html,
-    demo_talk_track_html,
-    iucn_badge_html,
-    map_howto_html,
 )
 from harvester_risk_atlas.archetypes import (  # noqa: E402
     assign_archetypes,
@@ -94,35 +85,13 @@ DEMO_CAPTIONS = {
     ),
     "brief": (
         "Demo · Step 3",
-        "Download the PDF field brief for stewardship talking points — research/education only, "
+        "Download the HTML field brief for stewardship talking points — research/education only, "
         "never a permit or medical claim.",
     ),
 }
 
-DEMO_TALK_TRACK = {
-    "Map": [
-        "Open on the map. Circles are species centroids from the GBIF sample, not places people harvested.",
-        "Size is HPI. Color is only the pressure band. The how-to-read strip says the same thing.",
-        "Demo species is abutra, Arcangelisia flava: moderate band, and the harvest proxy is the loud component.",
-    ],
-    "Species dossier": [
-        "Read HPI, then the four components. For abutra, harvest is high and rarity is not.",
-        "Point at the IUCN badge. It says Not recorded. Do not fill in a category.",
-        "The waterfall is weight times component. The decade chart counts GBIF records, not harvest volume.",
-    ],
-    "Field brief": [
-        "Download the PDF field brief. It repeats the score, the IUCN line, and the stewardship notes.",
-        "Say this out loud: research and education only. Not a permit, not medical advice, not an IUCN assessment.",
-    ],
-    "Compare": [
-        "Compare abutra with banaba. The chart title stays above the plot. Species names sit in the legend under the axis.",
-        "Both cards are HTML. A long binomial wraps between genus and epithet, in italics, without uppercasing the letters.",
-    ],
-    "Methods": [
-        "Open the weights expander. Rarity 0.30, climate 0.25, harvest 0.25, protected-area gap 0.20. They sum to 1.00.",
-        "Close on this line: HPI is computed in this app. It is not an IUCN index and not a harvest volume.",
-    ],
-}
+
+
 
 
 @st.cache_data
@@ -207,15 +176,6 @@ def demo_caption(key: str, enabled: bool):
     )
 
 
-def demo_talk(page: str, enabled: bool):
-    if not enabled:
-        return
-    lines = DEMO_TALK_TRACK.get(page)
-    if not lines:
-        return
-    st.markdown(demo_talk_track_html(page, lines), unsafe_allow_html=True)
-
-
 def map_color(band: str) -> str:
     return RISK_COLORS.get(band, "#86868b")
 
@@ -263,11 +223,12 @@ def build_map(
             popup_html += f"<br/><span style='color:#6e6e73'>{arch}</span>"
         folium.CircleMarker(
             location=[r["lat_mean"], r["lon_mean"]],
-            radius=7 + 8 * float(r["hpi"]),
-            color=col,
+            radius=8 + 10 * float(r["hpi"]),
+            color="#ffffff",
             fill=True,
-            fill_opacity=0.75,
-            weight=1,
+            fill_color=col,
+            fill_opacity=0.88,
+            weight=1.75,
             popup=folium.Popup(popup_html, max_width=280),
             tooltip=f"{r['scientific_name']} · {float(r['hpi']):.3f}",
         ).add_to(cluster)
@@ -286,6 +247,38 @@ def build_map(
             ).add_to(haze)
         haze.add_to(m)
     folium.LayerControl(collapsed=True).add_to(m)
+
+    # Compact HTML legend on map (readable on Esri gray canvas)
+    if color_by_archetype and arch_labels:
+        items = "".join(
+            f'<div style="margin:2px 0"><span style="display:inline-block;width:10px;height:10px;'
+            f'border-radius:50%;background:{arch_color[lab]};border:1.5px solid #fff;'
+            f'box-shadow:0 0 0 1px rgba(0,0,0,.15);vertical-align:middle;margin-right:6px"></span>'
+            f'<span style="font-size:11px;color:#1d1d1f">{lab}</span></div>'
+            for lab in arch_labels
+        )
+        title = "Archetype"
+    else:
+        items = "".join(
+            f'<div style="margin:2px 0"><span style="display:inline-block;width:10px;height:10px;'
+            f'border-radius:50%;background:{c};border:1.5px solid #fff;'
+            f'box-shadow:0 0 0 1px rgba(0,0,0,.15);vertical-align:middle;margin-right:6px"></span>'
+            f'<span style="font-size:11px;color:#1d1d1f">{lab}</span></div>'
+            for lab, c in [
+                ("Lower", RISK_COLORS["Lower relative pressure"]),
+                ("Moderate", RISK_COLORS["Moderate"]),
+                ("Higher", RISK_COLORS["Higher relative pressure"]),
+            ]
+        )
+        title = "HPI band"
+    legend_html = (
+        f'<div style="position:fixed;bottom:28px;left:28px;z-index:9999;background:#fff;'
+        f'border:1px solid #d2d2d7;border-radius:8px;padding:8px 10px;font-family:-apple-system,sans-serif;'
+        f'box-shadow:0 1px 2px rgba(0,0,0,.04);line-height:1.35;max-width:200px">'
+        f'<div style="font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;'
+        f'color:#86868b;margin-bottom:4px">{title}</div>{items}</div>'
+    )
+    m.get_root().html.add_child(folium.Element(legend_html))
     return m
 
 
@@ -337,10 +330,15 @@ def data_gaps_panel(row: pd.Series):
         )
 
     iucn_status = str(row.get("iucn_status") or "not_queried")
-    if iucn_status != "ok":
+    if iucn_status == "not_queried":
         flags.append(
-            f"<li><span class='gap-flag'>{iucn_status}</span> IUCN Red List not queried — "
-            "category never invented. Set IUCN_API_TOKEN later.</li>"
+            "<li><span class='gap-flag'>not_queried</span> IUCN not linked — "
+            "category never invented. Set IUCN_API_TOKEN to query.</li>"
+        )
+    elif iucn_status != "ok":
+        flags.append(
+            f"<li><span class='gap-flag'>{iucn_status}</span> IUCN Red List — "
+            "category not shown (never invented).</li>"
         )
 
     clim = row.get("climate_source") or row.get("climate_method") or "not documented"
@@ -358,11 +356,25 @@ def data_gaps_panel(row: pd.Series):
     )
 
 
+def iucn_badge_html(row: pd.Series) -> str:
+    """Muted 'IUCN not linked' when not_queried; real category only when status=ok."""
+    status = str(row.get("iucn_status") or "not_queried").strip()
+    cat = row.get("iucn_category") or row.get("iucn_category_code")
+    if status == "ok" and cat and str(cat) not in ("", "nan", "None"):
+        year = row.get("iucn_year")
+        label = str(cat)
+        if year is not None and str(year) not in ("", "nan", "None"):
+            label = f"{cat} · {year}"
+        return f'<span class="hra-iucn linked">IUCN {label}</span>'
+    return '<span class="hra-iucn unlinked">IUCN not linked</span>'
+
+
 def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool):
     band = str(row.get("hpi_band", ""))
     bc = band_class(band)
     arch = row.get("archetype_label") or ""
     chip = f'<span class="hra-chip">{arch}</span>' if arch else ""
+    iucn_badge = iucn_badge_html(row)
     st.markdown(
         f"""
         <div style="margin-bottom:0.5rem">
@@ -371,15 +383,14 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool):
           <div style="color:#6e6e73">{row.get('vernacular_ph','')}</div>
           <div style="margin-top:0.5rem">
             <span class="hra-band {bc}">{band}</span>
+            {iucn_badge}
             {chip}
-            {iucn_badge_html(row)}
           </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
     demo_caption("dossier", demo)
-    demo_talk("Species dossier", demo)
 
     hpi_v = float(row["hpi"])
     conf = float(row.get("hpi_confidence", 0))
@@ -405,11 +416,11 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool):
     tab_bar, tab_wf = st.tabs(["Component scores", "Weighted waterfall"])
     with tab_bar:
         fig_bar = component_bar(row)
-        st.plotly_chart(fig_bar, use_container_width=True)
+        st.plotly_chart(fig_bar, use_container_width=True, theme=None, config={"displayModeBar": "hover", "displaylogo": False})
         chart_download(fig_bar, f"hpi_components_{row['scientific_name'].replace(' ', '_')}")
     with tab_wf:
         fig_wf = component_waterfall(row)
-        st.plotly_chart(fig_wf, use_container_width=True)
+        st.plotly_chart(fig_wf, use_container_width=True, theme=None, config={"displayModeBar": "hover", "displaylogo": False})
         chart_download(fig_wf, f"hpi_waterfall_{row['scientific_name'].replace(' ', '_')}")
 
     data_gaps_panel(row)
@@ -419,7 +430,7 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool):
         sub = occ[occ["scientific_name"] == row["scientific_name"]]
         fig_dec = decade_histogram(sub, title=f"GBIF sample by decade — {row['scientific_name']}")
         if fig_dec is not None:
-            st.plotly_chart(fig_dec, use_container_width=True)
+            st.plotly_chart(fig_dec, use_container_width=True, theme=None, config={"displayModeBar": "hover", "displaylogo": False})
             chart_download(fig_dec, f"decades_{row['scientific_name'].replace(' ', '_')}")
         else:
             st.caption("No eventDate/year on this species’ GBIF sample — decade histogram skipped.")
@@ -460,10 +471,24 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool):
             unsafe_allow_html=True,
         )
     with c2:
-        iucn_note = row.get("iucn_note") or row.get("demo_iucn_note") or ""
+        iucn_status = str(row.get("iucn_status") or "not_queried")
+        iucn_cat = row.get("iucn_category") or row.get("iucn_category_code")
+        if iucn_status == "ok" and iucn_cat and str(iucn_cat) not in ("", "nan", "None"):
+            iucn_line = f"IUCN Red List: <strong>{iucn_cat}</strong>"
+            if row.get("iucn_year") and str(row.get("iucn_year")) not in ("", "nan", "None"):
+                iucn_line += f" ({row.get('iucn_year')})"
+            iucn_note = row.get("iucn_note") or ""
+        else:
+            iucn_line = (
+                '<span style="color:#86868b">IUCN not linked</span> — '
+                "Red List API not queried; category never invented."
+            )
+            iucn_note = (
+                "Set IUCN_API_TOKEN and run scripts/fetch_iucn.py for live categories."
+            )
         st.markdown(
             f'<div class="hra-card"><h3>Why it matters</h3><p>{row.get("notes","")}</p>'
-            f'<p style="margin-top:0.65rem">{iucn_badge_html(row)}</p>'
+            f'<p style="margin-top:0.65rem">{iucn_line}</p>'
             f'<p style="margin-top:0.35rem;color:#6e6e73;font-size:0.85rem">{iucn_note}</p></div>',
             unsafe_allow_html=True,
         )
@@ -495,36 +520,39 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool):
 
 def field_brief_page(row: pd.Series, demo: bool):
     demo_caption("brief", demo)
-    demo_talk("Field brief", demo)
     st.markdown(f"### Field brief — *{row['scientific_name']}*")
     st.caption(f"{row.get('vernacular_ph','')} · {row.get('hpi_band','')} · HPI {float(row['hpi']):.3f}")
-    st.markdown(iucn_badge_html(row), unsafe_allow_html=True)
     acts = dossier_actions(row.to_dict())
     payload = row.to_dict()
     html = render_field_brief_html(payload, acts)
     components.html(html, height=520, scrolling=True)
-    stem = str(row["scientific_name"]).replace(" ", "_")
+    stem = f"field_brief_{row['scientific_name'].replace(' ', '_')}"
     c1, c2 = st.columns(2)
     with c1:
         st.download_button(
-            "Download field brief (PDF)",
-            data=render_field_brief_pdf(payload, acts),
-            file_name=f"field_brief_{stem}.pdf",
-            mime="application/pdf",
-            type="primary",
-        )
-    with c2:
-        st.download_button(
             "Download field brief (HTML)",
             data=html.encode("utf-8"),
-            file_name=f"field_brief_{stem}.html",
+            file_name=f"{stem}.html",
             mime="text/html",
+            type="primary",
+            key="dl_brief_html",
         )
+    with c2:
+        try:
+            pdf_bytes = render_field_brief_pdf(payload, acts)
+            st.download_button(
+                "Download field brief (PDF)",
+                data=pdf_bytes,
+                file_name=f"{stem}.pdf",
+                mime="application/pdf",
+                key="dl_brief_pdf",
+            )
+        except ImportError:
+            st.caption("PDF needs reportlab (pip install reportlab). HTML still works.")
 
 
-def compare_page(hpi: pd.DataFrame, demo: bool):
+def compare_page(hpi: pd.DataFrame):
     st.markdown("### Compare species")
-    demo_talk("Compare", demo)
     st.caption("Side-by-side HPI components and key metrics. Pick any two from the atlas cohort.")
     names = hpi.sort_values("hpi", ascending=False)["scientific_name"].tolist()
     default_a = names[0] if names else None
@@ -550,20 +578,81 @@ def compare_page(hpi: pd.DataFrame, demo: bool):
     row_b = hpi.loc[hpi["scientific_name"] == b].iloc[0]
 
     fig = compare_components(row_a, row_b)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, theme=None, config={"displayModeBar": "hover", "displaylogo": False})
     chart_download(fig, f"compare_{a.replace(' ','_')}_vs_{b.replace(' ','_')}")
-    st.markdown(compare_grid_html(row_a, row_b), unsafe_allow_html=True)
 
+    def _metric_block(r: pd.Series) -> str:
+        """HTML card as one logical block — no leading spaces (Streamlit Markdown treats indented lines as code)."""
+        arch = r.get("archetype_label") or "—"
+        # Build with joined lines (no indent) so st.markdown fallback cannot code-fence.
+        parts = [
+            '<div class="hra-card hra-compare-card">',
+            f'<h3 class="hra-sci-name">{r["scientific_name"]}</h3>',
+            f'<p style="color:#6e6e73;margin-bottom:0.5rem">{r.get("vernacular_ph","")}</p>',
+            f'<p><span class="hra-mono">{float(r["hpi"]):.3f}</span> · {r.get("hpi_band","")}</p>',
+            (
+                f'<p style="margin-top:0.35rem">Confidence '
+                f'<span class="hra-mono">{float(r.get("hpi_confidence",0)):.2f}</span>'
+                f' · n={int(r.get("n_occurrences") or 0)}</p>'
+            ),
+            f'<p style="margin-top:0.5rem"><span class="hra-chip">{arch}</span></p>',
+            (
+                f'<p style="margin-top:0.65rem;font-size:0.85rem;color:#6e6e73">'
+                f'R {float(r["component_rarity"]):.3f} · '
+                f'C {float(r["component_climate"]):.3f} · '
+                f'H {float(r["component_harvest"]):.3f} · '
+                f'P {float(r["component_pa_gap"]):.3f}</p>'
+            ),
+            (
+                f'<p style="margin-top:0.35rem;font-size:0.8rem;color:#86868b">'
+                f'IUCN {r.get("iucn_category") or r.get("iucn_category_code")}</p>'
+                if str(r.get("iucn_status") or "") == "ok"
+                and (r.get("iucn_category") or r.get("iucn_category_code"))
+                else '<p style="margin-top:0.35rem;font-size:0.8rem;color:#86868b">IUCN not linked</p>'
+            ),
+            "</div>",
+        ]
+        return "".join(parts)
 
-def methods_page(hpi: pd.DataFrame, demo: bool):
-    st.markdown("## Methods & data sources")
-    demo_talk("Methods", demo)
-    st.markdown(hpi_formula_markdown())
-    with st.expander("HPI weights", expanded=False):
-        st.markdown(weights_explainer_markdown())
-    st.markdown(
-        "See `docs/METHODS.md` and `docs/DESIGN.md` for full formulas, licenses, and AI disclosure."
+    # st.html bypasses Markdown (avoids indented-block → code fence). Fallback: zero-indent markdown.
+    compare_html = (
+        f'<div class="hra-compare-grid">{_metric_block(row_a)}{_metric_block(row_b)}</div>'
     )
+    if hasattr(st, "html"):
+        st.html(compare_html)
+    else:
+        st.markdown(compare_html, unsafe_allow_html=True)
+
+
+def methods_page(hpi: pd.DataFrame):
+    st.markdown("## Methods & data sources")
+    st.markdown(hpi_formula_markdown())
+    with st.expander("Weights transparency (HPI v1.1)", expanded=True):
+        w = HPI_WEIGHTS
+        st.markdown(
+            f"""
+<div class="hra-card" style="margin-bottom:0.5rem">
+<table class="hra-weights">
+  <thead><tr><th>Component</th><th>Symbol</th><th>Weight</th><th>What it captures</th></tr></thead>
+  <tbody>
+    <tr><td>Rarity</td><td>R</td><td class="w">{w['rarity']:.2f}</td>
+        <td>Sparse GBIF sample + endemism cue</td></tr>
+    <tr><td>Climate stress</td><td>C</td><td class="w">{w['climate_stress']:.2f}</td>
+        <td>WorldClim niche squeeze / seasonality / thermal</td></tr>
+    <tr><td>Harvest proxy</td><td>H</td><td class="w">{w['harvest_proxy']:.2f}</td>
+        <td>Local density, recent-occurrence drop, literature flag</td></tr>
+    <tr><td>PA gap</td><td>P</td><td class="w">{w['pa_gap']:.2f}</td>
+        <td>Share of points outside WDPCA PH polygons</td></tr>
+  </tbody>
+</table>
+<p class="hra-weights-why">Why these weights: rarity and harvest get slightly more mass because wild-collection
+pressure and sparse records are the primary monitoring concern for this atlas; climate and PA
+gap share the rest so no single layer dominates. Tunable — see docs/METHODS.md. IUCN is never an HPI input.</p>
+</div>
+""",
+            unsafe_allow_html=True,
+        )
+    st.caption("Full formulas, licenses, and AI disclosure: docs/METHODS.md · docs/DESIGN.md")
     st.markdown(
         """
 | Source | Role | License / access |
@@ -577,7 +666,7 @@ def methods_page(hpi: pd.DataFrame, demo: bool):
     )
     st.markdown("### HPI distribution")
     fig = hpi_distribution(hpi)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, theme=None, config={"displayModeBar": "hover", "displaylogo": False})
     chart_download(fig, "hpi_distribution_cohort")
 
     st.markdown("### Risk archetypes")
@@ -660,7 +749,18 @@ def main():
             demo_sp = pick_demo_species(hpi)
             st.session_state["selected"] = demo_sp
             st.caption(f"Demo species: *{demo_sp}*")
-            st.caption("Talk track is on each page. Follow Map, dossier, then field brief.")
+            st.markdown(
+                f"""<div class="hra-talktrack">
+                <span class="tag">60-sec talk track</span>
+                <ol>
+                  <li>Map (15s): Color = HPI band; size ∝ score. Abutra is moderate — harvest signal, not Red List.</li>
+                  <li>Dossier (25s): R/C/H/P bars + waterfall. Gaps: IUCN not linked; climate WorldClim; PA WDPCA.</li>
+                  <li>Brief (15s): Download HTML or PDF. Stewardship only — not a permit.</li>
+                  <li>Close (5s): Weights 0.30/0.25/0.25/0.20. IUCN never invented.</li>
+                </ol>
+                </div>""",
+                unsafe_allow_html=True,
+            )
 
         st.markdown("---")
         st.caption("Search scientific or PH vernacular name")
@@ -694,32 +794,48 @@ def main():
     workflow_steps(page)
 
     if page == "Methods":
-        methods_page(hpi, demo)
+        methods_page(hpi)
         return
 
     if page == "Compare":
-        compare_page(hpi, demo)
+        compare_page(hpi)
         return
 
     if page == "Map":
         demo_caption("map", demo)
-        demo_talk("Map", demo)
-        color_arch = st.checkbox("Color centroids by risk archetype", value=False)
-        st.markdown(map_howto_html(), unsafe_allow_html=True)
         st.markdown(
-            """<div class="hra-legend">
-<span class="l-low">Lower relative pressure</span>
-<span class="l-mid">Moderate</span>
-<span class="l-high">Higher relative pressure</span>
-</div>""",
+            """<div class="hra-howto">
+            <span class="tag">How to read this</span>
+            <p>Marker color is HPI band only: green = lower relative pressure, earth = moderate,
+            red = higher. Marker size scales with HPI. This is a research index — not IUCN status
+            and not a harvest permit.</p>
+            </div>""",
             unsafe_allow_html=True,
         )
+        color_arch = st.checkbox("Color centroids by risk archetype", value=False)
+        if color_arch:
+            st.markdown(
+                """<div class="hra-legend">
+                <span class="l-note">Centroids colored by risk archetype (muted forest palette)</span>
+                </div>""",
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(
+                """<div class="hra-legend">
+                <span class="l-low">Lower relative pressure</span>
+                <span class="l-mid">Moderate</span>
+                <span class="l-high">Higher relative pressure</span>
+                <span class="l-note">Marker size ∝ HPI</span>
+                </div>""",
+                unsafe_allow_html=True,
+            )
         m = build_map(hpi, occ, selected, color_by_archetype=color_arch)
-        st_folium(m, width=None, height=480, returned_objects=[])
+        st_folium(m, width=None, height=520, returned_objects=[], use_container_width=True)
 
         st.markdown("#### HPI distribution")
         fig_dist = hpi_distribution(hpi, highlight=selected)
-        st.plotly_chart(fig_dist, use_container_width=True)
+        st.plotly_chart(fig_dist, use_container_width=True, theme=None, config={"displayModeBar": "hover", "displaylogo": False})
         chart_download(fig_dist, "hpi_distribution_map")
 
         show_cols = [
@@ -751,7 +867,7 @@ def main():
         dossier(row, occ, demo)
         m = build_map(hpi, occ, selected)
         st.markdown("#### Occurrence context")
-        st_folium(m, width=None, height=360, returned_objects=[])
+        st_folium(m, width=None, height=400, returned_objects=[], use_container_width=True)
         continue_to("Continue to field brief →", "Field brief")
     else:
         st.info("Select a species from the sidebar.")

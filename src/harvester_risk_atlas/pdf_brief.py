@@ -1,93 +1,99 @@
-"""One-page field brief: standalone HTML and a reportlab PDF. No medical claims."""
+"""Field brief exporters — HTML + real PDF. No medical claims; IUCN never invented."""
 from __future__ import annotations
 
-import html
-from io import BytesIO
+import io
 from typing import Any
 
-from .markup import iucn_plain_label
 
-
-def _num(value: Any, fmt: str, missing: str = "—") -> str:
-    if value is None:
-        return missing
+def _safe_float(v: Any, fmt: str = ".3f", default: str = "—") -> str:
     try:
-        number = float(value)
+        if v is None or (isinstance(v, float) and v != v):
+            return default
+        return format(float(v), fmt)
     except (TypeError, ValueError):
-        return missing
-    if number != number:
-        return missing
-    return format(number, fmt)
+        return default
 
 
-def _pdf_safe(text: Any) -> str:
-    """WinAnsi-safe text for the standard PDF fonts."""
-    raw = "" if text is None else str(text)
-    return (
-        raw.replace("×", "x")
-        .replace("—", "-")
-        .replace("–", "-")
-        .replace("’", "'")
-        .replace("“", '"')
-        .replace("”", '"')
-    )
+def _iucn_line(row: dict[str, Any]) -> str:
+    """Honest IUCN line for briefs — never invent a category."""
+    status = str(row.get("iucn_status") or "not_queried").strip()
+    cat = row.get("iucn_category") or row.get("iucn_category_code")
+    year = row.get("iucn_year")
+    if status == "ok" and cat:
+        line = f"IUCN Red List: {cat}"
+        if year is not None and str(year) not in ("", "nan", "None"):
+            line += f" ({year})"
+        return line
+    if status == "not_queried":
+        return "IUCN not linked — API not queried; category never invented."
+    if status in ("not_on_red_list", "no_assessment", "skipped"):
+        return f"IUCN: {status.replace('_', ' ')} — no category shown."
+    return f"IUCN: {status} — category not shown (never invented)."
+
+
+def _centroid_line(row: dict[str, Any]) -> str:
+    lat, lon = row.get("lat_mean"), row.get("lon_mean")
+    n = row.get("n_occurrences", 0) or 0
+    try:
+        if lat is not None and lon is not None and lat == lat and lon == lon:
+            return f"Centroid ≈ {float(lat):.3f}°N, {float(lon):.3f}°E · n={int(n)} GBIF sample pts"
+    except (TypeError, ValueError):
+        pass
+    return f"No georeferenced sample · n={int(n) if n == n else 0} GBIF pts"
 
 
 def render_field_brief_html(row: dict[str, Any], actions: list[str]) -> str:
-    hpi_s = _num(row.get("hpi"), ".3f")
-    conf_s = _num(row.get("hpi_confidence"), ".2f")
-    lat_s = _num(row.get("lat_mean"), ".3f")
-    lon_s = _num(row.get("lon_mean"), ".3f")
-    where = (
-        f"Centroid ≈ {lat_s}°N, {lon_s}°E · n={int(float(row.get('n_occurrences') or 0))} GBIF sample pts"
-        if lat_s != "—"
-        else "No georeferenced sample points in this extract."
-    )
-    actions_li = "".join(f"<li>{html.escape(a)}</li>" for a in actions)
-    iucn = html.escape(iucn_plain_label(row))
-    note = html.escape(str(row.get("iucn_note") or row.get("demo_iucn_note") or ""))
-    notes = html.escape(str(row.get("notes") or ""))
-    name = html.escape(str(row.get("scientific_name") or ""))
-    vernacular = html.escape(str(row.get("vernacular_ph") or ""))
-    family = html.escape(str(row.get("family") or ""))
-    band = html.escape(str(row.get("hpi_band") or "—"))
-    climate = html.escape(str(row.get("climate_source") or "n/a"))
-    pa = html.escape(str(row.get("pa_source") or "n/a"))
+    hpi_s = _safe_float(row.get("hpi"))
+    conf_s = _safe_float(row.get("hpi_confidence"), ".2f")
+    actions_li = "".join(f"<li>{a}</li>" for a in actions)
+    iucn = _iucn_line(row)
+    note = row.get("iucn_note") or ""
+    if str(row.get("iucn_status") or "") == "not_queried":
+        # Prefer short mute note over token signup essay in the brief body
+        note = "Set IUCN_API_TOKEN and re-run fetch_iucn.py for live categories."
+    clim = row.get("climate_source") or row.get("climate_method") or "n/a"
+    pa = row.get("pa_source") or row.get("pa_method") or "n/a"
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Field brief — {name}</title>
+<title>Field brief — {row.get('scientific_name','')}</title>
 <style>
   body {{ font-family: -apple-system, BlinkMacSystemFont, Inter, Helvetica, Arial, sans-serif;
-         color: #1d1d1f; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }}
-  h1 {{ font-size: 1.35rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.15rem; font-style: italic; }}
+         color: #1d1d1f; max-width: 720px; margin: 2rem auto; padding: 0 1rem;
+         line-height: 1.55; font-size: 15px; }}
+  h1 {{ font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; margin: 0.2rem 0 0.15rem 0; }}
+  .kicker {{ font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: #86868b; }}
   .sub {{ color: #6e6e73; font-size: 0.9rem; margin-bottom: 1.25rem; }}
   .metric {{ font-family: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
              font-variant-numeric: tabular-nums; }}
   .box {{ border: 1px solid #d2d2d7; border-radius: 8px; padding: 0.85rem 1rem; margin: 0.75rem 0; }}
-  .label {{ font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: #86868b; }}
-  .badge {{ display: inline-block; border: 1px solid #d2d2d7; border-radius: 999px;
-            padding: 0.12rem 0.55rem; font-size: 0.8rem; }}
-  .disc {{ font-size: 0.75rem; color: #6e6e73; border-top: 1px solid #d2d2d7; padding-top: 0.75rem; margin-top: 1.5rem; }}
+  .label {{ font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: #86868b;
+            margin-bottom: 0.35rem; }}
+  .muted {{ color: #6e6e73; font-size: 0.85rem; }}
+  .iucn-muted {{ color: #86868b; font-size: 0.9rem; }}
+  ul {{ margin: 0.35rem 0 0 1.1rem; padding: 0; }}
+  li {{ margin-bottom: 0.35rem; }}
+  .disc {{ font-size: 0.75rem; color: #6e6e73; border-top: 1px solid #d2d2d7;
+           padding-top: 0.75rem; margin-top: 1.5rem; }}
 </style>
 </head>
 <body>
-  <div class="label">Harvester Risk Atlas — field brief</div>
-  <h1>{name}</h1>
-  <div class="sub">{vernacular} · {family}</div>
-  <div class="box"><div class="label">Stress (HPI v1)</div>
+  <div class="kicker">Harvester Risk Atlas — field brief</div>
+  <h1>{row.get('scientific_name','')}</h1>
+  <div class="sub">{row.get('vernacular_ph','')} · {row.get('family','')}</div>
+  <div class="box"><div class="label">Stress (HPI v1.1)</div>
     <div class="metric" style="font-size:1.4rem">{hpi_s}</div>
-    <div style="font-size:0.8rem;color:#6e6e73">Confidence {conf_s} · Band: {band}</div>
+    <div class="muted">Confidence {conf_s} · Band: {row.get('hpi_band','—')}</div>
   </div>
   <div class="box"><div class="label">Where</div>
-    <div>{where}</div>
+    <div>{_centroid_line(row)}</div>
   </div>
   <div class="box"><div class="label">Why it matters</div>
-    <div>{notes}</div>
-    <div style="margin-top:0.5rem"><span class="badge">IUCN {iucn}</span></div>
-    <div style="margin-top:0.3rem;font-size:0.8rem;color:#6e6e73">{note}</div>
-    <div style="margin-top:0.4rem;font-size:0.75rem;color:#86868b">Climate: {climate} · PA: {pa}</div>
+    <div>{row.get('notes','')}</div>
+    <div class="iucn-muted" style="margin-top:0.5rem">{iucn}</div>
+    <div class="muted" style="margin-top:0.3rem">{note}</div>
+    <div style="margin-top:0.4rem;font-size:0.75rem;color:#86868b">Climate: {clim} · PA: {pa}</div>
   </div>
   <div class="box"><div class="label">What to do</div>
     <ul>{actions_li}</ul>
@@ -100,143 +106,280 @@ def render_field_brief_html(row: dict[str, Any], actions: list[str]) -> str:
 
 
 def render_field_brief_pdf(row: dict[str, Any], actions: list[str]) -> bytes:
-    """One-page PDF field brief. Requires reportlab."""
+    """Generate a one-page PDF brief. Prefers reportlab; falls back to fpdf2."""
+    try:
+        return _pdf_reportlab(row, actions)
+    except ImportError:
+        pass
+    try:
+        return _pdf_fpdf2(row, actions)
+    except ImportError as e:
+        raise ImportError(
+            "PDF export needs reportlab or fpdf2. pip install reportlab"
+        ) from e
+
+
+def _pdf_reportlab(row: dict[str, Any], actions: list[str]) -> bytes:
     from reportlab.lib.colors import HexColor
+    from reportlab.lib.enums import TA_LEFT
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
     from reportlab.lib.units import mm
-    from reportlab.platypus import (
-        HRFlowable,
-        ListFlowable,
-        ListItem,
-        Paragraph,
-        SimpleDocTemplate,
-        Spacer,
-    )
+    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 
-    name = _pdf_safe(row.get("scientific_name") or "Species")
-    vernacular = _pdf_safe(row.get("vernacular_ph") or "")
-    family = _pdf_safe(row.get("family") or "")
-    hpi_s = _num(row.get("hpi"), ".3f")
-    conf_s = _num(row.get("hpi_confidence"), ".2f")
-    band = _pdf_safe(row.get("hpi_band") or "-")
-    lat_s = _num(row.get("lat_mean"), ".3f")
-    lon_s = _num(row.get("lon_mean"), ".3f")
-    if lat_s == "—":
-        where = "No georeferenced sample points in this extract."
-    else:
-        n = int(float(row.get("n_occurrences") or 0))
-        where = f"Centroid approx. {lat_s} N, {lon_s} E. n={n} GBIF sample points."
-    iucn = _pdf_safe(iucn_plain_label(row))
-    notes = _pdf_safe(row.get("notes") or "")
-    iucn_note = _pdf_safe(row.get("iucn_note") or row.get("demo_iucn_note") or "")
-    climate = _pdf_safe(row.get("climate_source") or "n/a")
-    pa = _pdf_safe(row.get("pa_source") or "n/a")
+    ink = HexColor("#1d1d1f")
+    secondary = HexColor("#6e6e73")
+    tertiary = HexColor("#86868b")
+    hairline = HexColor("#d2d2d7")
+    accent = HexColor("#2d6a4f")
 
-    styles = getSampleStyleSheet()
-    kicker = ParagraphStyle(
-        "Kicker",
-        parent=styles["Normal"],
-        fontName="Times-Bold",
-        fontSize=8,
-        textColor=HexColor("#86868b"),
-        tracking=0.4,
-        spaceAfter=4,
-    )
-    title = ParagraphStyle(
-        "Species",
-        parent=styles["Normal"],
-        fontName="Times-Italic",
-        fontSize=16,
-        textColor=HexColor("#1d1d1f"),
-        leading=20,
-        spaceAfter=2,
-    )
-    sub = ParagraphStyle(
-        "Sub",
-        parent=styles["Normal"],
-        fontName="Times-Roman",
-        fontSize=10,
-        textColor=HexColor("#6e6e73"),
-        spaceAfter=10,
-    )
-    label = ParagraphStyle(
-        "Label",
-        parent=styles["Normal"],
-        fontName="Times-Bold",
-        fontSize=8,
-        textColor=HexColor("#86868b"),
-        spaceBefore=8,
-        spaceAfter=2,
-    )
-    body = ParagraphStyle(
-        "BodyCopy",
-        parent=styles["Normal"],
-        fontName="Times-Roman",
-        fontSize=10,
-        textColor=HexColor("#1d1d1f"),
-        leading=13,
-        spaceAfter=2,
-    )
-    fine = ParagraphStyle(
-        "Fine",
-        parent=body,
-        fontSize=8,
-        textColor=HexColor("#6e6e73"),
-        leading=11,
-    )
-
-    def p(text: str, style: ParagraphStyle) -> Paragraph:
-        return Paragraph(html.escape(text).replace("\n", "<br/>"), style)
-
-    story = [
-        p("HARVESTER RISK ATLAS  -  FIELD BRIEF", kicker),
-        p(name, title),
-        p(f"{vernacular}  ·  {family}".strip(" ·"), sub),
-        HRFlowable(width="100%", thickness=0.4, color=HexColor("#d2d2d7"), spaceAfter=6),
-        p("STRESS (HPI v1)", label),
-        p(f"{hpi_s}    confidence {conf_s}    band: {band}", body),
-        p("WHERE", label),
-        p(where, body),
-        p("WHY IT MATTERS", label),
-        p(notes or "No ethnobotany note on this row.", body),
-        p(f"IUCN: {iucn}", body),
-        p(iucn_note, fine),
-        p(f"Climate: {climate}", fine),
-        p(f"Protected areas: {pa}", fine),
-        p("WHAT TO DO", label),
-    ]
-    if actions:
-        story.append(
-            ListFlowable(
-                [ListItem(p(_pdf_safe(item), body), leftIndent=12) for item in actions],
-                bulletType="bullet",
-                start="•",
-                leftIndent=16,
-            )
-        )
-    story.extend(
-        [
-            Spacer(1, 8 * mm),
-            HRFlowable(width="100%", thickness=0.4, color=HexColor("#d2d2d7"), spaceBefore=4, spaceAfter=6),
-            p(
-                "Not medical advice. Not a harvest permit. HPI is a transparent research index. "
-                "IUCN categories are never invented. EthnoHACK 2026 Track 3.",
-                fine,
-            ),
-        ]
-    )
-
-    buf = BytesIO()
+    buf = io.BytesIO()
     doc = SimpleDocTemplate(
         buf,
         pagesize=A4,
-        leftMargin=18 * mm,
-        rightMargin=18 * mm,
-        topMargin=16 * mm,
-        bottomMargin=16 * mm,
-        title=f"Field brief - {name}",
+        leftMargin=22 * mm,
+        rightMargin=22 * mm,
+        topMargin=18 * mm,
+        bottomMargin=18 * mm,
+        title=f"Field brief — {row.get('scientific_name', '')}",
         author="Harvester Risk Atlas",
     )
+    base = getSampleStyleSheet()
+    styles = {
+        "kicker": ParagraphStyle(
+            "kicker",
+            parent=base["Normal"],
+            fontName="Helvetica",
+            fontSize=8,
+            textColor=tertiary,
+            spaceAfter=4,
+            tracking=1,
+        ),
+        "title": ParagraphStyle(
+            "title",
+            parent=base["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=16,
+            textColor=ink,
+            leading=20,
+            spaceAfter=2,
+        ),
+        "sub": ParagraphStyle(
+            "sub",
+            parent=base["Normal"],
+            fontName="Helvetica",
+            fontSize=10,
+            textColor=secondary,
+            spaceAfter=12,
+        ),
+        "label": ParagraphStyle(
+            "label",
+            parent=base["Normal"],
+            fontName="Helvetica",
+            fontSize=8,
+            textColor=tertiary,
+            spaceBefore=10,
+            spaceAfter=3,
+        ),
+        "body": ParagraphStyle(
+            "body",
+            parent=base["Normal"],
+            fontName="Helvetica",
+            fontSize=10,
+            textColor=ink,
+            leading=14,
+            alignment=TA_LEFT,
+            spaceAfter=2,
+        ),
+        "metric": ParagraphStyle(
+            "metric",
+            parent=base["Normal"],
+            fontName="Courier-Bold",
+            fontSize=18,
+            textColor=ink,
+            spaceAfter=2,
+        ),
+        "muted": ParagraphStyle(
+            "muted",
+            parent=base["Normal"],
+            fontName="Helvetica",
+            fontSize=9,
+            textColor=secondary,
+            leading=12,
+            spaceAfter=2,
+        ),
+        "action": ParagraphStyle(
+            "action",
+            parent=base["Normal"],
+            fontName="Helvetica",
+            fontSize=10,
+            textColor=ink,
+            leading=13,
+            leftIndent=12,
+            spaceAfter=4,
+        ),
+        "disc": ParagraphStyle(
+            "disc",
+            parent=base["Normal"],
+            fontName="Helvetica",
+            fontSize=8,
+            textColor=secondary,
+            leading=11,
+            spaceBefore=16,
+            borderPadding=6,
+        ),
+        "rule": ParagraphStyle(
+            "rule",
+            parent=base["Normal"],
+            fontName="Helvetica",
+            fontSize=8,
+            textColor=accent,
+            spaceAfter=0,
+        ),
+    }
+
+    def esc(s: Any) -> str:
+        t = "" if s is None else str(s)
+        return (
+            t.replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+        )
+
+    hpi_s = _safe_float(row.get("hpi"))
+    conf_s = _safe_float(row.get("hpi_confidence"), ".2f")
+    iucn = _iucn_line(row)
+    note = "Set IUCN_API_TOKEN and re-run fetch_iucn.py for live categories."
+    if str(row.get("iucn_status") or "") == "ok":
+        note = str(row.get("iucn_note") or "")
+    clim = row.get("climate_source") or row.get("climate_method") or "n/a"
+    pa = row.get("pa_source") or row.get("pa_method") or "n/a"
+
+    story = [
+        Paragraph("HARVESTER RISK ATLAS — FIELD BRIEF", styles["kicker"]),
+        Paragraph(esc(row.get("scientific_name", "")), styles["title"]),
+        Paragraph(
+            f"{esc(row.get('vernacular_ph', ''))} · {esc(row.get('family', ''))}",
+            styles["sub"],
+        ),
+        Paragraph("STRESS (HPI v1.1)", styles["label"]),
+        Paragraph(hpi_s, styles["metric"]),
+        Paragraph(
+            f"Confidence {conf_s} · Band: {esc(row.get('hpi_band', '—'))}",
+            styles["muted"],
+        ),
+        Paragraph("WHERE", styles["label"]),
+        Paragraph(esc(_centroid_line(row)), styles["body"]),
+        Paragraph("WHY IT MATTERS", styles["label"]),
+        Paragraph(esc(row.get("notes", "")), styles["body"]),
+        Paragraph(esc(iucn), styles["muted"]),
+    ]
+    if note:
+        story.append(Paragraph(esc(note), styles["muted"]))
+    story.append(
+        Paragraph(f"Climate: {esc(clim)} · PA: {esc(pa)}", styles["muted"])
+    )
+    story.append(Paragraph("WHAT TO DO", styles["label"]))
+    for a in actions:
+        story.append(Paragraph(f"• {esc(a)}", styles["action"]))
+    story.append(Spacer(1, 8))
+    story.append(
+        Paragraph(
+            "Not medical advice. Not a harvest permit. HPI is a transparent research index; "
+            "IUCN categories are never invented. EthnoHACK 2026 Track 3.",
+            styles["disc"],
+        )
+    )
+    # hairline is unused visually but keeps token parity with DESIGN.md
+    _ = hairline
     doc.build(story)
     return buf.getvalue()
+
+
+def _pdf_fpdf2(row: dict[str, Any], actions: list[str]) -> bytes:
+    from fpdf import FPDF
+
+    pdf = FPDF(format="A4")
+    pdf.set_auto_page_break(auto=True, margin=18)
+    pdf.add_page()
+    pdf.set_margins(22, 18, 22)
+
+    def text(s: Any) -> str:
+        # fpdf2 core fonts are latin-1; strip non-encodable chars
+        raw = "" if s is None else str(s)
+        return raw.encode("latin-1", "replace").decode("latin-1")
+
+    hpi_s = _safe_float(row.get("hpi"))
+    conf_s = _safe_float(row.get("hpi_confidence"), ".2f")
+    iucn = _iucn_line(row)
+
+    pdf.set_font("Helvetica", size=8)
+    pdf.set_text_color(0x86, 0x86, 0x8B)
+    pdf.cell(0, 5, "HARVESTER RISK ATLAS — FIELD BRIEF", new_x="LMARGIN", new_y="NEXT")
+
+    pdf.set_font("Helvetica", "B", 16)
+    pdf.set_text_color(0x1D, 0x1D, 0x1F)
+    pdf.multi_cell(0, 8, text(row.get("scientific_name", "")))
+
+    pdf.set_font("Helvetica", size=10)
+    pdf.set_text_color(0x6E, 0x6E, 0x73)
+    pdf.multi_cell(
+        0,
+        5,
+        text(f"{row.get('vernacular_ph', '')} · {row.get('family', '')}"),
+    )
+    pdf.ln(4)
+
+    pdf.set_font("Helvetica", size=8)
+    pdf.set_text_color(0x86, 0x86, 0x8B)
+    pdf.cell(0, 5, "STRESS (HPI v1.1)", new_x="LMARGIN", new_y="NEXT")
+    pdf.set_font("Courier", "B", 18)
+    pdf.set_text_color(0x1D, 0x1D, 0x1F)
+    pdf.cell(0, 9, hpi_s, new_x="LMARGIN", new_y="NEXT")
+    pdf.set_font("Helvetica", size=9)
+    pdf.set_text_color(0x6E, 0x6E, 0x73)
+    pdf.multi_cell(
+        0,
+        5,
+        text(f"Confidence {conf_s} · Band: {row.get('hpi_band', '—')}"),
+    )
+
+    pdf.ln(3)
+    pdf.set_font("Helvetica", size=8)
+    pdf.set_text_color(0x86, 0x86, 0x8B)
+    pdf.cell(0, 5, "WHERE", new_x="LMARGIN", new_y="NEXT")
+    pdf.set_font("Helvetica", size=10)
+    pdf.set_text_color(0x1D, 0x1D, 0x1F)
+    pdf.multi_cell(0, 5, text(_centroid_line(row)))
+
+    pdf.ln(2)
+    pdf.set_font("Helvetica", size=8)
+    pdf.set_text_color(0x86, 0x86, 0x8B)
+    pdf.cell(0, 5, "WHY IT MATTERS", new_x="LMARGIN", new_y="NEXT")
+    pdf.set_font("Helvetica", size=10)
+    pdf.set_text_color(0x1D, 0x1D, 0x1F)
+    pdf.multi_cell(0, 5, text(row.get("notes", "")))
+    pdf.set_font("Helvetica", size=9)
+    pdf.set_text_color(0x6E, 0x6E, 0x73)
+    pdf.multi_cell(0, 5, text(iucn))
+
+    pdf.ln(2)
+    pdf.set_font("Helvetica", size=8)
+    pdf.set_text_color(0x86, 0x86, 0x8B)
+    pdf.cell(0, 5, "WHAT TO DO", new_x="LMARGIN", new_y="NEXT")
+    pdf.set_font("Helvetica", size=10)
+    pdf.set_text_color(0x1D, 0x1D, 0x1F)
+    for a in actions:
+        pdf.multi_cell(0, 5, text(f"- {a}"))
+
+    pdf.ln(6)
+    pdf.set_font("Helvetica", size=8)
+    pdf.set_text_color(0x6E, 0x6E, 0x73)
+    pdf.multi_cell(
+        0,
+        4,
+        "Not medical advice. Not a harvest permit. HPI is a transparent research index; "
+        "IUCN categories are never invented. EthnoHACK 2026 Track 3.",
+    )
+    out = pdf.output()
+    return bytes(out) if isinstance(out, (bytes, bytearray)) else out.encode("latin-1")

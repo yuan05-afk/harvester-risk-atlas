@@ -8,53 +8,97 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 ACCENT = "#2d6a4f"
+ACCENT_MID = "#52796f"
+ACCENT_SOFT = "#74a892"
 INK = "#1d1d1f"
 INK_SEC = "#6e6e73"
 HAIRLINE = "#e8e8ed"
+PAPER = "#ffffff"
+
+# Risk colors — HPI bands / histogram ONLY (never component fills)
 RISK = {
     "Lower relative pressure": "#40916c",
     "Moderate": "#b08968",
     "Higher relative pressure": "#9b2226",
 }
-COMP_COLORS = {
-    "Rarity": "#2d6a4f",
-    "Climate": "#52796f",
-    "Harvest": "#b08968",
-    "PA gap": "#9b2226",
+
+# Forest accent ramp for non-HPI component charts (no risk red/amber)
+FOREST_RAMP = {
+    "Rarity": ACCENT,
+    "Climate": ACCENT_MID,
+    "Harvest": "#6b8f71",
+    "PA gap": ACCENT_SOFT,
 }
+
 WEIGHTS = {"Rarity": 0.30, "Climate": 0.25, "Harvest": 0.25, "PA gap": 0.20}
 
-FONT = dict(family="Inter, -apple-system, sans-serif", color=INK, size=12)
+FONT = dict(family="Inter, -apple-system, BlinkMacSystemFont, sans-serif", color=INK, size=12)
 LAYOUT_BASE = dict(
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor=PAPER,
+    plot_bgcolor=PAPER,
     font=FONT,
+    separators=".,",
+    # Never inherit a template that parks legend beside the title.
+    template="plotly_white",
 )
 
+# Canonical legend: horizontal UNDER the plot (never y>1 / never beside title).
+LEGEND_BELOW = dict(
+    orientation="h",
+    yanchor="top",
+    y=-0.22,
+    x=0,
+    xanchor="left",
+    bgcolor="rgba(0,0,0,0)",
+    borderwidth=0,
+    font=dict(size=11, color=INK_SEC),
+    title=dict(text=""),
+    itemsizing="constant",
+    traceorder="normal",
+)
 
-def _legend_below() -> dict:
-    """Horizontal legend under the axis so it does not share a band with the title."""
-    return dict(
-        orientation="h",
-        yanchor="top",
-        y=-0.28,
-        x=0,
-        xanchor="left",
-        title_text="",
-        font=dict(family="Inter, -apple-system, sans-serif", size=12, color=INK),
+# Bottom margin must clear a horizontal legend under the axes.
+MARGIN_WITH_LEGEND = dict(l=72, r=24, t=56, b=110)
+MARGIN_NO_LEGEND = dict(l=72, r=24, t=52, b=56)
+
+
+def _axis(title: str, **extra: Any) -> dict[str, Any]:
+    base = dict(
+        title=dict(text=title, font=dict(size=11, color=INK_SEC)),
+        gridcolor=HAIRLINE,
+        gridwidth=1,
+        zeroline=False,
+        showline=False,
+        tickfont=dict(size=11, color=INK_SEC),
+        automargin=True,
     )
+    base.update(extra)
+    return base
 
 
-def _title_above(text: str) -> dict:
+def _title(text: str) -> dict[str, Any]:
+    """Title anchored high in paper space with pad so it never meets a top legend."""
     return dict(
         text=text,
-        x=0,
+        font=dict(size=13, color=INK_SEC, family=FONT["family"]),
+        x=0.0,
         xanchor="left",
-        y=1,
+        y=0.98,
         yanchor="top",
-        pad=dict(b=18, t=0),
-        font=dict(size=13, color=INK_SEC, family="Inter, -apple-system, sans-serif"),
+        pad=dict(t=4, b=12, l=0, r=0),
     )
+
+
+def _legend_below(**overrides: Any) -> dict[str, Any]:
+    """Horizontal legend under the plot — never beside / over the title."""
+    leg = dict(LEGEND_BELOW)
+    leg.update(overrides)
+    return leg
+
+
+def _short_name(name: str, max_len: int = 32) -> str:
+    name = str(name)
+    return name if len(name) <= max_len else name[: max_len - 1] + "…"
 
 
 def _components_from_row(row: pd.Series | dict[str, Any]) -> pd.DataFrame:
@@ -72,10 +116,10 @@ def _components_from_row(row: pd.Series | dict[str, Any]) -> pd.DataFrame:
     )
 
 
-def component_bar(row: pd.Series | dict[str, Any], title: str = "HPI components") -> go.Figure:
-    """Horizontal bar of raw component scores [0,1]."""
+def component_bar(row: pd.Series | dict[str, Any], title: str = "HPI components (0–1)") -> go.Figure:
+    """Horizontal bar of raw component scores [0,1] — forest accents only."""
     comp = _components_from_row(row)
-    colors = [COMP_COLORS[c] for c in comp["Component"]]
+    colors = [FOREST_RAMP[c] for c in comp["Component"]]
     fig = go.Figure(
         go.Bar(
             x=comp["Score"],
@@ -83,23 +127,31 @@ def component_bar(row: pd.Series | dict[str, Any], title: str = "HPI components"
             orientation="h",
             marker_color=colors,
             marker_line_width=0,
+            text=[f"{v:.3f}" for v in comp["Score"]],
+            textposition="outside",
+            textfont=dict(size=11, color=INK_SEC, family="JetBrains Mono, ui-monospace, monospace"),
+            cliponaxis=False,
             hovertemplate="%{y}: %{x:.3f}<extra></extra>",
         )
     )
     fig.update_layout(
         **LAYOUT_BASE,
-        title=dict(text=title, font=dict(size=13, color=INK_SEC)),
-        height=200,
-        margin=dict(l=8, r=12, t=28, b=8),
+        title=_title(title),
+        height=280,
+        margin=dict(l=88, r=56, t=52, b=48),
         showlegend=False,
-        xaxis=dict(range=[0, 1], gridcolor=HAIRLINE, zeroline=False, title=""),
-        yaxis=dict(title="", categoryorder="array", categoryarray=["PA gap", "Harvest", "Climate", "Rarity"]),
+        xaxis=_axis("Component score", range=[0, 1.15]),
+        yaxis=_axis(
+            "",
+            categoryorder="array",
+            categoryarray=["PA gap", "Harvest", "Climate", "Rarity"],
+        ),
     )
     return fig
 
 
 def component_waterfall(row: pd.Series | dict[str, Any], title: str = "Weighted contribution to HPI") -> go.Figure:
-    """Waterfall: weight × component → sum ≈ HPI."""
+    """Waterfall: weight × component → sum ≈ HPI. Forest accents; total in ink."""
     get = row.get if hasattr(row, "get") else lambda k, d=None: row[k] if k in row.index else d
     raw = {
         "Rarity": float(get("component_rarity", 0) or 0),
@@ -122,27 +174,30 @@ def component_waterfall(row: pd.Series | dict[str, Any], title: str = "Weighted 
             measure=measures,
             x=x,
             y=y,
-            connector={"line": {"color": "#d2d2d7"}},
+            connector={"line": {"color": "#d2d2d7", "width": 1}},
             increasing={"marker": {"color": ACCENT}},
-            totals={"marker": {"color": "#1d1d1f"}},
+            totals={"marker": {"color": INK}},
             text=[f"{v:.3f}" for v in y],
             textposition="outside",
+            textfont=dict(size=11, color=INK_SEC),
+            cliponaxis=False,
             hovertemplate="%{x}: %{y:.3f}<extra></extra>",
         )
     )
     fig.update_layout(
         **LAYOUT_BASE,
-        title=dict(text=title, font=dict(size=13, color=INK_SEC)),
-        height=240,
-        margin=dict(l=8, r=12, t=28, b=40),
-        yaxis=dict(gridcolor=HAIRLINE, zeroline=False, title=""),
+        title=_title(title),
+        height=320,
+        margin=dict(l=72, r=24, t=52, b=64),
+        xaxis=_axis("Weighted term", tickangle=-20),
+        yaxis=_axis("Contribution to HPI"),
         showlegend=False,
     )
     return fig
 
 
 def hpi_distribution(hpi: pd.DataFrame, highlight: str | None = None) -> go.Figure:
-    """Global HPI histogram colored by band; optional species marker."""
+    """Global HPI histogram colored by band (risk colors OK here); optional species marker."""
     df = hpi.dropna(subset=["hpi"]).copy()
     fig = px.histogram(
         df,
@@ -157,31 +212,44 @@ def hpi_distribution(hpi: pd.DataFrame, highlight: str | None = None) -> go.Figu
                 "Higher relative pressure",
             ]
         },
+        labels={"hpi": "Harvest Pressure Index (HPI)", "hpi_band": "Band", "count": "Species"},
+        template="plotly_white",
     )
-    fig.update_traces(marker_line_width=0, opacity=0.85)
+    fig.update_traces(marker_line_width=0, opacity=0.88)
     if highlight and highlight in set(df["scientific_name"]):
         val = float(df.loc[df["scientific_name"] == highlight, "hpi"].iloc[0])
-        fig.add_vline(x=val, line_dash="dot", line_color=ACCENT, annotation_text=highlight, annotation_position="top")
+        short = _short_name(highlight, 28)
+        fig.add_vline(
+            x=val,
+            line_dash="dot",
+            line_color=ACCENT,
+            line_width=1.5,
+            annotation_text=short,
+            annotation_position="top",
+            annotation_font=dict(size=11, color=ACCENT),
+        )
+    # Force legend below AFTER px defaults (px parks legend at top-right).
     fig.update_layout(
         **LAYOUT_BASE,
-        title=_title_above("HPI distribution (atlas cohort)"),
-        height=300,
-        bargap=0.08,
+        title=_title("HPI distribution (atlas cohort)"),
+        height=320,
+        bargap=0.1,
         showlegend=True,
         legend=_legend_below(),
-        xaxis=dict(title="HPI", range=[0, 1], gridcolor=HAIRLINE),
-        yaxis=dict(title="Species", gridcolor=HAIRLINE),
-        margin=dict(l=48, r=16, t=72, b=108),
+        xaxis=_axis("Harvest Pressure Index (HPI)", range=[0, 1]),
+        yaxis=_axis("Number of species"),
+        margin=dict(MARGIN_WITH_LEGEND),
     )
+    fig.update_layout(legend=_legend_below())  # second pass beats px template merge
     return fig
 
 
 def compare_components(row_a: pd.Series, row_b: pd.Series) -> go.Figure:
-    """Grouped horizontal bars for two species."""
+    """Grouped horizontal bars for two species — forest accent vs earth tone (identity, not risk)."""
     comps = ["Rarity", "Climate", "Harvest", "PA gap"]
     keys = ["component_rarity", "component_climate", "component_harvest", "component_pa_gap"]
-    name_a = str(row_a.get("scientific_name", "A"))
-    name_b = str(row_b.get("scientific_name", "B"))
+    name_a = _short_name(row_a.get("scientific_name", "A"))
+    name_b = _short_name(row_b.get("scientific_name", "B"))
     fig = go.Figure()
     fig.add_trace(
         go.Bar(
@@ -190,7 +258,7 @@ def compare_components(row_a: pd.Series, row_b: pd.Series) -> go.Figure:
             x=[float(row_a[k]) for k in keys],
             orientation="h",
             marker_color=ACCENT,
-            hovertemplate="%{y}: %{x:.3f}<extra></extra>",
+            hovertemplate=f"{name_a} · %{{y}}: %{{x:.3f}}<extra></extra>",
         )
     )
     fig.add_trace(
@@ -199,21 +267,31 @@ def compare_components(row_a: pd.Series, row_b: pd.Series) -> go.Figure:
             y=comps,
             x=[float(row_b[k]) for k in keys],
             orientation="h",
-            marker_color="#b08968",
-            hovertemplate="%{y}: %{x:.3f}<extra></extra>",
+            marker_color=ACCENT_MID,
+            hovertemplate=f"{name_b} · %{{y}}: %{{x:.3f}}<extra></extra>",
         )
     )
+    # Legend ALWAYS below plot (y<=-0.22). Never y>1 — that overlaps the title.
     fig.update_layout(
         **LAYOUT_BASE,
-        title=_title_above("Component comparison"),
-        height=360,
+        title=_title("Component comparison (0–1)"),
+        height=400,
         barmode="group",
+        bargap=0.25,
+        bargroupgap=0.08,
         showlegend=True,
-        legend=_legend_below(),
-        xaxis=dict(range=[0, 1], gridcolor=HAIRLINE, title=""),
-        yaxis=dict(title=""),
-        margin=dict(l=56, r=24, t=72, b=96),
+        legend=_legend_below(y=-0.28),  # two long names → a bit lower + gap under axes
+        xaxis=_axis("Component score", range=[0, 1.05]),
+        # Category labels only (no axis title) so left ticks are fully visible.
+        yaxis=_axis(
+            "",
+            categoryorder="array",
+            categoryarray=["PA gap", "Harvest", "Climate", "Rarity"],
+            ticklabelposition="outside",
+        ),
+        margin=dict(l=96, r=28, t=60, b=120),
     )
+    fig.update_layout(legend=_legend_below(y=-0.28))
     return fig
 
 
@@ -236,16 +314,17 @@ def decade_histogram(occ_sub: pd.DataFrame, title: str = "Occurrences by decade"
             y=counts.values,
             marker_color=ACCENT,
             marker_line_width=0,
-            hovertemplate="%{x}: %{y}<extra></extra>",
+            hovertemplate="%{x}: %{y} records<extra></extra>",
         )
     )
     fig.update_layout(
         **LAYOUT_BASE,
-        title=dict(text=title, font=dict(size=13, color=INK_SEC)),
-        height=200,
-        xaxis=dict(title="", tickangle=-30),
-        yaxis=dict(title="Records", gridcolor=HAIRLINE),
-        margin=dict(l=8, r=12, t=28, b=48),
+        title=_title(title),
+        height=280,
+        showlegend=False,
+        xaxis=_axis("Decade", tickangle=-30),
+        yaxis=_axis("GBIF sample records"),
+        margin=dict(l=72, r=20, t=52, b=72),
     )
     return fig
 
