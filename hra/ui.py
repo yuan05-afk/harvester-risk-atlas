@@ -302,7 +302,7 @@ def page_map(rows: list[dict]) -> None:
             unsafe_allow_html=True,
         )
         if shown:
-            st.plotly_chart(cohort_figure(shown), width="stretch", config={"displayModeBar": False})
+            st.plotly_chart(cohort_figure(shown), width="stretch", theme=None, config={"displayModeBar": False})
         else:
             with st.container(border=True):
                 _empty("No cohort to draw", "The category chart appears again when the filter matches a species.")
@@ -387,7 +387,7 @@ def page_dossier(species: dict | None) -> None:
             with st.container(border=True):
                 _empty("Nothing to chart", "Both components are unscored, so there is no bar and no HPI.")
         else:
-            st.plotly_chart(figure, width="stretch", config={"displayModeBar": False})
+            st.plotly_chart(figure, width="stretch", theme=None, config={"displayModeBar": False})
             st.markdown(
                 "<p class='caption'>Listing is the forest bar. Record concentration is the gray bar, drawn on top of listing when both exist. "
                 "Only the HPI total uses a risk color. An unscored part is left off the chart.</p>",
@@ -405,7 +405,7 @@ def page_dossier(species: dict | None) -> None:
         with st.container(border=True):
             _empty("No dated records", "GBIF did not return a year facet for this species.")
     else:
-        st.plotly_chart(figure, width="stretch", config={"displayModeBar": False})
+        st.plotly_chart(figure, width="stretch", theme=None, config={"displayModeBar": False})
         note = "Counts of GBIF occurrence records that have a year. Not harvest volume."
         if before:
             note += f" {before} records dated before 1950 are omitted from the bars and mentioned here."
@@ -502,7 +502,8 @@ def page_brief(rows: list[dict]) -> None:
         with st.container(border=True):
             _empty("No comparison", "Both species need to be in the catalog.")
     else:
-        st.plotly_chart(figure, width="stretch", config={"displayModeBar": False})
+        st.markdown("<h2 class='section-title'>Component comparison</h2>", unsafe_allow_html=True)
+        st.plotly_chart(figure, width="stretch", theme=None, config={"displayModeBar": False})
         st.markdown(
             "<p class='caption'>Bars are listing and record concentration. Missing points are gaps, not zeros. "
             "Risk color stays on the HPI figures above, not on these bars.</p>",

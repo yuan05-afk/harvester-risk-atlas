@@ -25,7 +25,7 @@ Track 3 workflow is Map → Dossier → Brief. Demo mode keeps *Aquilaria malacc
 | Name column repeated the Latin name | Species with no single GBIF name showed the scientific name twice | Lists use one recorded English name when GBIF has one (*Agarwood*), and “—” when it has none (*Aquilaria crassna*). The dossier still says when no name is preferred |
 | Stale catalog in a long-running server | The first load stayed cached after the snapshot was corrected | The file is reread when its modification time changes |
 | Compare legend casing | “frankincense” rendered as stored | Display labels capitalize a fully lowercase vernacular |
-| Compare chart title on the legend | “Component comparison” sat on the species legend | Title stays at the top. The legend sits below the axis, with extra top and bottom margin |
+| Compare chart title on the legend | “Component comparison” sat on the species legend, and a later pass still left the green swatch on that word | The heading is outside the figure. Every Plotly legend is horizontal, on paper coordinates, at y=−0.28 under the axes. Compare categories are on the Y axis so “Listing” and “Concentration” stay whole |
 | Right compare card showed markup | An indented multiline HTML string was read as a Markdown code fence | Both cards use the same dedented HTML, and no line is indented |
 | Long binomials broke mid-word | A narrow card could split a name into pieces such as “ARCANGELISI” / “A FLAVA” | Genus and epithet stay whole words, in italics, with no uppercase transform |
 

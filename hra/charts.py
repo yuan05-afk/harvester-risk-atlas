@@ -16,21 +16,47 @@ LAYOUT = dict(
     hoverlabel=dict(font_family=SANS, font_size=12),
 )
 
+# Paper y=0 is the bottom of the axes. A negative y with the top of the
+# legend anchored there keeps the swatch under the plot. y>1 would sit
+# beside the title, which is the overlap we are avoiding.
+LEGEND_BELOW = dict(
+    orientation="h",
+    yanchor="top",
+    y=-0.28,
+    x=0,
+    xanchor="left",
+    xref="paper",
+    yref="paper",
+    font=dict(family=SANS, size=12, color=INK),
+)
+
 
 def _base(fig: go.Figure, height: int = 320) -> go.Figure:
-    fig.update_layout(height=height, **LAYOUT)
+    fig.update_layout(height=height, **LAYOUT, legend=dict(LEGEND_BELOW))
     fig.update_xaxes(
         showgrid=False,
         zeroline=False,
         linecolor="#e6e6e8",
         tickfont=dict(size=12),
         automargin=True,
+        ticklabeloverflow="allow",
     )
     fig.update_yaxes(
         gridcolor="#efeff1",
         zeroline=False,
         tickfont=dict(size=12),
         automargin=True,
+        ticklabeloverflow="allow",
+    )
+    return fig
+
+
+def _pin_legend(fig: go.Figure, *, show: bool, bottom: int = 36) -> go.Figure:
+    """Lock the legend under the axes. Call this after every other layout update."""
+    fig.update_layout(
+        showlegend=show,
+        legend=dict(LEGEND_BELOW),
+        margin_b=bottom if show else max(bottom, 36),
     )
     return fig
 
@@ -55,10 +81,10 @@ def cohort_figure(species: list[dict]) -> go.Figure:
         )
     )
     fig = _base(fig, 280)
-    fig.update_layout(margin=dict(l=16, r=28, t=8, b=36), xaxis_title="Species in this catalog")
+    fig.update_layout(margin=dict(l=120, r=36, t=12, b=48), xaxis_title="Species in this catalog")
     fig.update_yaxes(categoryorder="array", categoryarray=list(reversed(labels)), title=None)
     fig.update_xaxes(range=[0, max(values + [1]) + 1.4], title_font=dict(size=12, color=CAPTION))
-    return fig
+    return _pin_legend(fig, show=False, bottom=48)
 
 
 def decade_bins(years: list[dict]) -> tuple[dict[int, int], int]:
@@ -93,9 +119,9 @@ def decade_figure(species: dict) -> go.Figure | None:
         )
     )
     fig = _base(fig, 300)
-    fig.update_layout(margin=dict(l=16, r=12, t=8, b=8), yaxis_title="Records")
+    fig.update_layout(margin=dict(l=56, r=16, t=12, b=56), yaxis_title="Records")
     fig.update_yaxes(title_font=dict(size=12, color=CAPTION), rangemode="tozero")
-    return fig
+    return _pin_legend(fig, show=False, bottom=56)
 
 
 def waterfall_figure(score: dict) -> go.Figure | None:
@@ -119,8 +145,9 @@ def waterfall_figure(score: dict) -> go.Figure | None:
             )
         )
         fig = _base(fig, 300)
+        fig.update_layout(margin=dict(l=72, r=20, t=16, b=56))
         fig.update_yaxes(range=[0, 62], title="Points (of 50)", title_font=dict(size=12, color=CAPTION))
-        return fig
+        return _pin_legend(fig, show=False, bottom=56)
 
     hpi = score["hpi"]
     fig = go.Figure(
@@ -136,6 +163,7 @@ def waterfall_figure(score: dict) -> go.Figure | None:
         )
     )
     fig = _base(fig, 320)
+    fig.update_layout(margin=dict(l=64, r=20, t=16, b=64))
     fig.update_yaxes(range=[0, 112], title="Points", title_font=dict(size=12, color=CAPTION), dtick=20)
     fig.add_shape(
         type="line",
@@ -147,46 +175,37 @@ def waterfall_figure(score: dict) -> go.Figure | None:
         y1=listing,
         line=dict(color="#d2d2d7", width=1, dash="dot"),
     )
-    return fig
+    return _pin_legend(fig, show=False, bottom=64)
 
 
 def compare_figure(left: dict, right: dict) -> go.Figure | None:
     if left is None or right is None:
         return None
-    components = ["Listing", "Concentration"]
+    # Categories sit on Y so the full words stay visible. The legend is not
+    # a Plotly title: the page heading lives outside the figure.
+    categories = ["Listing", "Concentration"]
     fig = go.Figure()
     for species, color in ((left, FOREST), (right, STONE)):
         score = species["score"]
         fig.add_bar(
             name=display_name(species),
-            x=components,
-            y=[score.get("listing"), score.get("concentration")],
+            y=categories,
+            x=[score.get("listing"), score.get("concentration")],
+            orientation="h",
             marker_color=color,
-            hovertemplate="%{fullData.name}<br>%{x}: %{y}<extra></extra>",
+            hovertemplate="%{fullData.name}<br>%{y}: %{x}<extra></extra>",
         )
-    fig = _base(fig, 360)
+    fig = _base(fig, 320)
     fig.update_layout(
         barmode="group",
-        showlegend=True,
-        title=dict(
-            text="Component comparison",
-            x=0,
-            xanchor="left",
-            y=1,
-            yanchor="top",
-            pad=dict(b=18, t=0),
-            font=dict(family=SANS, size=16, color=INK),
-        ),
-        legend=dict(
-            orientation="h",
-            yanchor="top",
-            y=-0.28,
-            x=0,
-            xanchor="left",
-            font=dict(family=SANS, size=12, color=INK),
-        ),
-        margin=dict(l=56, r=24, t=72, b=96),
-        yaxis_title="Points",
+        margin=dict(l=156, r=28, t=12, b=96),
+        xaxis_title="Points",
     )
-    fig.update_yaxes(range=[0, 62], title_font=dict(size=12, color=CAPTION))
-    return fig
+    fig.update_xaxes(range=[0, 62], title_font=dict(size=12, color=CAPTION))
+    fig.update_yaxes(
+        categoryorder="array",
+        categoryarray=["Concentration", "Listing"],
+        title=None,
+        tickfont=dict(size=13, color=INK),
+    )
+    return _pin_legend(fig, show=True, bottom=96)

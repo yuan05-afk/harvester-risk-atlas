@@ -89,6 +89,31 @@ class ChartTests(unittest.TestCase):
         figure = waterfall_figure(partial["score"])
         self.assertEqual(len(figure.data[0].x), 1)
 
+    def _assert_legend_below(self, figure):
+        legend = figure.layout.legend
+        self.assertEqual(legend.orientation, "h")
+        self.assertEqual(legend.xref, "paper")
+        self.assertEqual(legend.yref, "paper")
+        self.assertEqual(legend.yanchor, "top")
+        self.assertEqual(legend.xanchor, "left")
+        self.assertLessEqual(legend.y, -0.25)
+        self.assertLess(legend.y, 1)
+
+    def test_every_chart_pins_the_legend_below(self):
+        demo = demo_species()
+        other = by_id("boswellia-sacra")
+        partial = next(row for row in species_list() if row["score"]["hpi"] is None and row["score"]["listing"] is not None)
+        figures = [
+            cohort_figure(species_list()),
+            decade_figure(demo),
+            waterfall_figure(demo["score"]),
+            waterfall_figure(partial["score"]),
+            compare_figure(demo, other),
+        ]
+        for figure in figures:
+            self.assertIsNotNone(figure)
+            self._assert_legend_below(figure)
+
     def test_decade_and_compare(self):
         demo = demo_species()
         other = by_id("boswellia-sacra")
@@ -96,9 +121,11 @@ class ChartTests(unittest.TestCase):
         figure = compare_figure(demo, other)
         self.assertEqual(figure.data[0].marker.color, FOREST)
         self.assertEqual(figure.data[1].marker.color, STONE)
-        self.assertEqual(figure.layout.title.text, "Component comparison")
-        self.assertLess(figure.layout.legend.y, 0)
-        self.assertGreaterEqual(figure.layout.margin.t, 64)
+        self.assertEqual(figure.data[0].orientation, "h")
+        self.assertEqual(list(figure.data[0].y), ["Listing", "Concentration"])
+        self.assertFalse(figure.layout.title.text)
+        self.assertTrue(figure.layout.showlegend)
+        self.assertGreaterEqual(figure.layout.margin.l, 140)
         self.assertGreaterEqual(figure.layout.margin.b, 80)
 
     def test_empty_decade(self):
