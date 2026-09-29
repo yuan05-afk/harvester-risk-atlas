@@ -96,6 +96,10 @@ class ChartTests(unittest.TestCase):
         figure = compare_figure(demo, other)
         self.assertEqual(figure.data[0].marker.color, FOREST)
         self.assertEqual(figure.data[1].marker.color, STONE)
+        self.assertEqual(figure.layout.title.text, "Component comparison")
+        self.assertLess(figure.layout.legend.y, 0)
+        self.assertGreaterEqual(figure.layout.margin.t, 64)
+        self.assertGreaterEqual(figure.layout.margin.b, 80)
 
     def test_empty_decade(self):
         self.assertIsNone(decade_figure({"occurrences": {"years": []}}))
@@ -110,6 +114,28 @@ class BriefAndMapTests(unittest.TestCase):
         self.assertIn("HPI is not scored", text)
         self.assertIn("population estimate", text.casefold())
         self.assertNotIn("population decline", text.casefold())
+
+    def test_compare_cards_render_as_html(self):
+        from hra.ui import compare_card_html
+
+        demo = demo_species()
+        other = by_id("boswellia-sacra")
+        long_name = {
+            "scientific_name": "Arcangelisia flava",
+            "common_name": None,
+            "vernacular_names": [],
+            "iucn": {"code": "LC", "label": "Least Concern"},
+            "score": {"complete": True, "hpi": 12, "band": "Lower", "listing": 8, "concentration": 4, "gaps": []},
+        }
+        for species in (demo, other, long_name):
+            fragment = compare_card_html(species)
+            self.assertTrue(fragment.startswith("<div"))
+            for line in fragment.splitlines():
+                self.assertFalse(line.startswith(" "), line)
+            self.assertNotIn("```", fragment)
+        self.assertIn('class="genus">Arcangelisia</span>', compare_card_html(long_name))
+        self.assertIn('class="epithet">flava</span>', compare_card_html(long_name))
+        self.assertNotIn("ARCANGELISI", compare_card_html(long_name))
 
     def test_map_uses_esri_gray(self):
         atlas = build_map(species_list()[:2])

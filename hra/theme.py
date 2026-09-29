@@ -144,6 +144,42 @@ CSS = f"""
     font-size: 0.78rem;
     color: {CAPTION};
     margin-top: 0.1rem;
+    text-transform: none;
+    letter-spacing: 0;
+    line-height: 1.4;
+    overflow-wrap: normal;
+    word-break: normal;
+  }}
+  .compare-card {{
+    min-width: 0;
+  }}
+  .compare-card .card-title,
+  .compare-card .card-binomial {{
+    text-transform: none;
+    letter-spacing: 0;
+    hyphens: manual;
+    overflow-wrap: normal;
+    word-break: keep-all;
+    line-height: 1.3;
+    margin: 0;
+  }}
+  .compare-card .card-title {{
+    font-size: 1.05rem;
+    font-weight: 600;
+  }}
+  .compare-card .card-binomial {{
+    margin-top: 0.2rem;
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #3a3a3c;
+  }}
+  .compare-card .genus,
+  .compare-card .epithet {{
+    display: inline-block;
+    white-space: nowrap;
+  }}
+  .compare-card .epithet {{
+    margin-left: 0.28em;
   }}
   .swatch {{
     display: inline-block;

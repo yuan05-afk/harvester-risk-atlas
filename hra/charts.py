@@ -164,12 +164,28 @@ def compare_figure(left: dict, right: dict) -> go.Figure | None:
             marker_color=color,
             hovertemplate="%{fullData.name}<br>%{x}: %{y}<extra></extra>",
         )
-    fig = _base(fig, 320)
+    fig = _base(fig, 360)
     fig.update_layout(
         barmode="group",
         showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0, font=dict(size=12)),
-        margin=dict(l=8, r=8, t=36, b=8),
+        title=dict(
+            text="Component comparison",
+            x=0,
+            xanchor="left",
+            y=1,
+            yanchor="top",
+            pad=dict(b=18, t=0),
+            font=dict(family=SANS, size=16, color=INK),
+        ),
+        legend=dict(
+            orientation="h",
+            yanchor="top",
+            y=-0.28,
+            x=0,
+            xanchor="left",
+            font=dict(family=SANS, size=12, color=INK),
+        ),
+        margin=dict(l=56, r=24, t=72, b=96),
         yaxis_title="Points",
     )
     fig.update_yaxes(range=[0, 62], title_font=dict(size=12, color=CAPTION))

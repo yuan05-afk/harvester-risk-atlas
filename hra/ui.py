@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html
+import textwrap
 
 import streamlit as st
 from streamlit_folium import st_folium
@@ -443,17 +444,41 @@ def page_dossier(species: dict | None) -> None:
         )
 
 
-def _hpi_badge(species: dict) -> str:
+def markdown_html(fragment: str) -> str:
+    """Drop leading spaces so Markdown does not turn the markup into a code fence."""
+    cleaned = textwrap.dedent(fragment).strip()
+    return "\n".join(line.lstrip() for line in cleaned.splitlines())
+
+
+def _binomial_html(scientific_name: str) -> str:
+    parts = scientific_name.split()
+    if len(parts) < 2:
+        return html.escape(scientific_name)
+    genus = html.escape(parts[0])
+    epithet = html.escape(" ".join(parts[1:]))
+    return f'<span class="genus">{genus}</span><span class="epithet">{epithet}</span>'
+
+
+def compare_card_html(species: dict) -> str:
     score = species["score"]
     if not score["complete"]:
         value = "Not scored"
     else:
         value = f"{score['hpi']} · {score['band']}"
-    return (
-        f"<div class='metric-label'>{html.escape(display_name(species))}</div>"
-        f"<div class='metric-value' style='color:{risk_color(score['band'])}'>{html.escape(value)}</div>"
-        f"<div class='metric-note'>{html.escape(species['scientific_name'])} · IUCN {html.escape(category_label(species))}</div>"
-    )
+    scientific = species["scientific_name"]
+    short = label_name(species)
+    title = ""
+    if short and short.casefold() != scientific.casefold():
+        title = f'<p class="card-title">{html.escape(short)}</p>'
+    fragment = f"""
+    <div class="compare-card">
+        {title}
+        <p class="card-binomial">{_binomial_html(scientific)}</p>
+        <p class="metric-value" style="color:{risk_color(score['band'])}">{html.escape(value)}</p>
+        <p class="metric-note">IUCN {html.escape(category_label(species))}</p>
+    </div>
+    """
+    return markdown_html(fragment)
 
 
 def page_brief(rows: list[dict]) -> None:
@@ -467,12 +492,11 @@ def page_brief(rows: list[dict]) -> None:
         with st.container(border=True):
             _empty("Choose two species", "Set Species and Compare with in the sidebar. Demo mode fills both.")
         return
-    with st.container(border=True):
-        st.markdown(
-            f"<div class='metric-row two'>{_hpi_badge(left)}{_hpi_badge(right)}</div>",
-            unsafe_allow_html=True,
-        )
-    st.markdown("<h2 class='section-title'>Components</h2>", unsafe_allow_html=True)
+    left_col, right_col = st.columns(2, gap="large")
+    for column, species in ((left_col, left), (right_col, right)):
+        with column:
+            with st.container(border=True):
+                st.markdown(compare_card_html(species), unsafe_allow_html=True)
     figure = compare_figure(left, right)
     if figure is None:
         with st.container(border=True):
