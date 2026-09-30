@@ -75,7 +75,7 @@ Card section labels (Where / Stress / …) stay uppercase 12–13px tertiary —
 - Honor `prefers-reduced-motion: reduce` (transitions/animations near-zero; preface removed).
 - **Banned motion:** bounce, spring, staggered card entrances, aurora blobs.
 - **Page enter:** main column only, 180ms opacity and a 3px rise. Not on the sidebar. Not while the preface is showing.
-- **Home preface (exception, one shot):** first session only. Four short lines, opacity crossfade, a 2px progress rule. Skip is a real button and stays hidden until 3 seconds. `?intro=skip` also dismisses it. No position shift, no bounce, no second call to action on the sheet. `prefers-reduced-motion` removes the sheet entirely (do not only crush the duration — the delay would leave a blank screen). `?demo=1` skips it and opens the map.
+- **Home preface (exception, one shot):** first session only, about nine seconds. A Philippines silhouette draws north to south, occurrence dots settle, and one leaf traces on. Four short lines then enter and leave one at a time (fade plus a slight lift — beats do not overlap). The formula sits inside the last line. A 3px accent rule and a mono beat index run with the sheet. Skip is a real button and stays hidden until 3 seconds. `?intro=skip` also dismisses it. No bounce, no second call to action on the sheet. `prefers-reduced-motion` removes the sheet entirely (do not only crush the duration — the delay would leave a blank screen). `?demo=1` skips it and opens the map.
 - Map controls: minimal Folium defaults; legend as hairlined floating panel
 - Markers: white/ink stroke (`weight ≥ 1.5`) so centroids read on Esri gray canvas
 

@@ -18,7 +18,7 @@ Files: `app/streamlit_app.py`, `tests/test_cloud_import.py`, `DEPLOY.md`.
 |------|--------|
 | App opens on **Home** — problem, HPI v1.1, term table, map → dossier → brief, cohort line from loaded scores | Done |
 | One action on Home: **Open the map**. No icon cards, no stat tiles, no chat, no name-model UI | Done |
-| First-visit preface: four opacity beats + formula + 2px rule + Skip. Once per session | Done |
+| First-visit preface: drawn PH mark + leaf, four non-overlapping beats, formula, 3px rule, Skip at 3s. Once per session | Done |
 | `prefers-reduced-motion` removes the preface. `?demo=1` skips it and opens the map | Done |
 | Species search stays off Home so the introduction is not the tool chrome | Done |
 
