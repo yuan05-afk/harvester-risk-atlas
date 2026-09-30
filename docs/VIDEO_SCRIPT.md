@@ -2,7 +2,7 @@
 
 Plain spoken track for Demo mode. Record the live app: https://harvester-risk-atlas.streamlit.app/
 
-**Setup:** Open demo. Home is the introduction (a short preface plays once; Skip if it is in the way). **Open the map** → sidebar → toggle **Demo mode** → species locks to *Arcangelisia flava* (abutra). `?demo=1` skips Home and the preface.
+**Setup:** Open demo. Home is the introduction (a short preface plays once; Skip if it is in the way; sidebar **Replay intro** if it does not appear). **Open the map** → sidebar → toggle **Demo mode** → species locks to *Arcangelisia flava* (abutra). `?demo=1` skips Home and the preface.
 
 ---
 

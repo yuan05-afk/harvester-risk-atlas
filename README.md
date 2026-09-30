@@ -2,7 +2,7 @@
 
 **EthnoHACK 2026 — Track 3: Biodiversity & Sustainability**
 
-Opens on **Home**: the problem, the Harvest Pressure Index, and one path into the tool. Then **Explore map** → **Species dossier** (HPI components, data gaps, archetype, decade hist) → **Field brief**. Also: **Compare** two species, **Demo mode** for judging video, Methods with cohort HPI distribution + archetype table. A first-visit preface states the problem in four lines; Skip or `?demo=1` goes straight to the tool.
+Opens on **Home**: the problem, the Harvest Pressure Index, and one path into the tool. Then **Explore map** → **Species dossier** (HPI components, data gaps, archetype, decade hist) → **Field brief**. Also: **Compare** two species, **Demo mode** for judging video, Methods with cohort HPI distribution + archetype table. A first-visit preface states the problem in four lines; Skip or `?demo=1` goes straight to the tool. Sidebar **Replay intro** plays that preface again.
 
 Vernacular→scientific search is a thin helper only — not a second product.
 

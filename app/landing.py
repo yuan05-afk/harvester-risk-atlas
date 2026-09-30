@@ -34,8 +34,16 @@ def demo_query_requested(query) -> bool:
     return "demo" in query
 
 
-def should_play_intro(*, intro_played: bool, demo_requested: bool) -> bool:
-    """Preface plays once per session, and never on the judging deep link."""
+def should_play_intro(
+    *, intro_played: bool, demo_requested: bool, replay: bool = False
+) -> bool:
+    """Preface plays once per session, and never on the judging deep link.
+
+    ``replay`` is the quiet sidebar control. It plays one cinematic pass even
+    after this session already showed the sheet, and even on ``?demo=1``.
+    """
+    if replay:
+        return True
     return not intro_played and not demo_requested
 
 
@@ -207,11 +215,16 @@ def _preface_mark() -> str:
     )
 
 
-def preload_markup(weights: dict) -> str:
-    """One-shot preface. The stylesheet owns timing, lift, and the mark."""
+def preload_markup(weights: dict, *, force_motion: bool = False) -> str:
+    """One-shot preface. The stylesheet owns timing, lift, and the mark.
+
+    ``force_motion`` is set only for Replay. The reduced-motion rule still
+    removes an automatic sheet; this class opts that one pass back in.
+    """
     formula = formula_line(weights)
+    root = "hra-preload hra-force-motion" if force_motion else "hra-preload"
     return (
-        '<div class="hra-preload">'
+        f'<div class="{root}">'
         '<div class="hra-preload-top">EthnoHACK 2026</div>'
         '<div class="hra-preload-lockup">'
         f"{_preface_mark()}"
