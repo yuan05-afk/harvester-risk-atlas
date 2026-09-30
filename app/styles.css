@@ -333,14 +333,18 @@ section[data-testid="stSidebar"] {
   z-index: 100;
 }
 section[data-testid="stSidebar"] > div:first-child {
-  padding-top: 1.25rem !important;
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
+  padding-top: 1.35rem !important;
+  padding-left: 1.15rem !important;
+  padding-right: 1.15rem !important;
+}
+section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
+  padding-left: 1.2rem !important;
+  padding-right: 1.2rem !important;
 }
 section[data-testid="stSidebar"] .block-container {
-  padding-top: 1.15rem !important;
-  padding-left: 0.45rem !important;
-  padding-right: 0.45rem !important;
+  padding-top: 1.25rem !important;
+  padding-left: 0.7rem !important;
+  padding-right: 0.7rem !important;
 }
 section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
   font-size: var(--fs-body);
@@ -352,8 +356,8 @@ section[data-testid="stSidebar"] hr {
 /* Sidebar radio — soft selected wash + transition */
 section[data-testid="stSidebar"] div[role="radiogroup"] label {
   border-radius: var(--radius) !important;
-  padding: 0.35rem 0.5rem !important;
-  margin: 0.1rem 0 !important;
+  padding: 0.45rem 0.6rem !important;
+  margin: 0.22rem 0 !important;
   transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 section[data-testid="stSidebar"] div[role="radiogroup"] label:hover {
@@ -399,16 +403,21 @@ div[data-baseweb="select"]:focus-within > div {
     box-shadow var(--dur) var(--ease) !important;
 }
 .stButton > button[kind="primary"] {
-  background: var(--accent) !important;
-  border-color: var(--accent) !important;
-  color: #fff !important;
+  background-color: #2d6a4f !important;
+  background-image: none !important;
+  border-color: #2d6a4f !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
 }
 .stButton > button:hover {
   border-color: var(--accent) !important;
 }
 .stButton > button[kind="primary"]:hover {
   background: #245a42 !important;
+  background-image: none !important;
   border-color: #245a42 !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
 }
 .stButton > button:focus-visible {
   box-shadow: var(--focus-ring) !important;
@@ -431,9 +440,11 @@ div[data-baseweb="select"]:focus-within > div {
 }
 .stDownloadButton > button[kind="primary"],
 [data-testid="stDownloadButton"] > button[kind="primary"] {
-  background: var(--accent) !important;
-  border-color: var(--accent) !important;
-  color: #fff !important;
+  background-color: #2d6a4f !important;
+  background-image: none !important;
+  border-color: #2d6a4f !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
 }
 .stDownloadButton > button:hover,
 [data-testid="stDownloadButton"] > button:hover {
@@ -442,12 +453,87 @@ div[data-baseweb="select"]:focus-within > div {
 .stDownloadButton > button[kind="primary"]:hover,
 [data-testid="stDownloadButton"] > button[kind="primary"]:hover {
   background: #245a42 !important;
+  background-image: none !important;
   border-color: #245a42 !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
 }
 .stDownloadButton > button:focus-visible,
 [data-testid="stDownloadButton"] > button:focus-visible {
   box-shadow: var(--focus-ring) !important;
   outline: none !important;
+}
+
+/* Filled primary — white on the control and every nested label node.
+   Streamlit paints the label inside stMarkdownContainer (p/span), so
+   `color` on the button alone stays dark on #2d6a4f. Fill stays on the
+   button only: no inner slab, no gradient. Hover #245a42 stays white. */
+.stButton > button[kind="primary"]:not(:disabled),
+.stDownloadButton > button[kind="primary"]:not(:disabled),
+[data-testid="stDownloadButton"] > button[kind="primary"]:not(:disabled),
+button[data-testid="stBaseButton-primary"]:not(:disabled) {
+  background-color: #2d6a4f !important;
+  background-image: none !important;
+  border-color: #2d6a4f !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+.stButton > button[kind="primary"] :is(p, span, div, a, label),
+.stDownloadButton > button[kind="primary"] :is(p, span, div, a, label),
+[data-testid="stDownloadButton"] > button[kind="primary"] :is(p, span, div, a, label),
+button[data-testid="stBaseButton-primary"] :is(p, span, div, a, label),
+button[data-testid="stBaseButton-primary"] * {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+.stButton > button[kind="primary"]:hover:not(:disabled),
+.stButton > button[kind="primary"]:focus:not(:disabled),
+.stButton > button[kind="primary"]:focus-visible:not(:disabled),
+.stButton > button[kind="primary"]:active:not(:disabled),
+.stDownloadButton > button[kind="primary"]:hover:not(:disabled),
+.stDownloadButton > button[kind="primary"]:focus:not(:disabled),
+.stDownloadButton > button[kind="primary"]:focus-visible:not(:disabled),
+.stDownloadButton > button[kind="primary"]:active:not(:disabled),
+[data-testid="stDownloadButton"] > button[kind="primary"]:hover:not(:disabled),
+[data-testid="stDownloadButton"] > button[kind="primary"]:focus:not(:disabled),
+[data-testid="stDownloadButton"] > button[kind="primary"]:focus-visible:not(:disabled),
+[data-testid="stDownloadButton"] > button[kind="primary"]:active:not(:disabled),
+button[data-testid="stBaseButton-primary"]:hover:not(:disabled),
+button[data-testid="stBaseButton-primary"]:focus:not(:disabled),
+button[data-testid="stBaseButton-primary"]:focus-visible:not(:disabled),
+button[data-testid="stBaseButton-primary"]:active:not(:disabled) {
+  background-color: #245a42 !important;
+  background-image: none !important;
+  border-color: #245a42 !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+.stButton > button[kind="primary"]:hover *,
+.stButton > button[kind="primary"]:focus *,
+.stButton > button[kind="primary"]:focus-visible *,
+.stButton > button[kind="primary"]:active *,
+.stDownloadButton > button[kind="primary"]:hover *,
+.stDownloadButton > button[kind="primary"]:focus *,
+.stDownloadButton > button[kind="primary"]:focus-visible *,
+.stDownloadButton > button[kind="primary"]:active *,
+[data-testid="stDownloadButton"] > button[kind="primary"]:hover *,
+[data-testid="stDownloadButton"] > button[kind="primary"]:focus *,
+[data-testid="stDownloadButton"] > button[kind="primary"]:focus-visible *,
+[data-testid="stDownloadButton"] > button[kind="primary"]:active *,
+button[data-testid="stBaseButton-primary"]:hover *,
+button[data-testid="stBaseButton-primary"]:focus *,
+button[data-testid="stBaseButton-primary"]:focus-visible *,
+button[data-testid="stBaseButton-primary"]:active * {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
 /* Tabs */
@@ -682,11 +768,11 @@ div[data-testid="stMetricLabel"] {
   color: var(--ink-secondary);
 }
 
-/* Demo narrative captions */
+/* Demo narrative captions — surface + hairline, even radius, no accent rail */
 .hra-demo-caption {
-  background: var(--accent-soft);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
   padding: 0.6rem 0.9rem;
   margin: 0.4rem 0 1rem 0;
   font-size: 0.875rem;
@@ -770,7 +856,6 @@ div[data-testid="stCheckbox"]:focus-within [data-baseweb="checkbox"] {
   color: var(--ink-secondary);
   line-height: 1.5;
   max-width: 42rem;
-  box-shadow: var(--shadow-hair);
 }
 .hra-howto .tag {
   font-size: 0.6875rem;
@@ -823,7 +908,6 @@ div[data-testid="stCheckbox"]:focus-within [data-baseweb="checkbox"] {
   font-size: 0.8125rem;
   color: var(--ink-secondary);
   line-height: 1.5;
-  box-shadow: var(--shadow-hair);
 }
 .hra-talktrack .tag {
   font-size: 0.6875rem;

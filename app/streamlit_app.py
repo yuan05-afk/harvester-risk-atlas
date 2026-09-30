@@ -8,6 +8,8 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 import folium
+from branca.element import MacroElement
+from jinja2 import Template
 from streamlit_folium import st_folium
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,6 +41,9 @@ from harvester_risk_atlas.hpi import (  # noqa: E402
     normalize_weights,
     top_rank_movers,
     weight_sensitivity,
+    dossier_choices,
+    mapped_species,
+    unmapped_note,
 )
 from harvester_risk_atlas.names import resolve_query  # noqa: E402
 from harvester_risk_atlas.pdf_brief import (  # noqa: E402
@@ -139,9 +144,11 @@ def load_occurrences() -> pd.DataFrame:
 
 
 @st.cache_data
-def load_with_archetypes(_mtime: float = 0.0) -> pd.DataFrame:
-    hpi = load_hpi(_mtime)
-    return assign_archetypes(hpi)
+def load_with_archetypes(_mtime: float = 0.0) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Mapped cohort (archetypes fit without unlocated rows) and skipped rows."""
+    raw = load_hpi(_mtime)
+    mapped, skipped = mapped_species(raw)
+    return assign_archetypes(mapped), skipped
 
 
 def band_class(band: str) -> str:
@@ -169,19 +176,23 @@ def header():
     )
 
 
-def home_page(hpi: pd.DataFrame) -> None:
+def home_page(hpi: pd.DataFrame, omitted: pd.DataFrame | None = None) -> None:
+    """Census is the full build. Unlocated rows stay out of the map, not out of the count."""
+    census = hpi
+    if omitted is not None and len(omitted):
+        census = pd.concat([hpi, omitted], ignore_index=True)
     bands = (
-        hpi["hpi_band"].value_counts().to_dict() if "hpi_band" in hpi.columns else {}
+        census["hpi_band"].value_counts().to_dict() if "hpi_band" in census.columns else {}
     )
     n_imputed = 0
-    if "hpi_confidence" in hpi.columns:
-        n_imputed = int((hpi["hpi_confidence"] < (0.85 - 1e-9)).sum())
+    if "hpi_confidence" in census.columns:
+        n_imputed = int((census["hpi_confidence"] < (0.85 - 1e-9)).sum())
     iucn_unlinked = True
-    if "iucn_status" in hpi.columns and len(hpi):
-        iucn_unlinked = bool((hpi["iucn_status"].fillna("not_queried") != "ok").all())
+    if "iucn_status" in census.columns and len(census):
+        iucn_unlinked = bool((census["iucn_status"].fillna("not_queried") != "ok").all())
     st.markdown(
         landing.home_markup(
-            n_taxa=int(len(hpi)),
+            n_taxa=int(len(census)),
             band_counts={str(k): int(v) for k, v in bands.items()},
             n_imputed=n_imputed,
             iucn_unlinked=iucn_unlinked,
@@ -225,6 +236,17 @@ def map_color(band: str) -> str:
     return RISK_COLORS.get(band, "#86868b")
 
 
+class _LeafletAttributionMute(MacroElement):
+    """Mute Leaflet credit links to tertiary ink inside the map iframe."""
+
+    _template = Template(
+        "{% macro html(this, kwargs) %}"
+        "<style>.leaflet-control-attribution,"
+        ".leaflet-control-attribution a{color:#86868b !important}</style>"
+        "{% endmacro %}"
+    )
+
+
 def build_map(
     hpi: pd.DataFrame,
     occ: pd.DataFrame,
@@ -242,6 +264,9 @@ def build_map(
         tiles="Esri.WorldGrayCanvas",
         control_scale=True,
     )
+    # st_folium only forwards figure-level {% macro html %} siblings into the
+    # map iframe. Parent app CSS cannot reach Leaflet attribution links.
+    m.get_root().add_child(_LeafletAttributionMute())
 
     # Archetype palette — forest ramp only (risk colors stay on HPI bands)
     arch_palette = ["#2d6a4f", "#52796f", "#74a892", "#6e6e73", "#44564a"]
@@ -356,6 +381,14 @@ def data_gaps_panel(row: pd.Series):
         val = row.get(key)
         if bool(val) is True or str(val).lower() == "true":
             flags.append(f"<li><span class='gap-flag'>imputed</span> {label}</li>")
+
+    lat, lon = row.get("lat_mean"), row.get("lon_mean")
+    if not (pd.notna(lat) and pd.notna(lon)):
+        flags.append(
+            "<li><span class='gap-flag'>no coordinates</span> "
+            "No georeferenced points in this extract. Not on the map. "
+            "Coordinates are not invented.</li>"
+        )
 
     n = int(row.get("n_occurrences") or 0)
     if n == 0:
@@ -488,7 +521,7 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool, hpi: pd.DataFrame | N
             f"Centroid ≈ {float(lat):.3f}°N, {float(lon):.3f}°E · "
             f"n={int(row.get('n_occurrences') or 0)} GBIF sample points"
             if pd.notna(lat)
-            else "No georeferenced sample points in demo extract."
+            else "No georeferenced points in this extract. Coordinates are not invented."
         )
         st.markdown(
             f'<div class="hra-card"><h3>Where</h3><p>{where}</p></div>',
@@ -591,6 +624,7 @@ def field_brief_page(row: pd.Series, demo: bool):
                 data=pdf_bytes,
                 file_name=f"{stem}.pdf",
                 mime="application/pdf",
+                type="secondary",
                 key="dl_brief_pdf",
             )
         except ImportError:
@@ -931,6 +965,24 @@ def go_to(target_page: str) -> None:
     st.session_state["page"] = target_page
 
 
+def _species_row(
+    selected: str | None, mapped: pd.DataFrame, omitted: pd.DataFrame
+) -> pd.Series | None:
+    if not selected:
+        return None
+    for frame in (mapped, omitted):
+        if selected in set(frame["scientific_name"]):
+            return frame.loc[frame["scientific_name"] == selected].iloc[0]
+    return None
+
+
+def _mapped_focus(selected: str | None, mapped: pd.DataFrame) -> str | None:
+    """Map, compare, and cohort focus. Unlocated names never become the hotspot."""
+    if selected and selected in set(mapped["scientific_name"]):
+        return selected
+    return None
+
+
 def continue_to(label: str, target_page: str):
     st.markdown('<div class="hra-continue"></div>', unsafe_allow_html=True)
     st.button(
@@ -945,7 +997,7 @@ def continue_to(label: str, target_page: str):
 def main():
     try:
         mtime = HPI_CSV.stat().st_mtime if HPI_CSV.exists() else 0.0
-        hpi = load_with_archetypes(mtime)
+        hpi, omitted = load_with_archetypes(mtime)
     except FileNotFoundError as e:
         st.error(str(e))
         st.stop()
@@ -1024,7 +1076,8 @@ def main():
             if demo:
                 selected = pick_demo_species(hpi)
             elif q.strip():
-                hits = resolve_query(q, hpi)
+                catalog = pd.concat([hpi, omitted], ignore_index=True) if len(omitted) else hpi
+                hits = resolve_query(q, catalog)
                 if hits:
                     labels = [
                         f"{h['scientific_name']} ({h['vernacular_ph']})"
@@ -1037,26 +1090,34 @@ def main():
                 else:
                     st.caption("No match in seed list.")
             else:
-                names = hpi.sort_values("hpi", ascending=False)["scientific_name"].tolist()
+                names = dossier_choices(hpi, omitted)
                 idx = names.index(selected) if selected in names else 0
                 selected = st.selectbox("Species", names, index=idx)
             st.session_state["selected"] = selected
 
-            if "archetype_label" in hpi.columns and selected in set(hpi["scientific_name"]):
+            if selected and selected not in set(hpi["scientific_name"]):
+                st.caption("No georeferenced points — dossier only, not a map focus.")
+            elif "archetype_label" in hpi.columns and selected in set(hpi["scientific_name"]):
                 arch = hpi.loc[hpi["scientific_name"] == selected, "archetype_label"].iloc[0]
                 st.caption(f"Archetype: {arch}")
         else:
             selected = st.session_state.get("selected")
 
     if page == "Home":
-        home_page(hpi)
+        home_page(hpi, omitted)
         return
 
     header()
     workflow_steps(page)
 
+    focus = _mapped_focus(selected, hpi)
+
     if page == "Methods":
-        methods_page(hpi, selected)
+        if selected and focus is None:
+            st.caption(
+                "No georeferenced points — this species is not in the cohort rank."
+            )
+        methods_page(hpi, focus)
         return
 
     if page == "Compare":
@@ -1091,11 +1152,11 @@ def main():
                 </div>""",
                 unsafe_allow_html=True,
             )
-        m = build_map(hpi, occ, selected, color_by_archetype=color_arch)
+        m = build_map(hpi, occ, focus, color_by_archetype=color_arch)
         st_folium(m, width=None, height=520, returned_objects=[], use_container_width=True)
 
         st.markdown("### HPI distribution")
-        fig_dist = hpi_distribution(hpi, highlight=selected)
+        fig_dist = hpi_distribution(hpi, highlight=focus)
         st.plotly_chart(fig_dist, use_container_width=True, theme=None, config={"displayModeBar": "hover", "displaylogo": False})
         chart_download(fig_dist, "hpi_distribution_map")
 
@@ -1111,24 +1172,37 @@ def main():
             show_cols.append("archetype_label")
         show = hpi[show_cols].sort_values("hpi", ascending=False)
         st.dataframe(show, use_container_width=True, hide_index=True, height=280)
+        note = unmapped_note(omitted)
+        if note:
+            st.caption(note)
         continue_to("Continue to species dossier →", "Species dossier")
         return
 
     if page == "Field brief":
-        if selected and selected in set(hpi["scientific_name"]):
-            row = hpi.loc[hpi["scientific_name"] == selected].iloc[0]
+        row = _species_row(selected, hpi, omitted)
+        if row is not None:
+            if focus is None:
+                st.caption(
+                    "No georeferenced points in this extract. Coordinates are not invented."
+                )
             field_brief_page(row, demo)
         else:
             st.info("Select a species from the sidebar.")
         return
 
-    # Species dossier
-    if selected and selected in set(hpi["scientific_name"]):
-        row = hpi.loc[hpi["scientific_name"] == selected].iloc[0]
+    # Species dossier — unlocated names stay here; they are not map focus.
+    row = _species_row(selected, hpi, omitted)
+    if row is not None:
+        if focus is None:
+            st.caption(
+                "No georeferenced points in this extract. "
+                "Not plotted, and not used as the map focus. Coordinates are not invented."
+            )
         dossier(row, occ, demo, hpi)
-        m = build_map(hpi, occ, selected)
-        st.markdown("### Occurrence context")
-        st_folium(m, width=None, height=400, returned_objects=[], use_container_width=True)
+        if focus is not None:
+            m = build_map(hpi, occ, focus)
+            st.markdown("### Occurrence context")
+            st_folium(m, width=None, height=400, returned_objects=[], use_container_width=True)
         continue_to("Continue to field brief →", "Field brief")
     else:
         st.info("Select a species from the sidebar.")

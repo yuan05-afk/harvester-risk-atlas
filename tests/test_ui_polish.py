@@ -7,6 +7,7 @@ from pathlib import Path
 import pandas as pd
 
 from harvester_risk_atlas.charts import compare_components, hpi_distribution
+from harvester_risk_atlas.hpi import dossier_choices, mapped_species, unmapped_note
 from harvester_risk_atlas.pdf_brief import _iucn_line, render_field_brief_pdf
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -88,6 +89,86 @@ class SnapshotUiTests(unittest.TestCase):
     def test_deploy_entry_and_reportlab(self):
         self.assertIn("app/streamlit_app.py", self.deploy)
         self.assertIn("reportlab==4.2.5", self.reqs)
+
+    def test_primary_descendants_forced_white(self):
+        css = self.css
+        self.assertIn('.stButton > button[kind="primary"]', css)
+        self.assertIn('button[data-testid="stBaseButton-primary"]', css)
+        self.assertIn('.stDownloadButton > button[kind="primary"]', css)
+        self.assertIn('button[data-testid="stBaseButton-primary"] *', css)
+        self.assertIn("color: #ffffff !important", css)
+        self.assertIn("fill: #ffffff !important", css)
+        self.assertIn("-webkit-text-fill-color: #ffffff !important", css)
+        self.assertIn("#245a42", css)
+        self.assertNotIn("linear-gradient", css)
+        # Hover/focus/active descendants stay white (label is a nested p/span).
+        self.assertIn('button[data-testid="stBaseButton-primary"]:hover *', css)
+        self.assertIn('button[data-testid="stBaseButton-primary"]:active *', css)
+
+    def test_demo_caption_has_no_accent_rail(self):
+        import re
+
+        match = re.search(r"\.hra-demo-caption\s*\{([^}]*)\}", self.css)
+        self.assertIsNotNone(match)
+        block = match.group(1)
+        self.assertNotIn("border-left", block)
+        self.assertNotIn("accent-soft", block)
+        self.assertNotIn("0 var(--radius)", block)
+        self.assertIn("var(--surface)", block)
+        self.assertIn("1px solid var(--hairline)", block)
+        self.assertIn("border-radius: var(--radius)", block)
+        self.assertNotIn("border-left", self.css)
+
+    def test_howto_and_talktrack_are_hairline_only(self):
+        import re
+
+        for cls in (".hra-howto", ".hra-talktrack"):
+            match = re.search(rf"{re.escape(cls)}\s*\{{([^}}]*)\}}", self.css)
+            self.assertIsNotNone(match, cls)
+            block = match.group(1)
+            self.assertNotIn("box-shadow", block)
+            self.assertIn("1px solid var(--hairline)", block)
+
+    def test_field_brief_pdf_is_secondary_html_stays_primary(self):
+        pdf_at = self.app.find("Download field brief (PDF)")
+        html_at = self.app.find("Download field brief (HTML)")
+        self.assertGreater(html_at, 0)
+        self.assertGreater(pdf_at, html_at)
+        html_call = self.app[html_at:pdf_at]
+        pdf_call = self.app[pdf_at:pdf_at + 450]
+        self.assertIn('type="primary"', html_call)
+        self.assertIn('type="secondary"', pdf_call)
+
+    def test_leaflet_attribution_muted_inside_map(self):
+        self.assertIn(".leaflet-control-attribution", self.app)
+        self.assertIn(".leaflet-control-attribution a{color:#86868b !important}", self.app)
+
+
+class UnmappedSpeciesTests(unittest.TestCase):
+    def test_mentha_without_coords_is_skipped(self):
+        frame = pd.read_csv(ROOT / "data" / "processed" / "hpi_scores.csv")
+        mapped, skipped = mapped_species(frame)
+        self.assertNotIn("Mentha × piperita", set(mapped["scientific_name"]))
+        self.assertIn("Mentha × piperita", set(skipped["scientific_name"]))
+        self.assertEqual(len(mapped) + len(skipped), len(frame))
+        self.assertTrue(mapped["lat_mean"].notna().all())
+        self.assertTrue(mapped["lon_mean"].notna().all())
+        self.assertTrue((frame["iucn_status"] == "not_queried").all())
+        note = unmapped_note(skipped)
+        self.assertIn("Mentha × piperita", note)
+        self.assertIn("yerba buena", note)
+        self.assertIn("no georeferenced points", note)
+        self.assertEqual(unmapped_note(mapped.iloc[0:0]), "")
+        self.assertTrue(skipped["lat_mean"].isna().all())
+        self.assertTrue(skipped["lon_mean"].isna().all())
+        choices = dossier_choices(mapped, skipped)
+        self.assertEqual(choices[-1], "Mentha × piperita")
+        self.assertNotEqual(choices[0], "Mentha × piperita")
+        self.assertGreater(float(skipped["hpi"].max()), float(mapped["hpi"].max()))
+        app = (ROOT / "app" / "streamlit_app.py").read_text(encoding="utf-8")
+        self.assertIn("No georeferenced points", app)
+        self.assertIn("_species_row(selected, hpi, omitted)", app)
+        self.assertNotIn("styles.css", app[app.find("def main"):])
 
 
 class IucnAndPdfTests(unittest.TestCase):
