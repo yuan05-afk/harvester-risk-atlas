@@ -55,9 +55,13 @@ print(len(pdf), 'bytes')
 - Hide the Deploy/toolbar chrome via `app/styles.css` (already applied).
 - Keep the disclaimer visible; disclose AI/OSS in README for judging.
 
-- After a push that adds new package exports (e.g. `hpi_spark_svg`), **reboot** the Cloud app
-  if you still see `ImportError: cannot import name …` — Streamlit can keep a stale module
-  cache across soft reloads. `requirements.txt` includes `-e .` so the `src/` package installs.
+- `requirements.txt` includes `-e .` so the `src/` package installs on Cloud.
+- Do not purge `sys.modules` at the top of `app/streamlit_app.py`. A second hard refresh
+  that deletes `harvester_risk_atlas` while the first import is inside
+  `importlib._load_unlocked` raises `KeyError` and the map never loads.
+- After a push, Cloud must redeploy `main`. Reboot the app once if it is still
+  serving the previous process. A stale `ImportError: cannot import name …` is
+  that reboot, not a per-run cache wipe.
 
 
 ## App entry

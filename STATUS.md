@@ -1,6 +1,16 @@
 # STATUS — Harvester Risk Atlas
 
-Last updated: 2026-09-30 (Home + first-visit preface)
+Last updated: 2026-09-30 (Cloud import KeyError)
+
+## Cloud import KeyError (2026-09-30)
+
+| Item | Status |
+|------|--------|
+| Root cause | Every run deleted `harvester_risk_atlas` from `sys.modules`. A second hard refresh did that while the first import was still in `importlib._load_unlocked`, which raises `KeyError`. Names in `config.py` were fine. |
+| Fix | Stop the per-run wipe. Keep the `src/` path insert and the `-e .` Cloud install. |
+| Stale `ImportError: cannot import name …` | Reboot Cloud after deploy. Do not bring the wipe back. |
+
+Files: `app/streamlit_app.py`, `tests/test_cloud_import.py`, `DEPLOY.md`.
 
 ## Home and preface (2026-09-30)
 
@@ -94,7 +104,7 @@ Files: `src/harvester_risk_atlas/hpi.py`, `src/harvester_risk_atlas/charts.py`, 
 | Item | Status |
 |------|--------|
 | Root cause | Streamlit kept stale `harvester_risk_atlas.*` in `sys.modules` after polish added `hpi_spark_svg` / earlier `render_field_brief_pdf` → in-app `ImportError: cannot import name …` |
-| Fix | Bust package modules before import in `app/streamlit_app.py`; add `-e .` to `requirements.txt` for Cloud src install |
+| Fix | Bust package modules before import in `app/streamlit_app.py`; add `-e .` to `requirements.txt` for Cloud src install. Superseded 2026-09-30: the per-run wipe caused the Cloud KeyError. Keep `-e .`; do not wipe `sys.modules`. |
 | Smoke | Stale-module repro fixed; AppTest Map + Dossier no exceptions; Cloud-style editable import OK |
 
 Files: `app/streamlit_app.py`, `requirements.txt`, `DEPLOY.md`.
