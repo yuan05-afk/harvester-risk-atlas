@@ -1,6 +1,6 @@
 # STATUS — Harvester Risk Atlas
 
-Last updated: 2026-09-29 ~20:55 (Asia/Manila)
+Last updated: 2026-09-30 (Asia/Manila)
 
 ## What works now
 
@@ -29,7 +29,7 @@ Last updated: 2026-09-29 ~20:55 (Asia/Manila)
 | Compare view (2 species, side-by-side components + metrics) | Done |
 | Risk archetypes — sklearn KMeans on HPI components; map color option + dossier chip | Done (`src/.../archetypes.py`) |
 | Occurrence decade histogram from GBIF `year` (skips if no dates) | Done |
-| Folium MarkerCluster on centroids; Esri World Gray Canvas retained | Done |
+| Centroids drawn without MarkerCluster so HPI colors show at default zoom; Esri World Gray Canvas retained | Done |
 | Demo mode toggle → *Arcangelisia flava* (abutra) + narrative captions | Done |
 | Chart HTML download (PNG if kaleido installed) | Done |
 | Exploratory suitability sketch (RF presence/background; not an SDM) | Done (dossier expander) |
@@ -55,7 +55,11 @@ Last updated: 2026-09-29 ~20:55 (Asia/Manila)
 - Motion: 120–180ms ease on signal controls only; no fade-up spam / bounce / aurora
 - Map basemap: **Esri World Gray Canvas** (free, no key); floating hairline legend panel
 
-## Changelog (2026-09-29)
+## Changelog
+
+- 2026-09-30: Cluster off on the risk atlas — centroids are CircleMarkers (HPI fill, white stroke); duplicate Folium in-map legend removed.
+
+### Changelog (2026-09-29)
 
 
 ### Cloud ImportError fix (2026-09-29 ~21:12 Asia/Manila) — local fix, needs push

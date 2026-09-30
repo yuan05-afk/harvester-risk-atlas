@@ -8,7 +8,6 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 import folium
-from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -218,7 +217,6 @@ def build_map(
     )
     arch_color = {lab: arch_palette[i % len(arch_palette)] for i, lab in enumerate(arch_labels)}
 
-    cluster = MarkerCluster(name="Species centroids", showCoverageOnHover=False).add_to(m)
     for _, r in pts.iterrows():
         if color_by_archetype and arch_labels:
             col = arch_color.get(str(r.get("archetype_label")), "#86868b")
@@ -242,7 +240,7 @@ def build_map(
             weight=1.75,
             popup=folium.Popup(popup_html, max_width=280),
             tooltip=f"{r['scientific_name']} · {float(r['hpi']):.3f}",
-        ).add_to(cluster)
+        ).add_to(m)
 
     # One-shot pulse ring on focused species (CSS, plays once — signal only)
     if focus and focus in pts["scientific_name"].values:
@@ -282,40 +280,7 @@ def build_map(
                 weight=0,
             ).add_to(haze)
         haze.add_to(m)
-    folium.LayerControl(collapsed=True).add_to(m)
-
-    # Compact HTML legend on map (readable on Esri gray canvas)
-    if color_by_archetype and arch_labels:
-        items = "".join(
-            f'<div style="margin:2px 0"><span style="display:inline-block;width:10px;height:10px;'
-            f'border-radius:50%;background:{arch_color[lab]};border:1.5px solid #fff;'
-            f'box-shadow:0 0 0 1px rgba(0,0,0,.15);vertical-align:middle;margin-right:6px"></span>'
-            f'<span style="font-size:11px;color:#1d1d1f">{lab}</span></div>'
-            for lab in arch_labels
-        )
-        title = "Archetype"
-    else:
-        items = "".join(
-            f'<div style="margin:2px 0"><span style="display:inline-block;width:10px;height:10px;'
-            f'border-radius:50%;background:{c};border:1.5px solid #fff;'
-            f'box-shadow:0 0 0 1px rgba(0,0,0,.15);vertical-align:middle;margin-right:6px"></span>'
-            f'<span style="font-size:11px;color:#1d1d1f">{lab}</span></div>'
-            for lab, c in [
-                ("Lower", RISK_COLORS["Lower relative pressure"]),
-                ("Moderate", RISK_COLORS["Moderate"]),
-                ("Higher", RISK_COLORS["Higher relative pressure"]),
-            ]
-        )
-        title = "HPI band"
-    legend_html = (
-        f'<div style="position:fixed;bottom:28px;left:28px;z-index:9999;background:#fff;'
-        f'border:1px solid #d2d2d7;border-radius:8px;padding:8px 11px;'
-        f'font-family:-apple-system,BlinkMacSystemFont,sans-serif;'
-        f'box-shadow:0 1px 2px rgba(0,0,0,.04);line-height:1.35;max-width:210px">'
-        f'<div style="font-size:10px;font-weight:600;letter-spacing:.045em;text-transform:uppercase;'
-        f'color:#86868b;margin-bottom:5px">{title}</div>{items}</div>'
-    )
-    m.get_root().html.add_child(folium.Element(legend_html))
+        folium.LayerControl(collapsed=True).add_to(m)
     return m
 
 
