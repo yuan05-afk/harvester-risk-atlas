@@ -72,10 +72,10 @@ Card section labels (Where / Stress / …) stay uppercase 12–13px tertiary —
   - Sidebar radio selected wash
   - Button / input hover + focus
   - Optional **one-shot** map focus pulse (`.hra-pulse`, ~0.9s, plays once)
-- Honor `prefers-reduced-motion: reduce` (transitions/animations near-zero; preface removed).
+- Honor `prefers-reduced-motion: reduce` (transitions/animations near-zero; the automatic preface is removed).
 - **Banned motion:** bounce, spring, staggered card entrances, aurora blobs.
 - **Page enter:** main column only, 180ms opacity and a 3px rise. Not on the sidebar. Not while the preface is showing.
-- **Home preface (exception, one shot):** first session only, about nine seconds. A Philippines silhouette draws north to south, occurrence dots settle, and one leaf traces on. Four short lines then enter and leave one at a time (fade plus a slight lift — beats do not overlap). The formula sits inside the last line. A 3px accent rule and a mono beat index run with the sheet. Skip is a real button and stays hidden until 3 seconds. `?intro=skip` also dismisses it. No bounce, no second call to action on the sheet. `prefers-reduced-motion` removes the sheet entirely (do not only crush the duration — the delay would leave a blank screen). `?demo=1` skips it and opens the map.
+- **Home preface (exception, one shot):** first session only, about nine seconds. A Philippines silhouette draws north to south, occurrence dots settle, and one leaf traces on. Four short lines then enter and leave one at a time (fade plus a slight lift — beats do not overlap). The formula sits inside the last line. A 3px accent rule and a mono beat index run with the sheet. Skip is a real button and stays hidden until 3 seconds. `?intro=skip` also dismisses it. No bounce, no second call to action on the sheet. `prefers-reduced-motion` removes the automatic sheet and Skip entirely (do not only crush the duration — the delay would leave a blank screen). **Replay intro** in the sidebar is a quiet text control, not a filled button and not a second control on the sheet. It plays that same cinematic once, including when the OS reports reduced motion. `?demo=1` skips the automatic sheet and opens the map.
 - Map controls: minimal Folium defaults; legend as hairlined floating panel
 - Markers: white/ink stroke (`weight ≥ 1.5`) so centroids read on Esri gray canvas
 

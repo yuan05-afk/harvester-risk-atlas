@@ -1150,6 +1150,57 @@ div[data-testid="stVerticalBlock"]:has(.hra-home) .stButton > button[kind="prima
   width: fit-content;
   min-width: 10.5rem;
 }
+/* Markers only. The following element container is the real control. */
+.hra-skip,
+.hra-replay {
+  display: none;
+}
+[data-testid="stElementContainer"]:has(.hra-skip),
+[data-testid="stElementContainer"]:has(.hra-replay) {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+}
+/* Replay intro — quiet sidebar text, not a second filled action. */
+[data-testid="stElementContainer"]:has(.hra-replay) + [data-testid="stElementContainer"] {
+  margin-top: 0.15rem;
+}
+[data-testid="stElementContainer"]:has(.hra-replay) + [data-testid="stElementContainer"] :is(button, [data-testid="stBaseButton-secondary"]) {
+  background: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  border-bottom: 1px solid var(--hairline) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--ink-secondary) !important;
+  -webkit-text-fill-color: var(--ink-secondary) !important;
+  fill: currentColor !important;
+  font-weight: 400 !important;
+  font-size: var(--fs-caption) !important;
+  line-height: 1.3 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 0 0.08rem 0 !important;
+  width: fit-content !important;
+}
+[data-testid="stElementContainer"]:has(.hra-replay) + [data-testid="stElementContainer"] :is(button, [data-testid="stBaseButton-secondary"]) :is(p, span, div, label) {
+  color: var(--ink-secondary) !important;
+  -webkit-text-fill-color: var(--ink-secondary) !important;
+  background: transparent !important;
+  background-image: none !important;
+  font-size: var(--fs-caption) !important;
+  font-weight: 400 !important;
+  margin: 0 !important;
+}
+[data-testid="stElementContainer"]:has(.hra-replay) + [data-testid="stElementContainer"] :is(button, [data-testid="stBaseButton-secondary"]):hover,
+[data-testid="stElementContainer"]:has(.hra-replay) + [data-testid="stElementContainer"] :is(button, [data-testid="stBaseButton-secondary"]):hover :is(p, span, div, label) {
+  color: var(--ink) !important;
+  -webkit-text-fill-color: var(--ink) !important;
+  background: transparent !important;
+  border-bottom-color: var(--accent) !important;
+}
 
 /* —— First-visit preface. One mark, then four beats that do not overlap. —— */
 .hra-preload {
@@ -1368,9 +1419,9 @@ div[data-testid="stVerticalBlock"]:has(.hra-home) .stButton > button[kind="prima
   animation: hra-preload-bar 9.15s linear forwards;
 }
 /* Skip is a Streamlit button lifted over the preface. Markdown links
-   are forced to target=_blank, so they cannot dismiss this page. */
-.stApp:has(.hra-preload) [data-testid="stElementContainer"]:has(button[kind="secondary"]),
-.stApp:has(.hra-preload) [data-testid="stElementContainer"]:has([data-testid="stBaseButton-secondary"]) {
+   are forced to target=_blank, so they cannot dismiss this page.
+   Scoped to the .hra-skip marker so Replay intro is not lifted with it. */
+.stApp:has(.hra-preload) [data-testid="stElementContainer"]:has(.hra-skip) + [data-testid="stElementContainer"] {
   position: fixed !important;
   left: 2rem !important;
   bottom: 0.9rem !important;
@@ -1382,8 +1433,8 @@ div[data-testid="stVerticalBlock"]:has(.hra-home) .stButton > button[kind="prima
   pointer-events: none;
   animation: hra-skip-in 0.4s var(--ease) 3s forwards, hra-preload-leave 0.48s var(--ease) 9.15s forwards;
 }
-.stApp:has(.hra-preload) button[kind="secondary"],
-.stApp:has(.hra-preload) [data-testid="stBaseButton-secondary"] {
+.stApp:has(.hra-preload) [data-testid="stElementContainer"]:has(.hra-skip) + [data-testid="stElementContainer"] button[kind="secondary"],
+.stApp:has(.hra-preload) [data-testid="stElementContainer"]:has(.hra-skip) + [data-testid="stElementContainer"] [data-testid="stBaseButton-secondary"] {
   background: transparent !important;
   border: none !important;
   border-bottom: 1px solid var(--hairline) !important;
@@ -1398,14 +1449,14 @@ div[data-testid="stVerticalBlock"]:has(.hra-home) .stButton > button[kind="prima
   padding: 0 0 0.08rem 0 !important;
   width: auto !important;
 }
-.stApp:has(.hra-preload) button[kind="secondary"]:hover,
-.stApp:has(.hra-preload) [data-testid="stBaseButton-secondary"]:hover {
+.stApp:has(.hra-preload) [data-testid="stElementContainer"]:has(.hra-skip) + [data-testid="stElementContainer"] button[kind="secondary"]:hover,
+.stApp:has(.hra-preload) [data-testid="stElementContainer"]:has(.hra-skip) + [data-testid="stElementContainer"] [data-testid="stBaseButton-secondary"]:hover {
   color: var(--ink) !important;
   border-bottom-color: var(--accent) !important;
   background: transparent !important;
 }
-.stApp:has(.hra-preload) button[kind="secondary"] p,
-.stApp:has(.hra-preload) [data-testid="stBaseButton-secondary"] p {
+.stApp:has(.hra-preload) [data-testid="stElementContainer"]:has(.hra-skip) + [data-testid="stElementContainer"] button[kind="secondary"] p,
+.stApp:has(.hra-preload) [data-testid="stElementContainer"]:has(.hra-skip) + [data-testid="stElementContainer"] [data-testid="stBaseButton-secondary"] p {
   color: var(--ink-secondary) !important;
   margin: 0 !important;
   font-size: var(--fs-caption) !important;
@@ -1493,13 +1544,40 @@ div[data-testid="stVerticalBlock"]:has(.hra-home) .stButton > button[kind="prima
 }
 @media (prefers-reduced-motion: reduce) {
   .hra-preload { display: none !important; }
-  .stApp:has(.hra-preload) [data-testid="stElementContainer"]:has(button[kind="secondary"]),
-  .stApp:has(.hra-preload) [data-testid="stElementContainer"]:has([data-testid="stBaseButton-secondary"]) {
+  .stApp:has(.hra-preload) [data-testid="stElementContainer"]:has(.hra-skip) + [data-testid="stElementContainer"] {
     display: none !important;
   }
   [data-testid="stMain"] .block-container,
   .stMain .block-container {
     animation: none !important;
     transform: none !important;
+  }
+  /* Replay opts this one pass back in. The universal duration crush above
+     would otherwise snap every beat to opacity 0 and leave a blank sheet,
+     so each preface duration is restored. Skip stays at 3s. */
+  .hra-preload.hra-force-motion {
+    display: flex !important;
+    animation-duration: 0.48s !important;
+  }
+  .hra-preload.hra-force-motion .hra-preload-top { animation-duration: 0.7s !important; }
+  .hra-preload.hra-force-motion .hra-preload-top::after { animation-duration: 0.7s !important; }
+  .hra-preload.hra-force-motion .hra-sil { animation-duration: 1.7s !important; }
+  .hra-preload.hra-force-motion .hra-sil.sil-w,
+  .hra-preload.hra-force-motion .hra-sil.sil-c { animation-duration: 1.35s !important; }
+  .hra-preload.hra-force-motion .hra-sil.sil-s { animation-duration: 1.45s !important; }
+  .hra-preload.hra-force-motion .dot { animation-duration: 0.55s !important; }
+  .hra-preload.hra-force-motion .draw { animation-duration: 1.25s !important; }
+  .hra-preload.hra-force-motion .d-blade { animation-duration: 1.55s !important; }
+  .hra-preload.hra-force-motion .d-vein { animation-duration: 1.05s !important; }
+  .hra-preload.hra-force-motion .beat { animation-duration: 2.05s !important; }
+  .hra-preload.hra-force-motion .b4 { animation-duration: 2.45s !important; }
+  .hra-preload.hra-force-motion .line { animation-duration: 0.55s !important; }
+  .hra-preload.hra-force-motion .formula { animation-duration: 0.6s !important; }
+  .hra-preload.hra-force-motion .hra-count i { animation-duration: 2.05s !important; }
+  .hra-preload.hra-force-motion .c4 { animation-duration: 2.45s !important; }
+  .hra-preload.hra-force-motion .hra-preload-bar::after { animation-duration: 9.15s !important; }
+  .stApp:has(.hra-force-motion) [data-testid="stElementContainer"]:has(.hra-skip) + [data-testid="stElementContainer"] {
+    display: block !important;
+    animation-duration: 0.4s, 0.48s !important;
   }
 }

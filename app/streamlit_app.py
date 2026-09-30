@@ -1026,6 +1026,13 @@ See dossier expander per species.
 
 def dismiss_preface() -> None:
     st.session_state["intro_played"] = True
+    st.session_state["intro_replay"] = False
+
+
+def replay_intro() -> None:
+    """One cinematic pass. Wins over a consumed session and over ?demo=1."""
+    st.session_state["intro_replay"] = True
+    st.session_state["intro_played"] = False
 
 
 def go_to(target_page: str) -> None:
@@ -1113,21 +1120,25 @@ def main():
     if "demo_mode" not in st.session_state:
         st.session_state["demo_mode"] = demo_qp
 
+    replay = bool(st.session_state.pop("intro_replay", False))
     play_intro = landing.should_play_intro(
         intro_played=bool(st.session_state.get("intro_played")),
         demo_requested=demo_qp,
+        replay=replay,
     )
     if play_intro:
-        # st.html keeps the SVG mark intact. Markdown can rewrite the sheet.
-        sheet = landing.preload_markup(dict(HPI_WEIGHTS))
-        if hasattr(st, "html"):
-            st.html(sheet)
-        else:
-            st.markdown(sheet, unsafe_allow_html=True)
+        # Replay adds hra-force-motion so one pass still plays when the OS
+        # reports reduced motion. An automatic visit stays hidden.
+        # st.html sanitizes with DOMPurify's html profile and drops <svg>,
+        # so the silhouette never arrives. This string is one HTML block;
+        # markdown keeps the mark.
+        sheet = landing.preload_markup(dict(HPI_WEIGHTS), force_motion=replay)
+        st.markdown(sheet, unsafe_allow_html=True)
         # A markdown link is rewritten to target=_blank, so Skip is a real
         # button. The click reruns the script; intro_played is already set,
         # and the preface is omitted. on_click is a no-op marker so the
         # widget does not also try to write nav state.
+        st.markdown('<div class="hra-skip"></div>', unsafe_allow_html=True)
         st.button("Skip", key="skip_intro", on_click=dismiss_preface)
         st.session_state["intro_played"] = True
 
@@ -1148,6 +1159,10 @@ def main():
             help="Jump to a strong example species with narrative captions for judging video.",
         )
         st.session_state["demo_mode"] = demo
+        # Quiet text control. Not on the preface sheet, and not a second primary.
+        # The marker keeps it off the Skip positioning rules.
+        st.markdown('<div class="hra-replay"></div>', unsafe_allow_html=True)
+        st.button("Replay intro", key="replay_intro", on_click=replay_intro)
         if demo:
             demo_sp = pick_demo_species(hpi)
             st.session_state["selected"] = demo_sp

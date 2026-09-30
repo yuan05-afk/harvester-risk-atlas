@@ -80,6 +80,21 @@ class LandingCopyTests(unittest.TestCase):
         self.assertTrue(
             landing.should_play_intro(intro_played=False, demo_requested=False)
         )
+        self.assertTrue(
+            landing.should_play_intro(
+                intro_played=True, demo_requested=True, replay=True
+            )
+        )
+        self.assertFalse(
+            landing.should_play_intro(
+                intro_played=False, demo_requested=True, replay=False
+            )
+        )
+        plain = landing.preload_markup(WEIGHTS)
+        forced = landing.preload_markup(WEIGHTS, force_motion=True)
+        self.assertNotIn("hra-force-motion", plain)
+        self.assertIn('class="hra-preload hra-force-motion"', forced)
+        self.assertIn("hra-sil", forced)
         self.assertEqual(landing.default_page(demo_requested=True), "Map")
         self.assertEqual(landing.default_page(demo_requested=False), "Home")
 
@@ -128,6 +143,30 @@ class LandingStyleTests(unittest.TestCase):
         self.assertIn("HPI = 0.30 R + 0.25 C + 0.25 H + 0.20 P", b4)
         self.assertIn("hra-page-in 180ms", self.css)
         self.assertIn(":not(:has(.hra-preload))", self.css)
+        # Automatic reduced-motion still removes the sheet and Skip.
+        # Replay opts one pass back in and restores the crushed durations.
+        reduce_at = self.css.rfind("@media (prefers-reduced-motion: reduce)")
+        tail = self.css[reduce_at:]
+        self.assertIn(".hra-preload { display: none !important; }", tail)
+        self.assertIn(".hra-skip", tail)
+        self.assertNotIn(':has(button[kind="secondary"])', tail)
+        self.assertIn(".hra-preload.hra-force-motion", tail)
+        self.assertIn("display: flex !important", tail)
+        self.assertIn("animation-duration: 1.55s !important", tail)
+        self.assertIn("animation-duration: 9.15s !important", tail)
+        self.assertIn("animation-duration: 0.4s, 0.48s !important", tail)
+        replay_at = self.app.find("Replay intro")
+        self.assertGreater(replay_at, 0)
+        window = self.app[replay_at:replay_at + 220]
+        self.assertIn("on_click=replay_intro", window)
+        self.assertNotIn('type="primary"', window)
+        self.assertIn("force_motion=replay", self.app)
+        sheet_at = self.app.find("force_motion=replay")
+        sheet_window = self.app[sheet_at:sheet_at + 500]
+        self.assertIn("unsafe_allow_html=True", sheet_window)
+        self.assertNotIn("st.html(sheet)", sheet_window)
+        self.assertIn('st.markdown(\'<div class="hra-skip"></div>\'', self.app)
+        self.assertIn('st.markdown(\'<div class="hra-replay"></div>\'', self.app)
         self.assertIn("padding: 1rem 1.25rem !important", self.css)
         self.assertIn("hra-dossier-grid", self.css)
         self.assertIn("hra-dossier-grid", self.app)

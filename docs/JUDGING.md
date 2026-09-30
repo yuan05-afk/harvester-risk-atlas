@@ -56,7 +56,7 @@ Code: MIT. Upstream data keep their own terms.
 
 ## What to click (Demo mode)
 
-1. Open the live demo. Home states the problem, the index, and the path. A short preface plays once — **Skip** if you want the page immediately. `?demo=1` skips the preface and opens the map.  
+1. Open the live demo. Home states the problem, the index, and the path. A short preface plays once — **Skip** if you want the page immediately. If it does not appear (this session already played it, or the phone reports reduced motion), sidebar → **Replay intro**. `?demo=1` skips the preface and opens the map.  
 2. **Open the map**, then sidebar → toggle **Demo mode** (locks *Arcangelisia flava* / abutra + talk track).  
 3. **Map** (~15s) — color = HPI band; abutra is moderate with a harvest-proxy signal.  
 4. **Continue** → **Dossier** (~25s) — components, gaps (IUCN not linked), archetype, decade hist.  
