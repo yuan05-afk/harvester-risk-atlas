@@ -313,12 +313,13 @@ def build_map(
         )
         if arch:
             popup_html += f"<br/><span style='color:#6e6e73'>{arch}</span>"
-        if r.get("plot_source") == "land_record":
-            popup_html += (
-                "<br/><span style='color:#6e6e73'>Nearest land record. "
-                "The sample average falls offshore.</span>"
-            )
         lat, lon = float(r["plot_lat"]), float(r["plot_lon"])
+        # Provenance only. The circle stays on the sample average.
+        if not on_ph_land(lat, lon):
+            popup_html += (
+                "<br/><span style='color:#6e6e73'>Sample average. "
+                "This mean is not on Philippines land.</span>"
+            )
         radius = marker_radius(r["hpi"])
         # Quiet halo in the same HPI color. Overlap reads as density, not a choropleth.
         folium.CircleMarker(
@@ -380,7 +381,7 @@ def build_map(
                 plat, plon = float(p["lat"]), float(p["lon"])
             except (TypeError, ValueError):
                 continue
-            if plat != plat or plon != plon or not on_ph_land(plat, plon):
+            if plat != plat or plon != plon:
                 continue
             folium.CircleMarker(
                 location=[plat, plon],
@@ -1212,19 +1213,6 @@ def main():
             if st.session_state.get("map_focus_hotspot")
             else None
         )
-        n_snapped = int((plotted["plot_source"] == "land_record").sum()) if not plotted.empty else 0
-        if n_snapped:
-            st.caption(
-                f"{n_snapped} circles use the nearest Philippines land record "
-                "because the GBIF average falls offshore."
-            )
-        offshore = sorted(
-            set(hpi["scientific_name"].astype(str)) - set(plotted["scientific_name"].astype(str))
-        )
-        if offshore:
-            st.caption(
-                "Not plotted (no Philippines land point): " + ", ".join(offshore) + "."
-            )
         if color_arch:
             st.markdown(
                 """<div class="hra-legend">

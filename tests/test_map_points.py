@@ -1,4 +1,4 @@
-"""Land placement for map markers. Averages that fall offshore must not be drawn."""
+"""Map markers use the true sample average, including means that fall offshore."""
 from __future__ import annotations
 
 import unittest
@@ -11,7 +11,6 @@ from harvester_risk_atlas.map_points import (
     choose_plot_point,
     hotspot_name,
     marker_radius,
-    on_major_ph_land,
     on_ph_land,
     species_plot_points,
 )
@@ -19,61 +18,54 @@ from harvester_risk_atlas.map_points import (
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def _square_land(lat: float, lon: float) -> bool:
-    return 14.0 <= lat <= 15.0 and 120.0 <= lon <= 121.0
-
-
-def _square_near(lat: float, lon: float) -> bool:
-    return 13.98 <= lat <= 15.02 and 119.98 <= lon <= 121.02
-
-
 class ChoosePlotPointTests(unittest.TestCase):
-    def test_offshore_average_snaps_to_nearest_land_record(self):
-        # Mean sits east of the square, in the water. Two records: one on land, one farther offshore.
-        chosen = choose_plot_point(
-            14.5,
-            121.8,
-            [(14.6, 120.4), (14.5, 122.4), (10.0, 100.0)],
-            on_land=_square_land,
-            near_land=_square_near,
-        )
-        self.assertEqual(chosen, (14.6, 120.4, "land_record"))
+    def test_offshore_average_stays_at_the_true_mean(self):
+        # Mean sits east of Luzon, in the water. A land record must not replace it.
+        chosen = choose_plot_point(14.5, 121.8)
+        self.assertEqual(chosen, (14.5, 121.8, "centroid"))
 
     def test_on_land_average_stays(self):
-        chosen = choose_plot_point(
-            14.5,
-            120.5,
-            [(14.9, 120.9)],
-            on_land=_square_land,
-            near_land=_square_near,
-        )
+        chosen = choose_plot_point(14.5, 120.5)
         self.assertEqual(chosen, (14.5, 120.5, "centroid"))
 
-    def test_average_outside_the_philippines_uses_a_land_record(self):
-        chosen = choose_plot_point(
-            3.4,
-            107.7,
-            [(6.0, 116.5), (14.6, 121.0)],
-            on_land=_square_land,
-            near_land=_square_near,
-        )
-        self.assertEqual(chosen[2], "land_record")
-        self.assertEqual((chosen[0], chosen[1]), (14.6, 121.0))
+    def test_average_west_of_the_philippines_stays(self):
+        # Eurycoma-like mean: south of Vietnam, west of the country box.
+        chosen = choose_plot_point(3.4183908, 107.68206095)
+        self.assertEqual(chosen[2], "centroid")
+        self.assertAlmostEqual(chosen[0], 3.4183908)
+        self.assertAlmostEqual(chosen[1], 107.68206095)
 
-    def test_nothing_on_land_is_omitted(self):
-        chosen = choose_plot_point(
-            11.5,
-            123.5,
-            [(11.6, 123.6)],
-            on_land=_square_land,
-            near_land=_square_near,
-        )
-        self.assertIsNone(chosen)
+    def test_visayan_sea_mean_is_kept(self):
+        chosen = choose_plot_point(11.5, 123.5)
+        self.assertEqual(chosen, (11.5, 123.5, "centroid"))
 
     def test_missing_coordinates_are_omitted(self):
-        self.assertIsNone(
-            choose_plot_point(None, None, [], on_land=_square_land, near_land=_square_near)
+        self.assertIsNone(choose_plot_point(None, None))
+        self.assertIsNone(choose_plot_point(float("nan"), 121.0))
+        self.assertIsNone(choose_plot_point(14.5, None))
+
+
+class OccurrencesDoNotMoveTheMeanTests(unittest.TestCase):
+    def test_land_records_are_not_a_placement_source(self):
+        hpi = pd.DataFrame(
+            {
+                "scientific_name": ["Eurycoma longifolia", "Mentha × piperita"],
+                "lat_mean": [3.4, None],
+                "lon_mean": [107.7, None],
+            }
         )
+        occurrences = pd.DataFrame(
+            {
+                "scientific_name": ["Eurycoma longifolia", "Eurycoma longifolia", "Mentha × piperita"],
+                "lat": [14.6, 10.3, 14.6],
+                "lon": [121.0, 123.9, 121.0],
+            }
+        )
+        plotted = species_plot_points(hpi, occurrences)
+        self.assertEqual(list(plotted["scientific_name"]), ["Eurycoma longifolia"])
+        self.assertAlmostEqual(float(plotted.iloc[0]["plot_lat"]), 3.4)
+        self.assertAlmostEqual(float(plotted.iloc[0]["plot_lon"]), 107.7)
+        self.assertEqual(plotted.iloc[0]["plot_source"], "centroid")
 
 
 class HotspotAndRadiusTests(unittest.TestCase):
@@ -95,7 +87,7 @@ class HotspotAndRadiusTests(unittest.TestCase):
                 "scientific_name": ["Mentha × piperita", "Arcangelisia flava"],
                 "plot_lat": [14.5, 10.3],
                 "plot_lon": [121.0, 123.9],
-                "plot_source": ["centroid", "land_record"],
+                "plot_source": ["centroid", "centroid"],
             }
         )
         scores = pd.DataFrame(
@@ -107,13 +99,13 @@ class HotspotAndRadiusTests(unittest.TestCase):
         self.assertEqual(hotspot_name(plotted, scores, "Mentha × piperita"), "Arcangelisia flava")
         self.assertEqual(hotspot_name(plotted, scores, None), "Arcangelisia flava")
 
-    def test_highest_hpi_when_selection_has_no_land_point(self):
+    def test_highest_hpi_when_selection_is_not_plotted(self):
         plotted = pd.DataFrame(
             {
                 "scientific_name": ["Arcangelisia flava", "Lagerstroemia speciosa"],
-                "plot_lat": [10.0, 14.0],
-                "plot_lon": [122.0, 121.0],
-                "plot_source": ["land_record", "centroid"],
+                "plot_lat": [11.047, 14.0],
+                "plot_lon": [121.973, 121.0],
+                "plot_source": ["centroid", "centroid"],
             }
         )
         scores = pd.DataFrame(
@@ -150,34 +142,52 @@ class ShippedMaskTests(unittest.TestCase):
         self.assertFalse(on_ph_land(11.60, 123.60))  # Visayan Sea
         self.assertFalse(on_ph_land(11.047, 121.973))  # abutra sample average
 
-    def test_every_marker_is_on_philippines_land(self):
+    def test_every_marker_is_the_true_sample_average(self):
+        located = self.hpi.dropna(subset=["lat_mean", "lon_mean"])
         self.assertGreater(len(self.plotted), 20)
-        for rec in self.plotted.itertuples(index=False):
-            self.assertTrue(
-                on_major_ph_land(rec.plot_lat, rec.plot_lon) or on_ph_land(rec.plot_lat, rec.plot_lon),
-                f"{rec.scientific_name} plotted at {rec.plot_lat:.3f},{rec.plot_lon:.3f}",
-            )
-
-    def test_small_islet_averages_move_onto_a_main_island(self):
-        # Sibuyan-sized means look like dots in the Visayan Sea at country zoom.
-        vitex = self.plotted.loc[self.plotted["scientific_name"] == "Vitex negundo"].iloc[0]
-        self.assertEqual(vitex.plot_source, "land_record")
-        self.assertTrue(on_major_ph_land(vitex.plot_lat, vitex.plot_lon))
-        abutra = self.plotted.loc[self.plotted["scientific_name"] == "Arcangelisia flava"].iloc[0]
-        self.assertTrue(on_major_ph_land(abutra.plot_lat, abutra.plot_lon))
-
-    def test_offshore_averages_move_and_unlocated_species_drop(self):
-        abutra = self.plotted.loc[self.plotted["scientific_name"] == "Arcangelisia flava"].iloc[0]
-        self.assertEqual(abutra.plot_source, "land_record")
+        self.assertEqual(
+            set(self.plotted["scientific_name"]),
+            set(located["scientific_name"].astype(str)),
+        )
+        merged = located.merge(self.plotted, on="scientific_name", how="inner")
+        for rec in merged.itertuples(index=False):
+            self.assertAlmostEqual(rec.plot_lat, rec.lat_mean)
+            self.assertAlmostEqual(rec.plot_lon, rec.lon_mean)
+            self.assertEqual(rec.plot_source, "centroid")
+        self.assertEqual(int((self.plotted["plot_source"] == "land_record").sum()), 0)
         self.assertNotIn("Mentha × piperita", set(self.plotted["scientific_name"]))
-        self.assertGreater(int((self.plotted["plot_source"] == "land_record").sum()), 10)
+
+    def test_eurycoma_stays_west_of_the_philippines(self):
+        row = self.plotted.loc[self.plotted["scientific_name"] == "Eurycoma longifolia"].iloc[0]
+        source = self.hpi.loc[self.hpi["scientific_name"] == "Eurycoma longifolia"].iloc[0]
+        self.assertAlmostEqual(row.plot_lat, source.lat_mean)
+        self.assertAlmostEqual(row.plot_lon, source.lon_mean)
+        self.assertLess(float(row.plot_lon), 116.0)
+        self.assertFalse(on_ph_land(row.plot_lat, row.plot_lon))
+        self.assertEqual(row.plot_source, "centroid")
+
+    def test_channel_means_are_not_moved_onto_a_main_island(self):
+        for name in ("Vitex negundo", "Arcangelisia flava"):
+            row = self.plotted.loc[self.plotted["scientific_name"] == name].iloc[0]
+            source = self.hpi.loc[self.hpi["scientific_name"] == name].iloc[0]
+            self.assertAlmostEqual(row.plot_lat, source.lat_mean)
+            self.assertAlmostEqual(row.plot_lon, source.lon_mean)
+            self.assertEqual(row.plot_source, "centroid")
+        abutra = self.plotted.loc[self.plotted["scientific_name"] == "Arcangelisia flava"].iloc[0]
+        self.assertFalse(on_ph_land(abutra.plot_lat, abutra.plot_lon))
 
     def test_app_fits_the_philippines_and_offers_the_hotspot_control(self):
         app = (ROOT / "app" / "streamlit_app.py").read_text(encoding="utf-8")
         self.assertIn("Focus highest-HPI hotspot", app)
         self.assertIn("fit_bounds", app)
+        self.assertIn("PH_FIT_BOUNDS", app)
+        self.assertIn("NEVER_FOCUS", (ROOT / "src" / "harvester_risk_atlas" / "map_points.py").read_text(encoding="utf-8"))
         self.assertNotIn("MarkerCluster", app)
         self.assertNotIn("zoom_start=6 if not focus else 8", app)
+        self.assertNotIn("land_record", app)
+        self.assertNotIn("nearest Philippines land record", app)
+        self.assertNotIn("Nearest land record", app)
+        self.assertIn("This mean is not on Philippines land.", app)
 
 
 if __name__ == "__main__":
