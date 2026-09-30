@@ -101,7 +101,6 @@ def preload_markup(weights: dict) -> str:
     <p class="formula beat b4f">{formula}</p>
   </div>
   <div class="hra-preload-bar" aria-hidden="true"></div>
-  <a class="hra-preload-skip" href="?intro=skip">Skip</a>
 </div>
 """.strip()
 

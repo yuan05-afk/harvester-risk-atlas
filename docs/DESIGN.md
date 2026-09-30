@@ -74,7 +74,7 @@ Card section labels (Where / Stress / …) stay uppercase 12–13px tertiary —
   - Optional **one-shot** map focus pulse (`.hra-pulse`, ~0.9s, plays once)
 - Honor `prefers-reduced-motion: reduce` (transitions/animations near-zero).
 - **Banned motion:** bounce, spring, page-wide fade-up, staggered card entrances, aurora blobs.
-- **Home preface (exception, one shot):** first session only, on Home. Four sentences, opacity crossfade, a 2px progress rule, a text skip (`?intro=skip`). No position shift, no bounce, no second button. `prefers-reduced-motion` removes the sheet entirely (do not only crush the duration — the delay would leave a blank screen). `?demo=1` skips it and opens the map.
+- **Home preface (exception, one shot):** first session only, on Home. Four sentences, opacity crossfade, a 2px progress rule, a text Skip button (markdown links open a new tab here, so Skip is a real control). `?intro=skip` also dismisses it. No position shift, no bounce, no second call to action on the page itself. `prefers-reduced-motion` removes the sheet entirely (do not only crush the duration — the delay would leave a blank screen). `?demo=1` skips it and opens the map.
 - Map controls: minimal Folium defaults; legend as hairlined floating panel
 - Markers: white/ink stroke (`weight ≥ 1.5`) so centroids read on Esri gray canvas
 

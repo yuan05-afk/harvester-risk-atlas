@@ -25,7 +25,7 @@ class LandingCopyTests(unittest.TestCase):
         self.assertIn("None of them is a field score", html)
         self.assertIn("never invents one", html)
         self.assertIn("HPI = 0.30 R + 0.25 C + 0.25 H + 0.20 P", html)
-        self.assertIn('href="?intro=skip"', html)
+        self.assertNotIn("href=", html)
         landing.assert_plain_voice(html)
 
     def test_home_is_one_path_not_a_feature_grid(self):
@@ -100,7 +100,10 @@ class LandingStyleTests(unittest.TestCase):
         self.assertIn('"Home"', self.app)
         self.assertIn("Open the map", self.app)
         self.assertIn('qp.get("intro") == "skip"', self.app)
+        self.assertIn('st.button("Skip"', self.app)
         self.assertIn("preload_markup", self.app)
+        self.assertIn("on_click=go_to", self.app)
+        self.assertNotIn('st.session_state["nav_radio"] = "Map"', self.app)
 
 
 if __name__ == "__main__":

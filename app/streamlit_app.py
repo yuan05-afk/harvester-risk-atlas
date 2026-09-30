@@ -20,7 +20,11 @@ SRC = ROOT / "src"
 if SRC.is_dir():
     sys.path.insert(0, str(SRC))
 for _mod in list(sys.modules):
-    if _mod == "harvester_risk_atlas" or _mod.startswith("harvester_risk_atlas."):
+    if (
+        _mod == "landing"
+        or _mod == "harvester_risk_atlas"
+        or _mod.startswith("harvester_risk_atlas.")
+    ):
         del sys.modules[_mod]
 
 from harvester_risk_atlas.config import (  # noqa: E402
@@ -64,7 +68,7 @@ st.set_page_config(
     page_title="Harvester Risk Atlas",
     page_icon=None,
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="auto",
 )
 
 CSS = (ROOT / "app" / "styles.css").read_text(encoding="utf-8")
@@ -185,10 +189,9 @@ def home_page(hpi: pd.DataFrame) -> None:
         ),
         unsafe_allow_html=True,
     )
-    if st.button("Open the map", type="primary", key="open_map"):
-        st.session_state["page"] = "Map"
-        st.session_state["nav_radio"] = "Map"
-        st.rerun()
+    # on_click runs before the nav radio instantiates. Setting nav_radio
+    # inside the button's if-block raises WidgetAlreadyInstantiatedError.
+    st.button("Open the map", type="primary", key="open_map", on_click=go_to, args=("Map",))
     st.caption("Weights, sources, and the limits of the index are on Methods.")
 
 
@@ -918,12 +921,25 @@ See dossier expander per species.
     )
 
 
+def dismiss_preface() -> None:
+    st.session_state["intro_played"] = True
+
+
+def go_to(target_page: str) -> None:
+    """Navigate before the radio widget is built."""
+    st.session_state["nav_radio"] = target_page
+    st.session_state["page"] = target_page
+
+
 def continue_to(label: str, target_page: str):
     st.markdown('<div class="hra-continue"></div>', unsafe_allow_html=True)
-    if st.button(label, type="primary", key=f"continue_{target_page}"):
-        st.session_state["page"] = target_page
-        st.session_state["nav_radio"] = target_page
-        st.rerun()
+    st.button(
+        label,
+        type="primary",
+        key=f"continue_{target_page}",
+        on_click=go_to,
+        args=(target_page,),
+    )
 
 
 def main():
@@ -958,6 +974,11 @@ def main():
             landing.preload_markup(dict(HPI_WEIGHTS)),
             unsafe_allow_html=True,
         )
+        # A markdown link is rewritten to target=_blank, so Skip is a real
+        # button. The click reruns the script; intro_played is already set,
+        # and the preface is omitted. on_click is a no-op marker so the
+        # widget does not also try to write nav state.
+        st.button("Skip", key="skip_intro", on_click=dismiss_preface)
         st.session_state["intro_played"] = True
 
     with st.sidebar:
