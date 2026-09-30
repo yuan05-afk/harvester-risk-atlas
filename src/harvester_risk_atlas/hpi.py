@@ -307,6 +307,58 @@ def top_rank_movers(sensitivity: pd.DataFrame, n: int = 8) -> pd.DataFrame:
     return moved.head(int(n)).drop(columns=["abs_delta"]).reset_index(drop=True)
 
 
+def mapped_species(hpi: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Split rows with a centroid from rows that cannot be mapped.
+
+    The demo extract includes Mentha × piperita with no lat/lon. Those rows
+    stay in the CSV (IUCN still not_queried). They are selectable in the
+    dossier and left out of the map, archetypes, and compare cohort.
+    Coordinates are never filled in.
+    """
+    if hpi.empty or "lat_mean" not in hpi.columns or "lon_mean" not in hpi.columns:
+        return hpi.copy(), hpi.iloc[0:0].copy()
+    ok = hpi["lat_mean"].notna() & hpi["lon_mean"].notna()
+    return hpi.loc[ok].copy(), hpi.loc[~ok].copy()
+
+
+def dossier_choices(mapped: pd.DataFrame, omitted: pd.DataFrame) -> list[str]:
+    """Mapped species by descending HPI, then unlocated names.
+
+    An imputed score with no centroid cannot sort to the front.
+    """
+    if mapped.empty or "scientific_name" not in mapped.columns:
+        names: list[str] = []
+    elif "hpi" in mapped.columns:
+        names = mapped.sort_values("hpi", ascending=False)["scientific_name"].astype(str).tolist()
+    else:
+        names = mapped["scientific_name"].astype(str).tolist()
+    if omitted.empty or "scientific_name" not in omitted.columns:
+        return names
+    for name in omitted["scientific_name"].astype(str).tolist():
+        if name not in names:
+            names.append(name)
+    return names
+
+
+def unmapped_note(skipped: pd.DataFrame) -> str:
+    """One plain sentence for the map table. Empty when every row has a centroid."""
+    if skipped.empty or "scientific_name" not in skipped.columns:
+        return ""
+    bits: list[str] = []
+    for _, row in skipped.iterrows():
+        name = str(row.get("scientific_name") or "").strip()
+        vern = str(row.get("vernacular_ph") or "").strip()
+        if not name or name.lower() == "nan":
+            continue
+        if vern and vern.lower() != "nan":
+            bits.append(f"{name} ({vern})")
+        else:
+            bits.append(name)
+    if not bits:
+        return ""
+    return "Not on the map — no georeferenced points: " + "; ".join(bits) + "."
+
+
 def hpi_formula_markdown() -> str:
     return (
         "**HPI v1.1** = 0.30·Rarity + 0.25·Climate stress + 0.25·Harvest proxy "
