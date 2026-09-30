@@ -1,6 +1,16 @@
 # STATUS — Harvester Risk Atlas
 
-Last updated: 2026-09-30 (Home + first-visit preface)
+Last updated: 2026-09-30 (Cloud import KeyError)
+
+## Cloud import (2026-09-30)
+
+| Item | Status |
+|------|--------|
+| Hard refresh on Community Cloud redacted `KeyError` at `from harvester_risk_atlas.config import` | Fixed |
+| Cause | App deleted `harvester_risk_atlas*` from `sys.modules` on every run. Python 3.11 `_load_unlocked` then `sys.modules.pop`s that name (line 701). A second session thread (hard refresh) removed it mid-import. |
+| Fix | Stop wiping `sys.modules`. Keep `src/` on `sys.path` and `-e .` so Cloud still installs the package. Reboot picks up new exports. |
+
+Files: `app/streamlit_app.py`, `tests/test_cloud_import.py`, `DEPLOY.md`.
 
 ## Home and preface (2026-09-30)
 
@@ -94,7 +104,7 @@ Files: `src/harvester_risk_atlas/hpi.py`, `src/harvester_risk_atlas/charts.py`, 
 | Item | Status |
 |------|--------|
 | Root cause | Streamlit kept stale `harvester_risk_atlas.*` in `sys.modules` after polish added `hpi_spark_svg` / earlier `render_field_brief_pdf` → in-app `ImportError: cannot import name …` |
-| Fix | Bust package modules before import in `app/streamlit_app.py`; add `-e .` to `requirements.txt` for Cloud src install |
+| Fix | Bust package modules before import in `app/streamlit_app.py`; add `-e .` to `requirements.txt` for Cloud src install. The wipe was removed 2026-09-30 — it raced importlib and crashed Cloud. `-e .` stayed. |
 | Smoke | Stale-module repro fixed; AppTest Map + Dossier no exceptions; Cloud-style editable import OK |
 
 Files: `app/streamlit_app.py`, `requirements.txt`, `DEPLOY.md`.

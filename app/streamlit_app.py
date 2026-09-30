@@ -14,20 +14,20 @@ from streamlit_folium import st_folium
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
-# Streamlit (local + Cloud) can keep stale package modules in sys.modules across
-# script reruns. After UI polish adds new exports (e.g. hpi_spark_svg,
-# render_field_brief_pdf), a cached older module raises ImportError:
-#   cannot import name '…' from 'harvester_risk_atlas.…'
-# Drop our package from the cache, then prefer the repo src/ tree.
+# Prefer the repo src/ tree for local runs. Cloud also installs the package
+# with `-e .` in requirements.txt, so a reboot loads new exports.
+#
+# Do not delete harvester_risk_atlas* or landing from sys.modules. On the
+# Python 3.11 Community Cloud runtime, importlib._bootstrap._load_unlocked
+# finishes exec_module and then does `sys.modules.pop(spec.name)` (line 701
+# on 3.11.4–3.11.11). A hard refresh runs this file on another session
+# thread; wiping the package while that pop is in flight raises KeyError
+# (Cloud redacts the module name) at `from harvester_risk_atlas.config import`
+# and the map never loads.
 if SRC.is_dir():
-    sys.path.insert(0, str(SRC))
-for _mod in list(sys.modules):
-    if (
-        _mod == "landing"
-        or _mod == "harvester_risk_atlas"
-        or _mod.startswith("harvester_risk_atlas.")
-    ):
-        del sys.modules[_mod]
+    _src = str(SRC)
+    if _src not in sys.path:
+        sys.path.insert(0, _src)
 
 from harvester_risk_atlas.config import (  # noqa: E402
     HPI_CSV,

@@ -55,9 +55,7 @@ print(len(pdf), 'bytes')
 - Hide the Deploy/toolbar chrome via `app/styles.css` (already applied).
 - Keep the disclaimer visible; disclose AI/OSS in README for judging.
 
-- After a push that adds new package exports (e.g. `hpi_spark_svg`), **reboot** the Cloud app
-  if you still see `ImportError: cannot import name …` — Streamlit can keep a stale module
-  cache across soft reloads. `requirements.txt` includes `-e .` so the `src/` package installs.
+- `requirements.txt` includes `-e .` so Cloud installs the `src/` package. Reboot after a push that adds exports. Do not drop `harvester_risk_atlas` from `sys.modules` on each run — that races importlib and raises a redacted `KeyError` on hard refresh.
 
 
 ## App entry
