@@ -109,7 +109,7 @@ class LandingCopyTests(unittest.TestCase):
         self.assertNotIn("linearGradient", html)
         self.assertNotIn("radialGradient", html)
         self.assertNotIn("filter=", html)
-        self.assertGreaterEqual(html.count('class="draw d-vein"'), 4)
+        self.assertGreaterEqual(html.count('class="draw d-vein"'), 5)
         self.assertIn('class="draw d-stem"', html)
         self.assertIn('class="draw d-blade"', html)
         self.assertNotIn("gbif", html.lower())
