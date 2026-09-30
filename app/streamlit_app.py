@@ -14,20 +14,15 @@ from streamlit_folium import st_folium
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
-# Streamlit (local + Cloud) can keep stale package modules in sys.modules across
-# script reruns. After UI polish adds new exports (e.g. hpi_spark_svg,
-# render_field_brief_pdf), a cached older module raises ImportError:
-#   cannot import name '…' from 'harvester_risk_atlas.…'
-# Drop our package from the cache, then prefer the repo src/ tree.
+# Prefer the repo src/ tree when it is present (local runs). Streamlit Cloud
+# installs the package via `-e .` in requirements.txt.
+# Do not delete harvester_risk_atlas or landing from sys.modules on each run.
+# A second Cloud hard-refresh does that while the first import is still inside
+# importlib._load_unlocked; the loader then raises KeyError on
+# sys.modules.pop(spec.name) and the app never finishes loading. A stale
+# "ImportError: cannot import name …" after a deploy is a Cloud reboot.
 if SRC.is_dir():
     sys.path.insert(0, str(SRC))
-for _mod in list(sys.modules):
-    if (
-        _mod == "landing"
-        or _mod == "harvester_risk_atlas"
-        or _mod.startswith("harvester_risk_atlas.")
-    ):
-        del sys.modules[_mod]
 
 from harvester_risk_atlas.config import (  # noqa: E402
     HPI_CSV,
