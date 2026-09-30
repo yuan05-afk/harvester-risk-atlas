@@ -98,6 +98,23 @@ class LandingCopyTests(unittest.TestCase):
         self.assertEqual(landing.default_page(demo_requested=True), "Map")
         self.assertEqual(landing.default_page(demo_requested=False), "Home")
 
+    def test_preface_mark_is_a_curved_schematic(self):
+        html = landing.preload_markup(WEIGHTS)
+        self.assertIn('class="hra-sil sil-n"', html)
+        self.assertIn('class="hra-sil sil-w"', html)
+        self.assertIn('class="hra-sil sil-c"', html)
+        self.assertIn('class="hra-sil sil-s"', html)
+        self.assertIn(" C ", html)
+        self.assertNotIn(" L ", html)
+        self.assertNotIn("linearGradient", html)
+        self.assertNotIn("radialGradient", html)
+        self.assertNotIn("filter=", html)
+        self.assertGreaterEqual(html.count('class="draw d-vein"'), 4)
+        self.assertIn('class="draw d-stem"', html)
+        self.assertIn('class="draw d-blade"', html)
+        self.assertNotIn("gbif", html.lower())
+        self.assertNotIn("centroid", html.lower())
+
 
 class LandingStyleTests(unittest.TestCase):
     @classmethod

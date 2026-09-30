@@ -1258,11 +1258,11 @@ div[data-testid="stVerticalBlock"]:has(.hra-home) .stButton > button[kind="prima
 .hra-sil {
   fill: var(--accent);
   stroke: var(--accent);
-  stroke-width: 1.25;
+  stroke-width: 0.85;
   stroke-linejoin: round;
   stroke-linecap: round;
   fill-opacity: 0;
-  stroke-opacity: 0.78;
+  stroke-opacity: 0.72;
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
   animation-name: hra-sil-in;
@@ -1285,7 +1285,7 @@ div[data-testid="stVerticalBlock"]:has(.hra-home) .stButton > button[kind="prima
 .hra-mark .dot.ring {
   fill: none;
   stroke: var(--accent);
-  stroke-width: 0.9;
+  stroke-width: 0.7;
   animation-name: hra-ring-in;
 }
 .hra-mark .dot.d1 { animation-delay: 0.45s; }
@@ -1295,7 +1295,7 @@ div[data-testid="stVerticalBlock"]:has(.hra-home) .stButton > button[kind="prima
 .hra-leaf .draw {
   fill: none;
   stroke: var(--accent);
-  stroke-width: 1.2;
+  stroke-width: 1.0;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-dasharray: 100;
@@ -1305,9 +1305,9 @@ div[data-testid="stVerticalBlock"]:has(.hra-home) .stButton > button[kind="prima
   animation-timing-function: cubic-bezier(0.45, 0, 0.2, 1);
   animation-fill-mode: forwards;
 }
-.hra-leaf .d-stem { animation-delay: 0.7s; }
-.hra-leaf .d-blade { animation-delay: 0.95s; animation-duration: 1.55s; stroke-width: 1.15; }
-.hra-leaf .d-vein { animation-delay: 1.55s; animation-duration: 1.05s; stroke-width: 0.9; }
+.hra-leaf .d-stem { animation-delay: 0.7s; stroke-width: 0.95; }
+.hra-leaf .d-blade { animation-delay: 0.95s; animation-duration: 1.55s; stroke-width: 1.05; }
+.hra-leaf .d-vein { animation-delay: 1.55s; animation-duration: 1.05s; stroke-width: 0.7; }
 .hra-preload-stage {
   position: relative;
   width: min(44rem, 100%);
