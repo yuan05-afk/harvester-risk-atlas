@@ -58,6 +58,7 @@ from harvester_risk_atlas.charts import (  # noqa: E402
     rank_shift_bars,
 )
 from harvester_risk_atlas.suitability import suitability_sketch  # noqa: E402
+import landing  # noqa: E402
 
 st.set_page_config(
     page_title="Harvester Risk Atlas",
@@ -76,6 +77,7 @@ RISK_COLORS = {
 }
 
 WORKFLOW_PAGES = [
+    "Home",
     "Map",
     "Species dossier",
     "Field brief",
@@ -150,21 +152,44 @@ def band_class(band: str) -> str:
 
 def header():
     st.markdown(
-        """
+        f"""
         <div class="hra-header">
           <div class="hra-kicker">EthnoHACK 2026 · Track 3 · Biodiversity &amp; Sustainability</div>
           <h1>Harvester Risk Atlas</h1>
           <p class="hra-sub">Harvest and climate pressure for PH/SEA medicinal plants.
           Pick a species → dossier → field brief. Research and education only.</p>
         </div>
-        <div class="hra-disclaimer">
-          <strong>Disclaimer.</strong> Not medical advice, not a harvest permit, not a Red List assessment.
-          Ethnobotany notes are cultural context only. IUCN categories are never invented —
-          live lookup needs an API token.
-        </div>
+        {landing.DISCLAIMER_HTML}
         """,
         unsafe_allow_html=True,
     )
+
+
+def home_page(hpi: pd.DataFrame) -> None:
+    bands = (
+        hpi["hpi_band"].value_counts().to_dict() if "hpi_band" in hpi.columns else {}
+    )
+    n_imputed = 0
+    if "hpi_confidence" in hpi.columns:
+        n_imputed = int((hpi["hpi_confidence"] < (0.85 - 1e-9)).sum())
+    iucn_unlinked = True
+    if "iucn_status" in hpi.columns and len(hpi):
+        iucn_unlinked = bool((hpi["iucn_status"].fillna("not_queried") != "ok").all())
+    st.markdown(
+        landing.home_markup(
+            n_taxa=int(len(hpi)),
+            band_counts={str(k): int(v) for k, v in bands.items()},
+            n_imputed=n_imputed,
+            iucn_unlinked=iucn_unlinked,
+            weights=dict(HPI_WEIGHTS),
+        ),
+        unsafe_allow_html=True,
+    )
+    if st.button("Open the map", type="primary", key="open_map"):
+        st.session_state["page"] = "Map"
+        st.session_state["nav_radio"] = "Map"
+        st.rerun()
+    st.caption("Weights, sources, and the limits of the index are on Methods.")
 
 
 def workflow_steps(active_page: str):
@@ -902,7 +927,6 @@ def continue_to(label: str, target_page: str):
 
 
 def main():
-    header()
     try:
         mtime = HPI_CSV.stat().st_mtime if HPI_CSV.exists() else 0.0
         hpi = load_with_archetypes(mtime)
@@ -911,16 +935,30 @@ def main():
         st.stop()
     occ = load_occurrences()
 
+    qp = st.query_params
+    if qp.get("intro") == "skip":
+        st.session_state["intro_played"] = True
+        del qp["intro"]
+    demo_qp = landing.demo_query_requested(qp)
     if "nav_radio" not in st.session_state:
-        st.session_state["nav_radio"] = "Map"
+        st.session_state["nav_radio"] = landing.default_page(demo_requested=demo_qp)
     if "page" not in st.session_state:
         st.session_state["page"] = st.session_state["nav_radio"]
     if "selected" not in st.session_state:
         st.session_state["selected"] = None
-    qp = st.query_params
-    demo_qp = qp.get("demo", "").lower() in ("1", "true", "yes") or "demo" in qp
     if "demo_mode" not in st.session_state:
         st.session_state["demo_mode"] = demo_qp
+
+    play_intro = landing.should_play_intro(
+        intro_played=bool(st.session_state.get("intro_played")),
+        demo_requested=demo_qp,
+    )
+    if play_intro:
+        st.markdown(
+            landing.preload_markup(dict(HPI_WEIGHTS)),
+            unsafe_allow_html=True,
+        )
+        st.session_state["intro_played"] = True
 
     with st.sidebar:
         st.markdown('<div class="hra-kicker">Navigate</div>', unsafe_allow_html=True)
@@ -943,48 +981,57 @@ def main():
             demo_sp = pick_demo_species(hpi)
             st.session_state["selected"] = demo_sp
             st.caption(f"Demo species: *{demo_sp}*")
-            st.markdown(
-                f"""<div class="hra-talktrack">
-                <span class="tag">60-sec talk track</span>
-                <ol>
-                  <li>Map (15s): Color = HPI band; size ∝ score. Abutra = moderate harvest signal, not Red List.</li>
-                  <li>Dossier (25s): R/C/H/P + waterfall. Gaps: IUCN not linked; WorldClim; WDPCA.</li>
-                  <li>Brief (15s): HTML or PDF. Stewardship only — not a permit.</li>
-                  <li>Close (5s): Weights 0.30 / 0.25 / 0.25 / 0.20. IUCN never invented.</li>
-                </ol>
-                </div>""",
-                unsafe_allow_html=True,
-            )
+            if page != "Home":
+                st.markdown(
+                    f"""<div class="hra-talktrack">
+                    <span class="tag">60-sec talk track</span>
+                    <ol>
+                      <li>Map (15s): Color = HPI band; size ∝ score. Abutra = moderate harvest signal, not Red List.</li>
+                      <li>Dossier (25s): R/C/H/P + waterfall. Gaps: IUCN not linked; WorldClim; WDPCA.</li>
+                      <li>Brief (15s): HTML or PDF. Stewardship only — not a permit.</li>
+                      <li>Close (5s): Weights 0.30 / 0.25 / 0.25 / 0.20. IUCN never invented.</li>
+                    </ol>
+                    </div>""",
+                    unsafe_allow_html=True,
+                )
 
-        st.markdown("---")
-        st.caption("Search scientific or PH vernacular name")
-        q = st.text_input("Search", placeholder="e.g. lagundi, banaba, abutra", label_visibility="collapsed")
-        selected = st.session_state.get("selected")
-        if demo:
-            selected = pick_demo_species(hpi)
-        elif q.strip():
-            hits = resolve_query(q, hpi)
-            if hits:
-                labels = [
-                    f"{h['scientific_name']} ({h['vernacular_ph']})"
-                    for h in hits
-                    if h.get("scientific_name")
-                ]
-                choice = st.selectbox("Matches", labels)
-                if choice:
-                    selected = choice.split(" (")[0]
+        if page != "Home":
+            st.markdown("---")
+            st.caption("Search scientific or PH vernacular name")
+            q = st.text_input("Search", placeholder="e.g. lagundi, banaba, abutra", label_visibility="collapsed")
+            selected = st.session_state.get("selected")
+            if demo:
+                selected = pick_demo_species(hpi)
+            elif q.strip():
+                hits = resolve_query(q, hpi)
+                if hits:
+                    labels = [
+                        f"{h['scientific_name']} ({h['vernacular_ph']})"
+                        for h in hits
+                        if h.get("scientific_name")
+                    ]
+                    choice = st.selectbox("Matches", labels)
+                    if choice:
+                        selected = choice.split(" (")[0]
+                else:
+                    st.caption("No match in seed list.")
             else:
-                st.caption("No match in seed list.")
+                names = hpi.sort_values("hpi", ascending=False)["scientific_name"].tolist()
+                idx = names.index(selected) if selected in names else 0
+                selected = st.selectbox("Species", names, index=idx)
+            st.session_state["selected"] = selected
+
+            if "archetype_label" in hpi.columns and selected in set(hpi["scientific_name"]):
+                arch = hpi.loc[hpi["scientific_name"] == selected, "archetype_label"].iloc[0]
+                st.caption(f"Archetype: {arch}")
         else:
-            names = hpi.sort_values("hpi", ascending=False)["scientific_name"].tolist()
-            idx = names.index(selected) if selected in names else 0
-            selected = st.selectbox("Species", names, index=idx)
-        st.session_state["selected"] = selected
+            selected = st.session_state.get("selected")
 
-        if "archetype_label" in hpi.columns and selected in set(hpi["scientific_name"]):
-            arch = hpi.loc[hpi["scientific_name"] == selected, "archetype_label"].iloc[0]
-            st.caption(f"Archetype: {arch}")
+    if page == "Home":
+        home_page(hpi)
+        return
 
+    header()
     workflow_steps(page)
 
     if page == "Methods":
