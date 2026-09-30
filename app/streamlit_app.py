@@ -1118,10 +1118,12 @@ def main():
         demo_requested=demo_qp,
     )
     if play_intro:
-        st.markdown(
-            landing.preload_markup(dict(HPI_WEIGHTS)),
-            unsafe_allow_html=True,
-        )
+        # st.html keeps the SVG mark intact. Markdown can rewrite the sheet.
+        sheet = landing.preload_markup(dict(HPI_WEIGHTS))
+        if hasattr(st, "html"):
+            st.html(sheet)
+        else:
+            st.markdown(sheet, unsafe_allow_html=True)
         # A markdown link is rewritten to target=_blank, so Skip is a real
         # button. The click reruns the script; intro_played is already set,
         # and the preface is omitted. on_click is a no-op marker so the

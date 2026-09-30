@@ -106,6 +106,26 @@ class LandingStyleTests(unittest.TestCase):
         self.assertIn("on_click=go_to", self.app)
         self.assertNotIn('st.session_state["nav_radio"] = "Map"', self.app)
         self.assertIn("hra-skip-in 0.4s var(--ease) 3s forwards", self.css)
+        self.assertIn("translateY(9px)", self.css)
+        self.assertIn("hra-sil-in", self.css)
+        self.assertIn("hra-draw", self.css)
+        self.assertIn("hra-dot-in", self.css)
+        self.assertIn(".hra-preload .b1 { --in: 0.40s; }", self.css)
+        self.assertIn(".hra-preload .b2 { --in: 2.54s; }", self.css)
+        self.assertIn(".hra-preload .b3 { --in: 4.68s; }", self.css)
+        self.assertIn(".hra-preload .b4 { --in: 6.82s;", self.css)
+        # Each beat is 2.05s and the next starts only after that window.
+        starts = [0.40, 2.54, 4.68, 6.82]
+        for prev, nxt in zip(starts, starts[1:]):
+            self.assertGreaterEqual(nxt, prev + 2.05)
+        html = (ROOT / "app" / "landing.py").read_text(encoding="utf-8")
+        self.assertIn("<svg", html)
+        self.assertIn("hra-leaf", html)
+        self.assertIn("hra-sil", html)
+        self.assertNotIn("b4f", html)
+        sheet = landing.preload_markup(WEIGHTS)
+        b4 = sheet.split('class="beat b4"')[1]
+        self.assertIn("HPI = 0.30 R + 0.25 C + 0.25 H + 0.20 P", b4)
         self.assertIn("hra-page-in 180ms", self.css)
         self.assertIn(":not(:has(.hra-preload))", self.css)
         self.assertIn("padding: 1rem 1.25rem !important", self.css)
