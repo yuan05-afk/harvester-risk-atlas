@@ -148,8 +148,7 @@ def header():
         <div class="hra-header">
           <div class="hra-kicker">EthnoHACK 2026 · Track 3 · Biodiversity &amp; Sustainability</div>
           <h1>Harvester Risk Atlas</h1>
-          <p class="hra-sub">Harvest and climate pressure for PH/SEA medicinal plants.
-          Pick a species → dossier → field brief. Research and education only.</p>
+          <p class="hra-sub">Harvest and climate pressure for PH/SEA medicinal plants — research and education only.</p>
         </div>
         <div class="hra-disclaimer">
           <strong>Disclaimer.</strong> Not medical advice, not a harvest permit, not a Red List assessment.
@@ -591,6 +590,7 @@ def field_brief_page(row: pd.Series, demo: bool):
                 data=pdf_bytes,
                 file_name=f"{stem}.pdf",
                 mime="application/pdf",
+                type="secondary",
                 key="dl_brief_pdf",
             )
         except ImportError:

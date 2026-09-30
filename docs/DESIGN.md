@@ -85,13 +85,15 @@ Card section labels (Where / Stress / …) stay uppercase 12–13px tertiary —
 - Marketing fluff (“unlock”, “seamlessly”, “revolutionize”)
 - Rainbow chrome outside HPI semantics
 - Risk-red/amber on non-HPI component charts
+- Colored left rails on callouts (demo caption, how-to, talk track). Those are surface + hairline, or a top hairline only. The `.tag` is small-caps tertiary. Accent is not a stripe.
 
 ## Copy voice
 Plain scientific English. Short dossier labels: **Where / Stress / Why it matters / What to do**. Disclaimer always visible, never cute.
 
 ## Map & dossier microcopy
 
-- **How to read this** — Map page only. 1–2 lines under the header strip: HPI color meaning + size cue. No emoji, no dual CTAs.
+- **How to read this** — Map page only. 1–2 lines under the header strip: HPI color meaning + size cue. No emoji, no dual CTAs, no left accent rail.
+- **Demo captions** — same hairline treatment as the how-to note. No mint fill, no side stripe.
 - **Weights transparency** — Methods expander table (R/C/H/P + weights + one plain sentence why). Match METHODS.md numbers.
 - **Demo talk track** — Sidebar under Demo mode only. Numbered 60-sec script; plain scientific English.
 - **IUCN badge** — Dossier chip: linked category when `iucn_status=ok`; otherwise muted `IUCN not linked`. Never show a fake LC/VU.
