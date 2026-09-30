@@ -8,6 +8,8 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 import folium
+from branca.element import MacroElement
+from jinja2 import Template
 from streamlit_folium import st_folium
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -202,6 +204,17 @@ def map_color(band: str) -> str:
     return RISK_COLORS.get(band, "#86868b")
 
 
+class _LeafletAttributionMute(MacroElement):
+    """Mute Leaflet credit links to tertiary ink inside the map iframe."""
+
+    _template = Template(
+        "{% macro html(this, kwargs) %}"
+        "<style>.leaflet-control-attribution,"
+        ".leaflet-control-attribution a{color:#86868b !important}</style>"
+        "{% endmacro %}"
+    )
+
+
 def build_map(
     hpi: pd.DataFrame,
     occ: pd.DataFrame,
@@ -219,6 +232,9 @@ def build_map(
         tiles="Esri.WorldGrayCanvas",
         control_scale=True,
     )
+    # st_folium only forwards figure-level {% macro html %} siblings into the
+    # map iframe. Parent app CSS cannot reach Leaflet attribution links.
+    m.get_root().add_child(_LeafletAttributionMute())
 
     # Archetype palette — forest ramp only (risk colors stay on HPI bands)
     arch_palette = ["#2d6a4f", "#52796f", "#74a892", "#6e6e73", "#44564a"]
@@ -576,6 +592,7 @@ def field_brief_page(row: pd.Series, demo: bool):
                 data=pdf_bytes,
                 file_name=f"{stem}.pdf",
                 mime="application/pdf",
+                type="secondary",
                 key="dl_brief_pdf",
             )
         except ImportError:
