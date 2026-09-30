@@ -93,6 +93,7 @@ Plain scientific English. Short dossier labels: **Where / Stress / Why it matter
 
 - **How to read this** — Map page only. 1–2 lines under the header strip: HPI color meaning + size cue. No emoji, no dual CTAs.
 - **Weights transparency** — Methods expander table (R/C/H/P + weights + one plain sentence why). Match METHODS.md numbers.
+- **Weight sensitivity** — Methods only, one collapsed expander under that table. Sliders reweight stored components for oral defense. Not a new nav page, not a new official index, and not shown on Map or Dossier.
 - **Demo talk track** — Sidebar under Demo mode only. Numbered 60-sec script; plain scientific English.
 - **IUCN badge** — Dossier chip: linked category when `iucn_status=ok`; otherwise muted `IUCN not linked`. Never show a fake LC/VU.
 - **Field brief** — HTML + PDF; same structure (Where / Stress / Why / What to do). Typography follows tokens above.

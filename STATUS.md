@@ -59,6 +59,21 @@ Last updated: 2026-09-30 (Asia/Manila)
 
 - 2026-09-30: Cluster off on the risk atlas — centroids are CircleMarkers (HPI fill, white stroke); duplicate Folium in-map legend removed.
 
+### HPI weight sensitivity on Methods (2026-09-30)
+
+| Item | Status |
+|------|--------|
+| Methods expander: R/C/H/P sliders, clipped ≥ 0 and rescaled to sum to 1 | Done |
+| Selected species rank before/after (rank 1 = highest HPI) | Done |
+| Top rank-shift table + forest-accent bars (no risk colors) | Done |
+| Restore control returns sliders to v1.1 (0.30 / 0.25 / 0.25 / 0.20) | Done |
+| Caption: oral-defense sensitivity, not a new official index | Done |
+| No new sidebar page; Map and Dossier unchanged | Confirmed |
+| IUCN left `not_queried`; no IUCN fetch | Unchanged |
+| Unit tests for normalize / ranks / chart colors | Done |
+
+Files: `src/harvester_risk_atlas/hpi.py`, `src/harvester_risk_atlas/charts.py`, `app/streamlit_app.py`, `tests/test_hpi_sensitivity.py`, `docs/METHODS.md`, `docs/DESIGN.md`, `STATUS.md`.
+
 ### Changelog (2026-09-29)
 
 
@@ -180,7 +195,7 @@ Files: `src/harvester_risk_atlas/charts.py`, `app/streamlit_app.py`, `STATUS.md`
 4. Tighten seed list with POWO synonyms; fix mint complex.
 5. Deploy Streamlit Cloud (see `DEPLOY.md`); keep disclaimer + AI/OSS disclosure.
 6. Judging packet drafted (`docs/JUDGING.md`, `VIDEO_SCRIPT.md`, `SUBMISSION_CHECKLIST.md`) — still need public repo + record/upload video + ≤10 slides.
-7. HPI weight sensitivity in notebook for oral defense.
+7. HPI weight sensitivity — on the Methods page (oral-defense explorer; v1.1 remains the official index).
 8. Optional: `pip install kaleido` for PNG slide exports.
 
 ## Blockers
