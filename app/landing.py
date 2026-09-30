@@ -89,15 +89,15 @@ def cohort_note(
 
 
 def preload_markup(weights: dict) -> str:
-    """One-shot preface. Opacity only; the stylesheet owns timing."""
+    """One-shot preface. Short lines, opacity only; the stylesheet owns timing."""
     formula = formula_line(weights)
     return f"""
 <div class="hra-preload">
   <div class="hra-preload-stage" aria-hidden="true">
-    <p class="beat b1"><span class="k">The pressure</span>Medicinal plants in the Philippines and Southeast Asia are still taken from the wild.</p>
-    <p class="beat b2"><span class="k">The records</span>Occurrences, climate, harvest, and protected-area cover sit in different datasets. None of them is a field score.</p>
-    <p class="beat b3"><span class="k">The wrong stand-in</span>A Red List category does not measure that pressure. This atlas never invents one.</p>
-    <p class="beat b4"><span class="k">Harvester Risk Atlas</span>A relative score from four open inputs. Then the map, the dossier, and a field brief.</p>
+    <p class="beat b1"><span class="k">Wild harvest</span>Medicinal plants are still taken from the wild.</p>
+    <p class="beat b2"><span class="k">The gap</span>No shared number shows that pressure.</p>
+    <p class="beat b3"><span class="k">Not a Red List</span>This atlas never invents one.</p>
+    <p class="beat b4"><span class="k">Harvester Risk Atlas</span>Four open inputs. One relative score.</p>
     <p class="formula beat b4f">{formula}</p>
   </div>
   <div class="hra-preload-bar" aria-hidden="true"></div>
@@ -135,29 +135,31 @@ def home_markup(
     <p class="eq">{w['rarity']} rarity + {w['climate_stress']} climate stress + {w['harvest_proxy']} harvest proxy + {w['pa_gap']} protected-area gap</p>
     <p class="note">Confidence falls when an input was imputed. IUCN sits beside the score, never inside it.</p>
   </div>
+  <div class="hra-parts-wrap">
   <table class="hra-parts">
     <thead>
       <tr><th>Term</th><th>What goes in</th></tr>
     </thead>
     <tbody>
       <tr>
-        <td>Rarity<span>weight {w['rarity']}</span></td>
-        <td>Inverted GBIF count, plus an endemism cue from the seed notes.</td>
+        <td><span class="term">Rarity</span><span class="weight">weight {w['rarity']}</span></td>
+        <td class="goes">Inverted GBIF count, plus an endemism cue from the seed notes.</td>
       </tr>
       <tr>
-        <td>Climate stress<span>weight {w['climate_stress']}</span></td>
-        <td>WorldClim 2.1 temperature, precipitation, and seasonality on a Southeast Asia clip.</td>
+        <td><span class="term">Climate stress</span><span class="weight">weight {w['climate_stress']}</span></td>
+        <td class="goes">WorldClim 2.1 temperature, precipitation, and seasonality on a Southeast Asia clip.</td>
       </tr>
       <tr>
-        <td>Harvest proxy<span>weight {w['harvest_proxy']}</span></td>
-        <td>Local occurrence density, the share of recent records, and a literature harvest flag.</td>
+        <td><span class="term">Harvest proxy</span><span class="weight">weight {w['harvest_proxy']}</span></td>
+        <td class="goes">Local occurrence density, the share of recent records, and a literature harvest flag.</td>
       </tr>
       <tr>
-        <td>Protected-area gap<span>weight {w['pa_gap']}</span></td>
-        <td>Share of points outside WDPCA Philippines, with a small distance boost when the gap is large.</td>
+        <td><span class="term">Protected-area gap</span><span class="weight">weight {w['pa_gap']}</span></td>
+        <td class="goes">Share of points outside WDPCA Philippines, with a small distance boost when the gap is large.</td>
       </tr>
     </tbody>
   </table>
+  </div>
   <h2>How it is used</h2>
   <ol class="hra-path">
     <li><strong>Map.</strong> One centroid per species. Color is the HPI band. Size follows the score.</li>

@@ -22,9 +22,10 @@ class LandingCopyTests(unittest.TestCase):
     def test_preface_states_the_problem_and_the_index(self):
         html = landing.preload_markup(WEIGHTS)
         self.assertIn("still taken from the wild", html)
-        self.assertIn("None of them is a field score", html)
+        self.assertIn("No shared number shows that pressure", html)
         self.assertIn("never invents one", html)
         self.assertIn("HPI = 0.30 R + 0.25 C + 0.25 H + 0.20 P", html)
+        self.assertLess(html.lower().count(" the "), 12)
         self.assertNotIn("href=", html)
         landing.assert_plain_voice(html)
 
@@ -104,6 +105,17 @@ class LandingStyleTests(unittest.TestCase):
         self.assertIn("preload_markup", self.app)
         self.assertIn("on_click=go_to", self.app)
         self.assertNotIn('st.session_state["nav_radio"] = "Map"', self.app)
+        self.assertIn("hra-skip-in 0.4s var(--ease) 3s forwards", self.css)
+        self.assertIn("hra-page-in 180ms", self.css)
+        self.assertIn(":not(:has(.hra-preload))", self.css)
+        self.assertIn("padding: 1rem 1.25rem !important", self.css)
+        self.assertIn("hra-dossier-grid", self.css)
+        self.assertIn("hra-dossier-grid", self.app)
+        self.assertIn("class=\"term\"", (ROOT / "app" / "landing.py").read_text(encoding="utf-8"))
+        self.assertNotIn("st.info(", self.app)
+        self.assertNotIn("border-left", self.css)
+        self.assertNotIn("HeatMap", self.app)
+        self.assertNotIn("MarkerCluster", self.app)
 
 
 if __name__ == "__main__":

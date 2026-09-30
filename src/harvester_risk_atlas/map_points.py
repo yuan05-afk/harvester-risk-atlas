@@ -8,6 +8,7 @@ Coordinates are never taken from a nearby land record.
 from __future__ import annotations
 
 import json
+import re
 from functools import lru_cache
 
 import pandas as pd
@@ -25,14 +26,82 @@ HOTSPOT_PAD_DEG = 1.35
 
 def marker_radius(hpi: float) -> float:
     """Pixel radius. Readable at a Philippines-wide zoom, still quiet."""
+    return 12.0 + 6.0 * _unit_score(hpi)
+
+
+# Same three risk inks as the bands. The ramp is continuous so a 0.40 and a
+# 0.55 do not share one flat color. It is painted only on real centroids.
+_RAMP_LOW = (0x40, 0x91, 0x6C)
+_RAMP_MID = (0xB0, 0x89, 0x68)
+_RAMP_HIGH = (0x9B, 0x22, 0x26)
+
+
+def _unit_score(hpi: float) -> float:
     try:
         score = float(hpi)
     except (TypeError, ValueError):
-        score = 0.0
+        return 0.0
     if score != score:  # NaN
-        score = 0.0
-    score = min(1.0, max(0.0, score))
-    return 12.0 + 6.0 * score
+        return 0.0
+    return min(1.0, max(0.0, score))
+
+
+def _lerp_rgb(a: tuple[int, int, int], b: tuple[int, int, int], t: float) -> tuple[int, int, int]:
+    return tuple(int(round(a[i] + (b[i] - a[i]) * t)) for i in range(3))
+
+
+def hpi_marker_color(hpi: float) -> str:
+    """Calm HPI color for one centroid. Not a surface between points."""
+    score = _unit_score(hpi)
+    if score <= 0.5:
+        rgb = _lerp_rgb(_RAMP_LOW, _RAMP_MID, score / 0.5)
+    else:
+        rgb = _lerp_rgb(_RAMP_MID, _RAMP_HIGH, (score - 0.5) / 0.5)
+    return "#{:02x}{:02x}{:02x}".format(*rgb)
+
+
+# Clicks land on the marker coordinate. This only rejects a miss on open water.
+CLICK_MATCH_DEG = 0.35
+
+
+def species_at_click(
+    plotted: pd.DataFrame,
+    lat,
+    lon,
+    tooltip: str | None = None,
+) -> str | None:
+    """Species whose circle was clicked, or None if the click missed.
+
+    Tooltip wins (``Name · score``). Otherwise the nearest plotted centroid
+    within ``CLICK_MATCH_DEG``. Mentha × piperita never matches.
+    """
+    if plotted is None or plotted.empty or "scientific_name" not in plotted.columns:
+        return None
+    names = set(plotted["scientific_name"].astype(str)) - NEVER_FOCUS
+    frame = plotted[plotted["scientific_name"].astype(str).isin(names)]
+    if frame.empty:
+        return None
+    if tooltip:
+        # Leaflet wraps the tip in a div. The name is the text before the score.
+        text = re.sub(r"<[^>]+>", " ", str(tooltip))
+        text = " ".join(text.split())
+        head = text.split(" · ")[0].strip()
+        if head in names:
+            return head
+    pair = _finite_pair(lat, lon)
+    if pair is None:
+        return None
+    lat_f, lon_f = pair
+    best_name = None
+    best_d = CLICK_MATCH_DEG * CLICK_MATCH_DEG
+    for rec in frame.itertuples(index=False):
+        dlat = float(rec.plot_lat) - lat_f
+        dlon = float(rec.plot_lon) - lon_f
+        dist = dlat * dlat + dlon * dlon
+        if dist <= best_d:
+            best_d = dist
+            best_name = str(rec.scientific_name)
+    return best_name
 
 
 @lru_cache(maxsize=1)

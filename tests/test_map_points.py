@@ -10,8 +10,10 @@ from harvester_risk_atlas.map_points import (
     PH_FIT_BOUNDS,
     choose_plot_point,
     hotspot_name,
+    hpi_marker_color,
     marker_radius,
     on_ph_land,
+    species_at_click,
     species_plot_points,
 )
 
@@ -176,6 +178,41 @@ class ShippedMaskTests(unittest.TestCase):
         abutra = self.plotted.loc[self.plotted["scientific_name"] == "Arcangelisia flava"].iloc[0]
         self.assertFalse(on_ph_land(abutra.plot_lat, abutra.plot_lon))
 
+    def test_color_follows_hpi_on_a_centroid_and_is_not_a_rainbow(self):
+        self.assertEqual(hpi_marker_color(0), "#40916c")
+        self.assertEqual(hpi_marker_color(0.5), "#b08968")
+        self.assertEqual(hpi_marker_color(1), "#9b2226")
+        mid_low = hpi_marker_color(0.25)
+        self.assertNotEqual(mid_low, "#40916c")
+        self.assertNotEqual(mid_low, "#b08968")
+        self.assertNotIn("ff00", hpi_marker_color(0.8))
+
+    def test_click_resolves_the_circle_and_ignores_mentha_and_open_water(self):
+        plotted = pd.DataFrame(
+            {
+                "scientific_name": ["Mentha × piperita", "Eurycoma longifolia", "Arcangelisia flava"],
+                "plot_lat": [14.6, 3.418, 11.047],
+                "plot_lon": [121.0, 107.682, 121.973],
+                "plot_source": ["centroid", "centroid", "centroid"],
+            }
+        )
+        self.assertEqual(
+            species_at_click(plotted, 14.6, 121.0, "Eurycoma longifolia · 0.400"),
+            "Eurycoma longifolia",
+        )
+        self.assertEqual(
+            species_at_click(
+                plotted,
+                0,
+                0,
+                "<div>\n Arcangelisia flava · 0.519\n </div>",
+            ),
+            "Arcangelisia flava",
+        )
+        self.assertEqual(species_at_click(plotted, 11.047, 121.973, None), "Arcangelisia flava")
+        self.assertIsNone(species_at_click(plotted, 14.6, 121.0, "Mentha × piperita · 0.990"))
+        self.assertIsNone(species_at_click(plotted, 20.0, 100.0, None))
+
     def test_app_fits_the_philippines_and_offers_the_hotspot_control(self):
         app = (ROOT / "app" / "streamlit_app.py").read_text(encoding="utf-8")
         self.assertIn("Focus highest-HPI hotspot", app)
@@ -188,6 +225,15 @@ class ShippedMaskTests(unittest.TestCase):
         self.assertNotIn("nearest Philippines land record", app)
         self.assertNotIn("Nearest land record", app)
         self.assertIn("This mean is not on Philippines land.", app)
+        self.assertIn("hpi_marker_color", app)
+        self.assertIn("species_at_click", app)
+        self.assertIn("map_zoom_species", app)
+        self.assertIn("Click a circle to center it", app)
+        self.assertIn("not scored", app)
+        self.assertNotIn("HeatMap", app)
+        self.assertNotIn("hexbin", app.lower())
+        self.assertNotIn("kriging", app.lower())
+        self.assertNotIn("idw", app.lower())
 
 
 if __name__ == "__main__":

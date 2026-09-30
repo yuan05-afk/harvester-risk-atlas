@@ -105,6 +105,15 @@ class SnapshotUiTests(unittest.TestCase):
         self.assertIn('button[data-testid="stBaseButton-primary"]:hover *', css)
         self.assertIn('button[data-testid="stBaseButton-primary"]:active *', css)
 
+    def test_callouts_have_no_side_rail(self):
+        self.assertNotIn("border-left", self.css)
+        self.assertNotIn("border-inline-start", self.css)
+        self.assertIn(".hra-note", self.css)
+        note = self.css.split(".hra-note {", 1)[1].split("}", 1)[0]
+        self.assertIn("border-top: 1px solid var(--hairline)", note)
+        self.assertIn("border-width: 1px 0 0", self.css)
+        self.assertNotIn("st.info(", self.app)
+
     def test_demo_caption_has_no_accent_rail(self):
         import re
 
