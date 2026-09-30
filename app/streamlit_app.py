@@ -71,8 +71,10 @@ from harvester_risk_atlas.map_points import (  # noqa: E402
     HOTSPOT_PAD_DEG,
     PH_FIT_BOUNDS,
     hotspot_name,
+    hpi_marker_color,
     marker_radius,
     on_ph_land,
+    species_at_click,
     species_plot_points,
 )
 import landing  # noqa: E402
@@ -86,12 +88,6 @@ st.set_page_config(
 
 CSS = (ROOT / "app" / "styles.css").read_text(encoding="utf-8")
 st.markdown(f"<style>{CSS}</style>", unsafe_allow_html=True)
-
-RISK_COLORS = {
-    "Lower relative pressure": "#40916c",
-    "Moderate": "#b08968",
-    "Higher relative pressure": "#9b2226",
-}
 
 WORKFLOW_PAGES = [
     "Home",
@@ -110,9 +106,9 @@ STEP_META = [
 DEMO_CAPTIONS = {
     "map": (
         "Demo · Step 1",
-        "Centroids on Esri gray canvas: color = HPI band, size ∝ score. "
-        "Abutra (Arcangelisia flava) is moderate with a strong harvest proxy — "
-        "the judging example for wild-collection pressure.",
+        "Each circle is one species at its sample average. Color deepens with HPI; "
+        "size follows the score. Abutra (Arcangelisia flava) is the judging example — "
+        "moderate, with a strong harvest proxy. Empty water is not a score.",
     ),
     "dossier": (
         "Demo · Step 2",
@@ -240,8 +236,29 @@ def demo_caption(key: str, enabled: bool):
     )
 
 
-def map_color(band: str) -> str:
-    return RISK_COLORS.get(band, "#86868b")
+def _unit_from_row(hpi) -> float:
+    try:
+        score = float(hpi)
+    except (TypeError, ValueError):
+        return 0.0
+    if score != score:
+        return 0.0
+    return min(1.0, max(0.0, score))
+
+
+def _inline_bold(text: str) -> str:
+    parts = str(text).split("**")
+    return "".join(
+        f"<strong>{part}</strong>" if i % 2 else part for i, part in enumerate(parts)
+    )
+
+
+def quiet_note(label: str, body: str) -> None:
+    """Uppercase label and body. Hairline on top — no side stripe."""
+    st.markdown(
+        f'<p class="hra-note"><span class="k">{label}</span>{body}</p>',
+        unsafe_allow_html=True,
+    )
 
 
 class _MapZoomSnap(MacroElement):
@@ -304,7 +321,7 @@ def build_map(
         if color_by_archetype and arch_labels:
             col = arch_color.get(str(r.get("archetype_label")), "#86868b")
         else:
-            col = map_color(str(r["hpi_band"]))
+            col = hpi_marker_color(r["hpi"])
         arch = r.get("archetype_label", "")
         popup_html = (
             f"<b>{r['scientific_name']}</b><br/>"
@@ -321,15 +338,18 @@ def build_map(
                 "This mean is not on Philippines land.</span>"
             )
         radius = marker_radius(r["hpi"])
-        # Quiet halo in the same HPI color. Overlap reads as density, not a choropleth.
+        score = _unit_from_row(r["hpi"])
+        tip = f"{r['scientific_name']} · {float(r['hpi']):.3f}"
+        # Soft edge on this centroid only. Not a filled surface between species.
         folium.CircleMarker(
             location=[lat, lon],
-            radius=radius * 2.1,
+            radius=radius * 1.45,
             color=col,
             fill=True,
             fill_color=col,
-            fill_opacity=0.12,
+            fill_opacity=0.08 + 0.07 * score,
             weight=0,
+            tooltip=tip,
         ).add_to(m)
         folium.CircleMarker(
             location=[lat, lon],
@@ -337,10 +357,10 @@ def build_map(
             color="#ffffff",
             fill=True,
             fill_color=col,
-            fill_opacity=0.9,
+            fill_opacity=0.92,
             weight=2.0,
             popup=folium.Popup(popup_html, max_width=280),
-            tooltip=f"{r['scientific_name']} · {float(r['hpi']):.3f}",
+            tooltip=tip,
         ).add_to(m)
 
     # One-shot pulse on the camera target, else the selection, when it is plotted.
@@ -578,69 +598,59 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool, hpi: pd.DataFrame | N
         else:
             st.caption("No eventDate/year on this species’ GBIF sample — decade histogram skipped.")
 
-    c1, c2 = st.columns(2)
-    with c1:
-        lat, lon = row.get("lat_mean"), row.get("lon_mean")
-        where = (
-            f"Centroid ≈ {float(lat):.3f}°N, {float(lon):.3f}°E · "
-            f"n={int(row.get('n_occurrences') or 0)} GBIF sample points"
-            if pd.notna(lat)
-            else "No georeferenced points in this extract. Coordinates are not invented."
+    lat, lon = row.get("lat_mean"), row.get("lon_mean")
+    where = (
+        f"Centroid ≈ {float(lat):.3f}°N, {float(lon):.3f}°E · "
+        f"n={int(row.get('n_occurrences') or 0)} GBIF sample points"
+        if pd.notna(lat)
+        else "No georeferenced points in this extract. Coordinates are not invented."
+    )
+    clim_note = row.get("climate_method") or row.get("climate_source") or "climate method n/a"
+    pa_note = row.get("pa_source") or row.get("pa_method") or "PA source n/a"
+    dist = row.get("mean_dist_to_pa_km")
+    dist_s = (
+        f"{float(dist):.1f} km mean distance to PA"
+        if dist == dist and dist is not None
+        else "distance n/a"
+    )
+    frac = row.get("frac_in_protected", row.get("frac_in_protected_proxy"))
+    frac_s = (
+        f"{float(frac)*100:.0f}% points in PA"
+        if frac == frac and frac is not None
+        else "overlap n/a"
+    )
+    iucn_status = str(row.get("iucn_status") or "not_queried")
+    iucn_cat = row.get("iucn_category") or row.get("iucn_category_code")
+    if iucn_status == "ok" and iucn_cat and str(iucn_cat) not in ("", "nan", "None"):
+        iucn_line = f"IUCN Red List: <strong>{iucn_cat}</strong>"
+        if row.get("iucn_year") and str(row.get("iucn_year")) not in ("", "nan", "None"):
+            iucn_line += f" ({row.get('iucn_year')})"
+        iucn_note = row.get("iucn_note") or ""
+    else:
+        iucn_line = (
+            '<span style="color:#86868b">IUCN not linked</span> — '
+            "Red List API not queried; category never invented."
         )
-        st.markdown(
-            f'<div class="hra-card"><h3>Where</h3><p>{where}</p></div>',
-            unsafe_allow_html=True,
+        iucn_note = (
+            "Set IUCN_API_TOKEN and run scripts/fetch_iucn.py for live categories."
         )
-        clim_note = row.get("climate_method") or row.get("climate_source") or "climate method n/a"
-        pa_note = row.get("pa_source") or row.get("pa_method") or "PA source n/a"
-        dist = row.get("mean_dist_to_pa_km")
-        dist_s = (
-            f"{float(dist):.1f} km mean distance to PA"
-            if dist == dist and dist is not None
-            else "distance n/a"
-        )
-        frac = row.get("frac_in_protected", row.get("frac_in_protected_proxy"))
-        frac_s = (
-            f"{float(frac)*100:.0f}% points in PA"
-            if frac == frac and frac is not None
-            else "overlap n/a"
-        )
-        st.markdown(
-            f'<div class="hra-card"><h3>Stress</h3><p>{hpi_formula_markdown()}</p>'
-            f'<p style="margin-top:0.5rem;font-size:0.85rem;color:#6e6e73">'
-            f'<strong>Climate:</strong> {clim_note}<br/>'
-            f'<strong>PA:</strong> {frac_s} · {dist_s}<br/>'
-            f'<span style="font-size:0.8rem">{pa_note}</span></p></div>',
-            unsafe_allow_html=True,
-        )
-    with c2:
-        iucn_status = str(row.get("iucn_status") or "not_queried")
-        iucn_cat = row.get("iucn_category") or row.get("iucn_category_code")
-        if iucn_status == "ok" and iucn_cat and str(iucn_cat) not in ("", "nan", "None"):
-            iucn_line = f"IUCN Red List: <strong>{iucn_cat}</strong>"
-            if row.get("iucn_year") and str(row.get("iucn_year")) not in ("", "nan", "None"):
-                iucn_line += f" ({row.get('iucn_year')})"
-            iucn_note = row.get("iucn_note") or ""
-        else:
-            iucn_line = (
-                '<span style="color:#86868b">IUCN not linked</span> — '
-                "Red List API not queried; category never invented."
-            )
-            iucn_note = (
-                "Set IUCN_API_TOKEN and run scripts/fetch_iucn.py for live categories."
-            )
-        st.markdown(
-            f'<div class="hra-card"><h3>Why it matters</h3><p>{row.get("notes","")}</p>'
-            f'<p style="margin-top:0.65rem">{iucn_line}</p>'
-            f'<p style="margin-top:0.35rem;color:#6e6e73;font-size:0.85rem">{iucn_note}</p></div>',
-            unsafe_allow_html=True,
-        )
-        acts = dossier_actions(row.to_dict())
-        lis = "".join(f"<li>{a}</li>" for a in acts)
-        st.markdown(
-            f'<div class="hra-card"><h3>What to do</h3><ul class="hra-actions">{lis}</ul></div>',
-            unsafe_allow_html=True,
-        )
+    acts = dossier_actions(row.to_dict())
+    lis = "".join(f"<li>{a}</li>" for a in acts)
+    st.markdown(
+        f'<div class="hra-dossier-grid">'
+        f'<div class="hra-card"><h3>Where</h3><p>{where}</p></div>'
+        f'<div class="hra-card"><h3>Why it matters</h3><p>{row.get("notes","")}</p>'
+        f'<p style="margin-top:0.55rem">{iucn_line}</p>'
+        f'<p style="margin-top:0.3rem;color:#6e6e73;font-size:0.85rem">{iucn_note}</p></div>'
+        f'<div class="hra-card"><h3>Stress</h3><p>{_inline_bold(hpi_formula_markdown())}</p>'
+        f'<p style="margin-top:0.45rem;font-size:0.85rem;color:#6e6e73">'
+        f'<strong>Climate:</strong> {clim_note}<br/>'
+        f'<strong>PA:</strong> {frac_s} · {dist_s}<br/>'
+        f'<span style="font-size:0.8rem">{pa_note}</span></p></div>'
+        f'<div class="hra-card"><h3>What to do</h3><ul class="hra-actions">{lis}</ul></div>'
+        f'</div>',
+        unsafe_allow_html=True,
+    )
 
     # Exploratory suitability (collapsed)
     with st.expander("Exploratory suitability sketch (not an SDM)", expanded=False):
@@ -716,7 +726,7 @@ def compare_page(hpi: pd.DataFrame):
             index=names.index(default_b) if default_b in names else min(1, len(names) - 1),
         )
     if a == b:
-        st.info("Select two different species.")
+        quiet_note("Compare", "Select two different species.")
         return
     row_a = hpi.loc[hpi["scientific_name"] == a].iloc[0]
     row_b = hpi.loc[hpi["scientific_name"] == b].iloc[0]
@@ -1047,6 +1057,33 @@ def _mapped_focus(selected: str | None, mapped: pd.DataFrame) -> str | None:
     return None
 
 
+def _apply_map_click(event, plotted: pd.DataFrame) -> None:
+    """Center the map on a clicked centroid and open that dossier next."""
+    if not isinstance(event, dict):
+        return
+    obj = event.get("last_object_clicked")
+    if not isinstance(obj, dict):
+        return
+    try:
+        lat = float(obj.get("lat"))
+        lon = float(obj.get("lng"))
+    except (TypeError, ValueError):
+        return
+    tooltip = event.get("last_object_clicked_tooltip")
+    sig = (round(lat, 5), round(lon, 5), "" if tooltip is None else str(tooltip))
+    if sig == st.session_state.get("map_click_sig"):
+        return
+    st.session_state["map_click_sig"] = sig
+    name = species_at_click(plotted, lat, lon, None if tooltip is None else str(tooltip))
+    if not name:
+        return
+    st.session_state["map_zoom_species"] = name
+    st.session_state["map_focus_hotspot"] = False
+    if not st.session_state.get("demo_mode"):
+        st.session_state["selected"] = name
+    st.rerun()
+
+
 def continue_to(label: str, target_page: str):
     st.markdown('<div class="hra-continue"></div>', unsafe_allow_html=True)
     st.button(
@@ -1123,7 +1160,7 @@ def main():
                     f"""<div class="hra-talktrack">
                     <span class="tag">60-sec talk track</span>
                     <ol>
-                      <li>Map (15s): Color = HPI band; size ∝ score. Abutra = moderate harvest signal, not Red List.</li>
+                      <li>Map (15s): Each circle is one species. Color and size follow HPI. Abutra = moderate harvest signal, not Red List.</li>
                       <li>Dossier (25s): R/C/H/P + waterfall. Gaps: IUCN not linked; WorldClim; WDPCA.</li>
                       <li>Brief (15s): HTML or PDF. Stewardship only — not a permit.</li>
                       <li>Close (5s): Weights 0.30 / 0.25 / 0.25 / 0.20. IUCN never invented.</li>
@@ -1190,29 +1227,51 @@ def main():
 
     if page == "Map":
         demo_caption("map", demo)
+        if "color_centroids_arch" not in st.session_state:
+            st.session_state["color_centroids_arch"] = False
+        color_arch = bool(st.session_state["color_centroids_arch"])
+        plotted = species_plot_points(hpi, occ)
+        if "map_focus_hotspot" not in st.session_state:
+            st.session_state["map_focus_hotspot"] = False
+        if color_arch:
+            howto = (
+                "Each circle is one species at its sample average. Color is the risk archetype. "
+                "Size still follows the score. Click a circle to center it. "
+                "Water between circles is not scored."
+            )
+        else:
+            howto = (
+                "Each circle is one species at its sample average. Color deepens with the score — "
+                "greener is lower, earth is moderate, red is higher. Larger means higher pressure. "
+                "Click a circle to center it. Water between circles is not scored."
+            )
         st.markdown(
-            """<div class="hra-howto">
+            f"""<div class="hra-howto">
             <span class="tag">How to read this</span>
-            <p>Color = HPI band (green lower · earth moderate · red higher). Size ∝ HPI.
-            Research index only — not IUCN status, not a harvest permit.</p>
+            <p>{howto}</p>
             </div>""",
             unsafe_allow_html=True,
         )
         ctrl_check, ctrl_focus = st.columns([1.6, 1])
         with ctrl_check:
-            color_arch = st.checkbox("Color centroids by risk archetype", value=False)
-        plotted = species_plot_points(hpi, occ)
-        if "map_focus_hotspot" not in st.session_state:
-            st.session_state["map_focus_hotspot"] = False
+            color_arch = st.checkbox(
+                "Color centroids by risk archetype",
+                key="color_centroids_arch",
+            )
         with ctrl_focus:
             if st.button("Focus highest-HPI hotspot", key="focus_hpi_hotspot"):
                 st.session_state["map_focus_hotspot"] = True
+                st.session_state["map_zoom_species"] = None
         # Unlocated names (Mentha) are not `focus`. hotspot_name also refuses them.
-        zoom_to = (
-            hotspot_name(plotted, hpi, focus)
-            if st.session_state.get("map_focus_hotspot")
-            else None
-        )
+        # A circle click centers that species; Focus highest-HPI still wins when asked.
+        clicked_name = st.session_state.get("map_zoom_species")
+        plotted_names = set(plotted["scientific_name"].astype(str)) if not plotted.empty else set()
+        if st.session_state.get("map_focus_hotspot"):
+            zoom_to = hotspot_name(plotted, hpi, focus)
+        elif clicked_name in plotted_names:
+            zoom_to = str(clicked_name)
+        else:
+            zoom_to = None
         if color_arch:
             st.markdown(
                 """<div class="hra-legend">
@@ -1226,7 +1285,7 @@ def main():
                 <span class="l-low">Lower relative pressure</span>
                 <span class="l-mid">Moderate</span>
                 <span class="l-high">Higher relative pressure</span>
-                <span class="l-note">Marker size ∝ HPI</span>
+                <span class="l-note">Larger circle, higher score</span>
                 </div>""",
                 unsafe_allow_html=True,
             )
@@ -1237,7 +1296,15 @@ def main():
             color_by_archetype=color_arch,
             zoom_to=zoom_to,
         )
-        st_folium(m, width=None, height=640, returned_objects=[], use_container_width=True)
+        map_event = st_folium(
+            m,
+            width=None,
+            height=640,
+            returned_objects=["last_object_clicked", "last_object_clicked_tooltip"],
+            use_container_width=True,
+            key="hra_ph_map",
+        )
+        _apply_map_click(map_event, plotted)
 
         st.markdown("### HPI distribution")
         fig_dist = hpi_distribution(hpi, highlight=focus)
@@ -1271,7 +1338,7 @@ def main():
                 )
             field_brief_page(row, demo)
         else:
-            st.info("Select a species from the sidebar.")
+            quiet_note("Species", "Select a species from the sidebar.")
         return
 
     # Species dossier — unlocated names stay here; they are not map focus.
@@ -1289,7 +1356,7 @@ def main():
             st_folium(m, width=None, height=420, returned_objects=[], use_container_width=True)
         continue_to("Continue to field brief →", "Field brief")
     else:
-        st.info("Select a species from the sidebar.")
+        quiet_note("Species", "Select a species from the sidebar.")
 
 
 if __name__ == "__main__":

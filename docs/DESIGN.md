@@ -72,9 +72,10 @@ Card section labels (Where / Stress / …) stay uppercase 12–13px tertiary —
   - Sidebar radio selected wash
   - Button / input hover + focus
   - Optional **one-shot** map focus pulse (`.hra-pulse`, ~0.9s, plays once)
-- Honor `prefers-reduced-motion: reduce` (transitions/animations near-zero).
-- **Banned motion:** bounce, spring, page-wide fade-up, staggered card entrances, aurora blobs.
-- **Home preface (exception, one shot):** first session only, on Home. Four sentences, opacity crossfade, a 2px progress rule, a text Skip button (markdown links open a new tab here, so Skip is a real control). `?intro=skip` also dismisses it. No position shift, no bounce, no second call to action on the page itself. `prefers-reduced-motion` removes the sheet entirely (do not only crush the duration — the delay would leave a blank screen). `?demo=1` skips it and opens the map.
+- Honor `prefers-reduced-motion: reduce` (transitions/animations near-zero; preface removed).
+- **Banned motion:** bounce, spring, staggered card entrances, aurora blobs.
+- **Page enter:** main column only, 180ms opacity and a 3px rise. Not on the sidebar. Not while the preface is showing.
+- **Home preface (exception, one shot):** first session only. Four short lines, opacity crossfade, a 2px progress rule. Skip is a real button and stays hidden until 3 seconds. `?intro=skip` also dismisses it. No position shift, no bounce, no second call to action on the sheet. `prefers-reduced-motion` removes the sheet entirely (do not only crush the duration — the delay would leave a blank screen). `?demo=1` skips it and opens the map.
 - Map controls: minimal Folium defaults; legend as hairlined floating panel
 - Markers: white/ink stroke (`weight ≥ 1.5`) so centroids read on Esri gray canvas
 
@@ -95,7 +96,8 @@ The app opens on **Home**, not the map. Home is one column: the problem, the ind
 
 ## Map & dossier microcopy
 
-- **How to read this** — Map page only. 1–2 lines under the header strip: HPI color meaning + size cue. No emoji, no dual CTAs.
+- **How to read this** — Map page only. 1–2 lines: each circle is one species at its sample average; color deepens with HPI; size follows the score; water between circles is not scored. No emoji, no dual CTAs, no interpolated surface.
+- **Callouts** — Quiet uppercase label plus body, or a full hairline. No left or vertical color rail, including black or mint. Streamlit alerts are flattened to a top hairline.
 - **Weights transparency** — Methods expander table (R/C/H/P + weights + one plain sentence why). Match METHODS.md numbers.
 - **Weight sensitivity** — Methods only, one collapsed expander under that table. Sliders reweight stored components for oral defense. Not a new nav page, not a new official index, and not shown on Map or Dossier.
 - **Demo talk track** — Sidebar under Demo mode only. Numbered 60-sec script; plain scientific English.
