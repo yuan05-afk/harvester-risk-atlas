@@ -1,6 +1,7 @@
 """Harvester Risk Atlas — Streamlit demo (EthnoHACK 2026 Track 3)."""
 from __future__ import annotations
 
+import inspect
 import sys
 from pathlib import Path
 
@@ -20,7 +21,8 @@ SRC = ROOT / "src"
 # A second Cloud hard-refresh does that while the first import is still inside
 # importlib._load_unlocked; the loader then raises KeyError on
 # sys.modules.pop(spec.name) and the app never finishes loading. A stale
-# "ImportError: cannot import name …" after a deploy is a Cloud reboot.
+# "ImportError: cannot import name …" or a mixed-module TypeError (new app,
+# older landing) after a deploy clears only when the Cloud owner reboots.
 if SRC.is_dir():
     sys.path.insert(0, str(SRC))
 
@@ -1097,6 +1099,73 @@ def continue_to(label: str, target_page: str):
     )
 
 
+def _signature_accepts(fn, name: str) -> bool | None:
+    """Whether ``fn`` can be called with keyword ``name``.
+
+    None means the signature could not be read. Callers then try the keyword
+    and drop it on TypeError. An explicit parameter, or ``**kwargs``, counts
+    as accepted. This is how a new app file tolerates an older ``landing``
+    module on Streamlit Cloud without clearing ``sys.modules``.
+    """
+    try:
+        parameters = inspect.signature(fn).parameters
+    except (TypeError, ValueError):
+        return None
+    param = parameters.get(name)
+    if param is not None:
+        return param.kind is not inspect.Parameter.POSITIONAL_ONLY
+    return any(item.kind is inspect.Parameter.VAR_KEYWORD for item in parameters.values())
+
+
+def _should_play_intro(*, intro_played: bool, demo_requested: bool, replay: bool) -> bool:
+    """Call ``landing.should_play_intro`` even if ``replay`` is not a parameter.
+
+    When both modules are current, ``replay=True`` still forces one pass.
+    When the keyword is missing and a replay was requested, play anyway:
+    the sidebar already asked, and passing the unknown keyword TypeErrors.
+    """
+    fn = landing.should_play_intro
+    accepts = _signature_accepts(fn, "replay")
+    if accepts is True:
+        return bool(
+            fn(
+                intro_played=intro_played,
+                demo_requested=demo_requested,
+                replay=replay,
+            )
+        )
+    if accepts is False:
+        if replay:
+            return True
+        return bool(fn(intro_played=intro_played, demo_requested=demo_requested))
+    try:
+        return bool(
+            fn(
+                intro_played=intro_played,
+                demo_requested=demo_requested,
+                replay=replay,
+            )
+        )
+    except TypeError:
+        if replay:
+            return True
+        return bool(fn(intro_played=intro_played, demo_requested=demo_requested))
+
+
+def _preload_markup(weights: dict, *, force_motion: bool) -> str:
+    """Preface HTML. ``force_motion`` is forwarded only when landing accepts it."""
+    fn = landing.preload_markup
+    accepts = _signature_accepts(fn, "force_motion")
+    if accepts is True:
+        return fn(weights, force_motion=force_motion)
+    if accepts is False:
+        return fn(weights)
+    try:
+        return fn(weights, force_motion=force_motion)
+    except TypeError:
+        return fn(weights)
+
+
 def main():
     try:
         mtime = HPI_CSV.stat().st_mtime if HPI_CSV.exists() else 0.0
@@ -1121,7 +1190,7 @@ def main():
         st.session_state["demo_mode"] = demo_qp
 
     replay = bool(st.session_state.pop("intro_replay", False))
-    play_intro = landing.should_play_intro(
+    play_intro = _should_play_intro(
         intro_played=bool(st.session_state.get("intro_played")),
         demo_requested=demo_qp,
         replay=replay,
@@ -1131,8 +1200,9 @@ def main():
         # reports reduced motion. An automatic visit stays hidden.
         # st.html sanitizes with DOMPurify's html profile and drops <svg>,
         # so the silhouette never arrives. This string is one HTML block;
-        # markdown keeps the mark.
-        sheet = landing.preload_markup(dict(HPI_WEIGHTS), force_motion=replay)
+        # markdown keeps the mark. force_motion is omitted when this Cloud
+        # process still has an older landing.preload_markup.
+        sheet = _preload_markup(dict(HPI_WEIGHTS), force_motion=replay)
         st.markdown(sheet, unsafe_allow_html=True)
         # A markdown link is rewritten to target=_blank, so Skip is a real
         # button. The click reruns the script; intro_played is already set,
