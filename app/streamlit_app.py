@@ -214,6 +214,15 @@ def build_map(
         tiles="Esri.WorldGrayCanvas",
         control_scale=True,
     )
+    # Attribution sits inside the Folium iframe, so parent CSS cannot reach it.
+    m.get_root().html.add_child(
+        folium.Element(
+            "<style>"
+            ".leaflet-control-attribution,"
+            ".leaflet-control-attribution a{color:#86868b !important}"
+            "</style>"
+        )
+    )
 
     # Archetype palette — forest ramp only (risk colors stay on HPI bands)
     arch_palette = ["#2d6a4f", "#52796f", "#74a892", "#6e6e73", "#44564a"]
@@ -563,6 +572,7 @@ def field_brief_page(row: pd.Series, demo: bool):
                 data=pdf_bytes,
                 file_name=f"{stem}.pdf",
                 mime="application/pdf",
+                type="secondary",
                 key="dl_brief_pdf",
             )
         except ImportError:

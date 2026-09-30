@@ -89,6 +89,59 @@ class SnapshotUiTests(unittest.TestCase):
         self.assertIn("app/streamlit_app.py", self.deploy)
         self.assertIn("reportlab==4.2.5", self.reqs)
 
+    def test_primary_descendants_forced_white(self):
+        css = self.css
+        self.assertIn('.stButton > button[kind="primary"]', css)
+        self.assertIn('button[data-testid="stBaseButton-primary"]', css)
+        self.assertIn('.stDownloadButton > button[kind="primary"]', css)
+        self.assertIn('button[data-testid="stBaseButton-primary"] *', css)
+        self.assertIn("color: #ffffff !important", css)
+        self.assertIn("fill: #ffffff !important", css)
+        self.assertIn("-webkit-text-fill-color: #ffffff !important", css)
+        self.assertIn("#245a42", css)
+        self.assertNotIn("linear-gradient", css)
+        # Hover/focus/active descendants stay white (label is a nested p/span).
+        self.assertIn('button[data-testid="stBaseButton-primary"]:hover *', css)
+        self.assertIn('button[data-testid="stBaseButton-primary"]:active *', css)
+
+    def test_demo_caption_has_no_accent_rail(self):
+        import re
+
+        match = re.search(r"\.hra-demo-caption\s*\{([^}]*)\}", self.css)
+        self.assertIsNotNone(match)
+        block = match.group(1)
+        self.assertNotIn("border-left", block)
+        self.assertNotIn("accent-soft", block)
+        self.assertNotIn("0 var(--radius)", block)
+        self.assertIn("var(--surface)", block)
+        self.assertIn("1px solid var(--hairline)", block)
+        self.assertIn("border-radius: var(--radius)", block)
+        self.assertNotIn("border-left", self.css)
+
+    def test_howto_and_talktrack_are_hairline_only(self):
+        import re
+
+        for cls in (".hra-howto", ".hra-talktrack"):
+            match = re.search(rf"{re.escape(cls)}\s*\{{([^}}]*)\}}", self.css)
+            self.assertIsNotNone(match, cls)
+            block = match.group(1)
+            self.assertNotIn("box-shadow", block)
+            self.assertIn("1px solid var(--hairline)", block)
+
+    def test_field_brief_pdf_is_secondary_html_stays_primary(self):
+        pdf_at = self.app.find("Download field brief (PDF)")
+        html_at = self.app.find("Download field brief (HTML)")
+        self.assertGreater(html_at, 0)
+        self.assertGreater(pdf_at, html_at)
+        html_call = self.app[html_at:pdf_at]
+        pdf_call = self.app[pdf_at:pdf_at + 450]
+        self.assertIn('type="primary"', html_call)
+        self.assertIn('type="secondary"', pdf_call)
+
+    def test_leaflet_attribution_muted_inside_map(self):
+        self.assertIn(".leaflet-control-attribution", self.app)
+        self.assertIn(".leaflet-control-attribution a{color:#86868b !important}", self.app)
+
 
 class IucnAndPdfTests(unittest.TestCase):
     def test_missing_category_is_not_linked(self):
