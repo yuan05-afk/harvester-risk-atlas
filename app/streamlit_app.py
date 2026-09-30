@@ -689,7 +689,10 @@ def weight_sensitivity_section(hpi: pd.DataFrame, selected: str | None) -> None:
             "applied weights sum to 1. Components are the stored cohort columns; "
             "IUCN is not an input."
         )
-        if st.session_state.pop("sens_restore_pending", False):
+        # Session state owns the slider values. Passing value= as well makes
+        # Streamlit warn after Restore ("created with a default value but also
+        # had its value set via the Session State API").
+        if st.session_state.pop("sens_restore_pending", False) or "sens_w_rarity" not in st.session_state:
             st.session_state["sens_w_rarity"] = float(HPI_WEIGHTS["rarity"])
             st.session_state["sens_w_climate"] = float(HPI_WEIGHTS["climate_stress"])
             st.session_state["sens_w_harvest"] = float(HPI_WEIGHTS["harvest_proxy"])
@@ -701,7 +704,6 @@ def weight_sensitivity_section(hpi: pd.DataFrame, selected: str | None) -> None:
                 "Rarity",
                 min_value=0.0,
                 max_value=1.0,
-                value=float(HPI_WEIGHTS["rarity"]),
                 step=0.01,
                 format="%.2f",
                 key="sens_w_rarity",
@@ -710,7 +712,6 @@ def weight_sensitivity_section(hpi: pd.DataFrame, selected: str | None) -> None:
                 "Climate stress",
                 min_value=0.0,
                 max_value=1.0,
-                value=float(HPI_WEIGHTS["climate_stress"]),
                 step=0.01,
                 format="%.2f",
                 key="sens_w_climate",
@@ -720,7 +721,6 @@ def weight_sensitivity_section(hpi: pd.DataFrame, selected: str | None) -> None:
                 "Harvest proxy",
                 min_value=0.0,
                 max_value=1.0,
-                value=float(HPI_WEIGHTS["harvest_proxy"]),
                 step=0.01,
                 format="%.2f",
                 key="sens_w_harvest",
@@ -729,7 +729,6 @@ def weight_sensitivity_section(hpi: pd.DataFrame, selected: str | None) -> None:
                 "PA gap",
                 min_value=0.0,
                 max_value=1.0,
-                value=float(HPI_WEIGHTS["pa_gap"]),
                 step=0.01,
                 format="%.2f",
                 key="sens_w_pa",

@@ -156,6 +156,10 @@ class ChartAndPageTests(unittest.TestCase):
         self.assertNotIn('"Sensitivity"', app)
         idx = app.index("rank_shift_bars(")
         self.assertIn("theme=None", app[idx : idx + 400])
+        section = app[app.index("def weight_sensitivity_section") : app.index("def methods_page")]
+        # value= plus session_state on the same key surfaces a Streamlit warning after Restore.
+        self.assertNotIn("value=float(HPI_WEIGHTS", section)
+        self.assertIn("sens_restore_pending", section)
         self.assertIn("## Weight sensitivity", methods)
         self.assertIn("does not replace HPI v1.1", methods)
 
