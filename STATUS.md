@@ -1,6 +1,6 @@
 # STATUS — Harvester Risk Atlas
 
-Last updated: 2026-09-29 ~20:55 (Asia/Manila)
+Last updated: 2026-09-30 (repo public; cache-bust `c1660a8` already on `origin/main`)
 
 ## What works now
 
@@ -55,10 +55,22 @@ Last updated: 2026-09-29 ~20:55 (Asia/Manila)
 - Motion: 120–180ms ease on signal controls only; no fade-up spam / bounce / aurora
 - Map basemap: **Esri World Gray Canvas** (free, no key); floating hairline legend panel
 
-## Changelog (2026-09-29)
+## Changelog
+
+### Map reading polish (2026-09-30)
+
+| Item | Status |
+|------|--------|
+| Map “How to read this”, legend, and Demo talk track use zero-indent HTML (`show_html`) so Streamlit 1.41 does not code-fence them | Done |
+| Dossier Stress card uses `hpi_formula_html()` (no literal `**`) | Done |
+| Species centroids drawn directly (no MarkerCluster) so HPI color/size show at zoom 6–8 | Done |
+| IUCN left `not_queried` | Unchanged |
+| Repo visibility docs | Public |
+
+### Earlier (2026-09-29)
 
 
-### Cloud ImportError fix (2026-09-29 ~21:12 Asia/Manila) — local fix, needs push
+### Cloud ImportError fix (2026-09-29 ~21:12 Asia/Manila) — on `main` (`c1660a8`)
 
 | Item | Status |
 |------|--------|
@@ -68,7 +80,7 @@ Last updated: 2026-09-29 ~20:55 (Asia/Manila)
 
 Files: `app/streamlit_app.py`, `requirements.txt`, `DEPLOY.md`.
 
-**Push recommendation:** yes — CloudAgent should push to `main`, then reboot the Streamlit Cloud app once.
+**Push:** done. `c1660a8` is on `origin/main`. Reboot the Cloud app only if an old `ImportError` is still showing.
 
 
 
@@ -105,7 +117,7 @@ Files: `app/styles.css`, `app/streamlit_app.py`, `src/harvester_risk_atlas/chart
 | README **For judges** section + layout links | Done |
 | No browser / no git push | Observed |
 
-**Flag for submit:** GitHub repo still private — publicize or share judge access before Devpost close.
+**Flag for submit:** GitHub repo is **public** (2026-09-30). Homepage: https://harvester-risk-atlas.streamlit.app/. Still need a demo video and ≤10 slides.
 
 
 
@@ -175,7 +187,7 @@ Files: `src/harvester_risk_atlas/charts.py`, `app/streamlit_app.py`, `STATUS.md`
 3. Optional: DENR open PA layers if license-cleared; keep WDPCA citation.
 4. Tighten seed list with POWO synonyms; fix mint complex.
 5. Deploy Streamlit Cloud (see `DEPLOY.md`); keep disclaimer + AI/OSS disclosure.
-6. Judging packet drafted (`docs/JUDGING.md`, `VIDEO_SCRIPT.md`, `SUBMISSION_CHECKLIST.md`) — still need public repo + record/upload video + ≤10 slides.
+6. Judging packet drafted (`docs/JUDGING.md`, `VIDEO_SCRIPT.md`, `SUBMISSION_CHECKLIST.md`). Repo is public. Still record/upload video + ≤10 slides.
 7. HPI weight sensitivity in notebook for oral defense.
 8. Optional: `pip install kaleido` for PNG slide exports.
 

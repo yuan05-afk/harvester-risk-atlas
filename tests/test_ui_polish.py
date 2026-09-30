@@ -7,6 +7,7 @@ from pathlib import Path
 import pandas as pd
 
 from harvester_risk_atlas.charts import compare_components, hpi_distribution
+from harvester_risk_atlas.hpi import hpi_formula_html, hpi_formula_markdown
 from harvester_risk_atlas.pdf_brief import _iucn_line, render_field_brief_pdf
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -76,6 +77,11 @@ class SnapshotUiTests(unittest.TestCase):
         self.assertIn("60-sec talk track", self.app)
         self.assertIn("Weights transparency (HPI v1.1)", self.app)
         self.assertIn("0.30", self.app)
+        self.assertIn("def show_html", self.app)
+        self.assertIn("hpi_formula_html()", self.app)
+        # Indented HTML inside st.markdown becomes a code fence on Streamlit 1.41.
+        self.assertNotIn("MarkerCluster", self.app)
+        self.assertIn('FeatureGroup(name="Species centroids"', self.app)
 
     def test_compare_cards_are_unindented_html(self):
         self.assertIn('class="hra-sci-name"', self.app)
@@ -91,6 +97,15 @@ class SnapshotUiTests(unittest.TestCase):
 
 
 class IucnAndPdfTests(unittest.TestCase):
+    def test_formula_html_has_no_markdown_asterisks(self):
+        html = hpi_formula_html()
+        md = hpi_formula_markdown()
+        self.assertIn("<strong>HPI v1.1</strong>", html)
+        self.assertNotIn("**", html)
+        self.assertIn("0.30", html)
+        self.assertIn("**HPI v1.1**", md)
+        self.assertIn("0.20", md)
+
     def test_missing_category_is_not_linked(self):
         line = _iucn_line(_row().to_dict())
         self.assertIn("not linked", line)

@@ -208,13 +208,25 @@ def compute_hpi(features: pd.DataFrame, weights: dict[str, float] | None = None)
     return df
 
 
-def hpi_formula_markdown() -> str:
+def hpi_formula_text() -> str:
+    """Plain formula sentence. Weights come from config so Methods and dossier match."""
+    w = HPI_WEIGHTS
     return (
-        "**HPI v1.1** = 0.30·Rarity + 0.25·Climate stress + 0.25·Harvest proxy "
-        "+ 0.20·Protected-area gap. Each component ∈ [0,1]. "
+        f"HPI v1.1 = {w['rarity']:.2f}·Rarity + {w['climate_stress']:.2f}·Climate stress "
+        f"+ {w['harvest_proxy']:.2f}·Harvest proxy + {w['pa_gap']:.2f}·Protected-area gap. "
+        "Each component ∈ [0,1]. "
         "Confidence falls when components are imputed. "
         "Not IUCN status; not medical advice."
     )
+
+
+def hpi_formula_markdown() -> str:
+    return hpi_formula_text().replace("HPI v1.1", "**HPI v1.1**", 1)
+
+
+def hpi_formula_html() -> str:
+    """Same sentence for unsafe HTML cards. Markdown asterisks would render literally."""
+    return hpi_formula_text().replace("HPI v1.1", "<strong>HPI v1.1</strong>", 1)
 
 
 def dossier_actions(row: dict[str, Any]) -> list[str]:

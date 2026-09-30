@@ -3,7 +3,7 @@
 **Biodiversity & Sustainability** · one-pager for judges
 
 **Live demo:** https://harvester-risk-atlas.streamlit.app/  
-**Repo:** GitHub — currently **private** (make public before Devpost close, or share judge access).
+**Repo:** https://github.com/yuan05-afk/harvester-risk-atlas (**public**)
 
 > Not medical advice. Not a harvest permit. IUCN categories are never invented.
 

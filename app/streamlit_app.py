@@ -8,7 +8,6 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 import folium
-from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,7 +29,11 @@ from harvester_risk_atlas.config import (  # noqa: E402
     DATA_PROCESSED,
     HPI_WEIGHTS,
 )
-from harvester_risk_atlas.hpi import dossier_actions, hpi_formula_markdown  # noqa: E402
+from harvester_risk_atlas.hpi import (  # noqa: E402
+    dossier_actions,
+    hpi_formula_html,
+    hpi_formula_markdown,
+)
 from harvester_risk_atlas.names import resolve_query  # noqa: E402
 from harvester_risk_atlas.pdf_brief import (  # noqa: E402
     render_field_brief_html,
@@ -177,6 +180,20 @@ def workflow_steps(active_page: str):
     st.markdown(f'<div class="hra-steps">{"".join(parts)}</div>', unsafe_allow_html=True)
 
 
+def show_html(parts: list[str]) -> None:
+    """Render joined HTML with no leading spaces.
+
+    Streamlit 1.41 still markdown-parses st.markdown. A flush first line plus
+    indented inner lines becomes a code fence, so judge-facing panels must be
+    zero-indent. st.html skips that parser.
+    """
+    html = "".join(parts)
+    if hasattr(st, "html"):
+        st.html(html)
+    else:
+        st.markdown(html, unsafe_allow_html=True)
+
+
 def demo_caption(key: str, enabled: bool):
     if not enabled or key not in DEMO_CAPTIONS:
         return
@@ -218,7 +235,8 @@ def build_map(
     )
     arch_color = {lab: arch_palette[i % len(arch_palette)] for i, lab in enumerate(arch_labels)}
 
-    cluster = MarkerCluster(name="Species centroids", showCoverageOnHover=False).add_to(m)
+    # ~35 centroids. Clustering at zoom 6–8 hides HPI color and size.
+    centroids = folium.FeatureGroup(name="Species centroids", show=True).add_to(m)
     for _, r in pts.iterrows():
         if color_by_archetype and arch_labels:
             col = arch_color.get(str(r.get("archetype_label")), "#86868b")
@@ -242,7 +260,7 @@ def build_map(
             weight=1.75,
             popup=folium.Popup(popup_html, max_width=280),
             tooltip=f"{r['scientific_name']} · {float(r['hpi']):.3f}",
-        ).add_to(cluster)
+        ).add_to(centroids)
 
     # One-shot pulse ring on focused species (CSS, plays once — signal only)
     if focus and focus in pts["scientific_name"].values:
@@ -507,7 +525,7 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool, hpi: pd.DataFrame | N
             else "overlap n/a"
         )
         st.markdown(
-            f'<div class="hra-card"><h3>Stress</h3><p>{hpi_formula_markdown()}</p>'
+            f'<div class="hra-card"><h3>Stress</h3><p>{hpi_formula_html()}</p>'
             f'<p style="margin-top:0.5rem;font-size:0.85rem;color:#6e6e73">'
             f'<strong>Climate:</strong> {clim_note}<br/>'
             f'<strong>PA:</strong> {frac_s} · {dist_s}<br/>'
@@ -795,17 +813,18 @@ def main():
             demo_sp = pick_demo_species(hpi)
             st.session_state["selected"] = demo_sp
             st.caption(f"Demo species: *{demo_sp}*")
-            st.markdown(
-                f"""<div class="hra-talktrack">
-                <span class="tag">60-sec talk track</span>
-                <ol>
-                  <li>Map (15s): Color = HPI band; size ∝ score. Abutra = moderate harvest signal, not Red List.</li>
-                  <li>Dossier (25s): R/C/H/P + waterfall. Gaps: IUCN not linked; WorldClim; WDPCA.</li>
-                  <li>Brief (15s): HTML or PDF. Stewardship only — not a permit.</li>
-                  <li>Close (5s): Weights 0.30 / 0.25 / 0.25 / 0.20. IUCN never invented.</li>
-                </ol>
-                </div>""",
-                unsafe_allow_html=True,
+            show_html(
+                [
+                    '<div class="hra-talktrack">',
+                    '<span class="tag">60-sec talk track</span>',
+                    "<ol>",
+                    "<li>Map (15s): Color = HPI band; size ∝ score. Abutra = moderate harvest signal, not Red List.</li>",
+                    "<li>Dossier (25s): R/C/H/P + waterfall. Gaps: IUCN not linked; WorldClim; WDPCA.</li>",
+                    "<li>Brief (15s): HTML or PDF. Stewardship only — not a permit.</li>",
+                    "<li>Close (5s): Weights 0.30 / 0.25 / 0.25 / 0.20. IUCN never invented.</li>",
+                    "</ol>",
+                    "</div>",
+                ]
             )
 
         st.markdown("---")
@@ -849,31 +868,34 @@ def main():
 
     if page == "Map":
         demo_caption("map", demo)
-        st.markdown(
-            """<div class="hra-howto">
-            <span class="tag">How to read this</span>
-            <p>Color = HPI band (green lower · earth moderate · red higher). Size ∝ HPI.
-            Research index only — not IUCN status, not a harvest permit.</p>
-            </div>""",
-            unsafe_allow_html=True,
+        show_html(
+            [
+                '<div class="hra-howto">',
+                '<span class="tag">How to read this</span>',
+                "<p>Color = HPI band (green lower · earth moderate · red higher). Size ∝ HPI. "
+                "Research index only — not IUCN status, not a harvest permit.</p>",
+                "</div>",
+            ]
         )
         color_arch = st.checkbox("Color centroids by risk archetype", value=False)
         if color_arch:
-            st.markdown(
-                """<div class="hra-legend">
-                <span class="l-note">Centroids colored by risk archetype (muted forest palette)</span>
-                </div>""",
-                unsafe_allow_html=True,
+            show_html(
+                [
+                    '<div class="hra-legend">',
+                    '<span class="l-note">Centroids colored by risk archetype (muted forest palette)</span>',
+                    "</div>",
+                ]
             )
         else:
-            st.markdown(
-                """<div class="hra-legend">
-                <span class="l-low">Lower relative pressure</span>
-                <span class="l-mid">Moderate</span>
-                <span class="l-high">Higher relative pressure</span>
-                <span class="l-note">Marker size ∝ HPI</span>
-                </div>""",
-                unsafe_allow_html=True,
+            show_html(
+                [
+                    '<div class="hra-legend">',
+                    '<span class="l-low">Lower relative pressure</span>',
+                    '<span class="l-mid">Moderate</span>',
+                    '<span class="l-high">Higher relative pressure</span>',
+                    '<span class="l-note">Marker size ∝ HPI</span>',
+                    "</div>",
+                ]
             )
         m = build_map(hpi, occ, selected, color_by_archetype=color_arch)
         st_folium(m, width=None, height=520, returned_objects=[], use_container_width=True)

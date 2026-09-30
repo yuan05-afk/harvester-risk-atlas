@@ -21,7 +21,7 @@ EthnoHACK 2026 · **Track 3: Biodiversity & Sustainability**
 | **Methods** | [`docs/METHODS.md`](docs/METHODS.md) |
 
 **Click path:** open demo → sidebar **Demo mode** → Map → Dossier → Field brief.  
-Repo is currently **private** — make public (or share judge access) before Devpost close.
+Repo is **public**: https://github.com/yuan05-afk/harvester-risk-atlas
 
 ## Design
 

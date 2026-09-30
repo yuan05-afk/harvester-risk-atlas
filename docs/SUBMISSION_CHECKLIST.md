@@ -8,7 +8,7 @@ Track **3 — Biodiversity & Sustainability** · Harvester Risk Atlas
 
 | Item | Status / action |
 |------|-----------------|
-| **GitHub repo** | ⚠️ Currently **private**. Make **public** before submission close, *or* add judge collaborator access and note that on Devpost. |
+| **GitHub repo** | **Public** — https://github.com/yuan05-afk/harvester-risk-atlas |
 | **Live demo URL** | https://harvester-risk-atlas.streamlit.app/ |
 | **Demo video** | ≤ **10 min**. Prefer 60–90s spoken path in [`VIDEO_SCRIPT.md`](VIDEO_SCRIPT.md). Record Demo mode only. |
 | **Slides** | ≤ **10** slides. Problem → HPI formula → Map→Dossier→Brief → data/licenses → AI disclosure → demo link. |
@@ -26,7 +26,7 @@ Track **3 — Biodiversity & Sustainability** · Harvester Risk Atlas
 - [ ] HPI formula stated (0.30 / 0.25 / 0.25 / 0.20)  
 - [ ] Data sources named: GBIF, WorldClim 2.1, WDPCA PH, IUCN optional  
 - [ ] Demo path documented for judges ([`JUDGING.md`](JUDGING.md))  
-- [ ] Repo public *or* access plan written on Devpost  
+- [x] Repo public  
 - [ ] Video ≤10 min · slides ≤10  
 - [ ] No Cursor IDE / local secrets on camera  
 
@@ -34,7 +34,7 @@ Track **3 — Biodiversity & Sustainability** · Harvester Risk Atlas
 
 1. Open live demo → **Demo mode** → Map → Dossier → Field brief (HTML + PDF).  
 2. Confirm IUCN shows **not linked** / `not_queried` if no token (never a fake category).  
-3. Flip repo visibility or share access.  
+3. Confirm the live demo opens for a stranger (no Streamlit login wall).  
 4. Upload video + slides + link judging one-pager.
 
 ## Links
