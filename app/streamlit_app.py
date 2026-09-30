@@ -29,7 +29,13 @@ from harvester_risk_atlas.config import (  # noqa: E402
     DATA_PROCESSED,
     HPI_WEIGHTS,
 )
-from harvester_risk_atlas.hpi import dossier_actions, hpi_formula_markdown  # noqa: E402
+from harvester_risk_atlas.hpi import (  # noqa: E402
+    dossier_actions,
+    hpi_formula_markdown,
+    normalize_weights,
+    top_rank_movers,
+    weight_sensitivity,
+)
 from harvester_risk_atlas.names import resolve_query  # noqa: E402
 from harvester_risk_atlas.pdf_brief import (  # noqa: E402
     render_field_brief_html,
@@ -49,6 +55,7 @@ from harvester_risk_atlas.charts import (  # noqa: E402
     fig_to_png_bytes,
     fig_to_html_bytes,
     hpi_spark_svg,
+    rank_shift_bars,
 )
 from harvester_risk_atlas.suitability import suitability_sketch  # noqa: E402
 
@@ -635,7 +642,181 @@ def compare_page(hpi: pd.DataFrame):
         st.markdown(compare_html, unsafe_allow_html=True)
 
 
-def methods_page(hpi: pd.DataFrame):
+def _fmt_weight(value: float) -> str:
+    """Two decimals when the weight is on a 0.01 grid; otherwise three."""
+    scaled = value * 100.0
+    if abs(scaled - round(scaled)) < 1e-6:
+        return f"{value:.2f}"
+    return f"{value:.3f}"
+
+
+def _sensitivity_metrics_html(row: pd.Series, n: int) -> str:
+    """Rank before/after for the sidebar species. Rank 1 = highest HPI."""
+    base_rank = int(row["rank_v11"])
+    alt_rank = int(row["rank_sensitivity"])
+    delta = int(row["rank_delta"])
+    if delta > 0:
+        hint = "toward rank 1"
+    elif delta < 0:
+        hint = "away from rank 1"
+    else:
+        hint = "unchanged"
+    cards = [
+        ("v1.1 rank", str(base_rank), f"of {n} · 1 = highest HPI"),
+        ("Sensitivity rank", str(alt_rank), f"of {n}"),
+        ("Δ rank", f"{delta:+d}", hint),
+    ]
+    parts = ['<div class="hra-metrics">']
+    for label, value, card_hint in cards:
+        parts.append(
+            "<div class=\"hra-metric\">"
+            f"<div class=\"label\">{label}</div>"
+            f"<div class=\"value\">{value}</div>"
+            f"<div class=\"hint\">{card_hint}</div>"
+            "</div>"
+        )
+    parts.append("</div>")
+    return "".join(parts)
+
+
+def weight_sensitivity_section(hpi: pd.DataFrame, selected: str | None) -> None:
+    """Compact Methods-only explorer. Does not change the published v1.1 index."""
+    with st.expander("Weight sensitivity", expanded=False):
+        st.caption(
+            "Sensitivity analysis for oral defense — not a new official index. "
+            "Published HPI v1.1 stays 0.30 · Rarity, 0.25 · Climate, 0.25 · Harvest, "
+            "0.20 · PA gap. Slider values are clipped at zero and rescaled so the "
+            "applied weights sum to 1. Components are the stored cohort columns; "
+            "IUCN is not an input."
+        )
+        if st.session_state.pop("sens_restore_pending", False):
+            st.session_state["sens_w_rarity"] = float(HPI_WEIGHTS["rarity"])
+            st.session_state["sens_w_climate"] = float(HPI_WEIGHTS["climate_stress"])
+            st.session_state["sens_w_harvest"] = float(HPI_WEIGHTS["harvest_proxy"])
+            st.session_state["sens_w_pa"] = float(HPI_WEIGHTS["pa_gap"])
+
+        left, right = st.columns(2, gap="large")
+        with left:
+            rarity = st.slider(
+                "Rarity",
+                min_value=0.0,
+                max_value=1.0,
+                value=float(HPI_WEIGHTS["rarity"]),
+                step=0.01,
+                format="%.2f",
+                key="sens_w_rarity",
+            )
+            climate = st.slider(
+                "Climate stress",
+                min_value=0.0,
+                max_value=1.0,
+                value=float(HPI_WEIGHTS["climate_stress"]),
+                step=0.01,
+                format="%.2f",
+                key="sens_w_climate",
+            )
+        with right:
+            harvest = st.slider(
+                "Harvest proxy",
+                min_value=0.0,
+                max_value=1.0,
+                value=float(HPI_WEIGHTS["harvest_proxy"]),
+                step=0.01,
+                format="%.2f",
+                key="sens_w_harvest",
+            )
+            pa_gap = st.slider(
+                "PA gap",
+                min_value=0.0,
+                max_value=1.0,
+                value=float(HPI_WEIGHTS["pa_gap"]),
+                step=0.01,
+                format="%.2f",
+                key="sens_w_pa",
+            )
+
+        raw = {
+            "rarity": rarity,
+            "climate_stress": climate,
+            "harvest_proxy": harvest,
+            "pa_gap": pa_gap,
+        }
+        raw_positive = sum(max(0.0, float(v)) for v in raw.values())
+        applied = normalize_weights(raw)
+        applied_bits = " · ".join(
+            f"{label} {_fmt_weight(applied[key])}"
+            for label, key in (
+                ("Rarity", "rarity"),
+                ("Climate", "climate_stress"),
+                ("Harvest", "harvest_proxy"),
+                ("PA gap", "pa_gap"),
+            )
+        )
+        if raw_positive <= 0.0:
+            st.caption(f"All sliders were zero, so v1.1 weights were applied. {applied_bits}.")
+        else:
+            st.markdown(
+                f'<p class="hra-caption">Applied weights '
+                f'<span class="hra-mono">{applied_bits}</span>. '
+                "Non-negative and scaled to sum to 1.</p>",
+                unsafe_allow_html=True,
+            )
+        if st.button("Restore v1.1 weights", key="sens_restore_btn"):
+            st.session_state["sens_restore_pending"] = True
+            st.rerun()
+
+        try:
+            sens = weight_sensitivity(hpi, applied)
+        except ValueError as exc:
+            st.caption(str(exc))
+            return
+
+        n = int(len(sens))
+        match = (
+            sens.loc[sens["scientific_name"] == str(selected)]
+            if selected
+            else sens.iloc[0:0]
+        )
+        if match.empty:
+            st.caption("Select a species in the sidebar to compare its rank.")
+        else:
+            row = match.iloc[0]
+            st.markdown(f"*{row['scientific_name']}*")
+            st.markdown(
+                _sensitivity_metrics_html(row, n),
+                unsafe_allow_html=True,
+            )
+            st.caption(
+                f"HPI {float(row['hpi_v11']):.3f} → {float(row['hpi_sensitivity']):.3f}. "
+                "Rank 1 is the highest score in this cohort."
+            )
+
+        movers = top_rank_movers(sens, n=8)
+        if movers.empty:
+            st.caption("No rank changes at these weights. Move a slider to see who shifts.")
+            return
+
+        view = pd.DataFrame(
+            {
+                "Species": movers["scientific_name"],
+                "Vernacular": movers["vernacular_ph"] if "vernacular_ph" in movers.columns else "",
+                "v1.1 rank": movers["rank_v11"].astype(int),
+                "Sensitivity rank": movers["rank_sensitivity"].astype(int),
+                "Δ rank": movers["rank_delta"].map(lambda d: f"{int(d):+d}"),
+            }
+        )
+        st.caption("Largest rank shifts (up to 8). Positive Δ moved toward rank 1.")
+        st.dataframe(view, hide_index=True, use_container_width=True)
+        fig = rank_shift_bars(movers)
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            theme=None,
+            config={"displayModeBar": "hover", "displaylogo": False},
+        )
+
+
+def methods_page(hpi: pd.DataFrame, selected: str | None = None):
     st.markdown("## Methods & data sources")
     st.markdown(hpi_formula_markdown())
     with st.expander("Weights transparency (HPI v1.1)", expanded=True):
@@ -663,6 +844,7 @@ gap share the rest so no single layer dominates. Tunable — see docs/METHODS.md
 """,
             unsafe_allow_html=True,
         )
+    weight_sensitivity_section(hpi, selected)
     st.caption("Full formulas, licenses, and AI disclosure: docs/METHODS.md · docs/DESIGN.md")
     st.markdown(
         """
@@ -807,7 +989,7 @@ def main():
     workflow_steps(page)
 
     if page == "Methods":
-        methods_page(hpi)
+        methods_page(hpi, selected)
         return
 
     if page == "Compare":

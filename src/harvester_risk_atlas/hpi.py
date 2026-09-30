@@ -208,6 +208,105 @@ def compute_hpi(features: pd.DataFrame, weights: dict[str, float] | None = None)
     return df
 
 
+# Stored component columns. Sensitivity reweights these; it does not refit them.
+COMPONENT_COLUMNS = {
+    "rarity": "component_rarity",
+    "climate_stress": "component_climate",
+    "harvest_proxy": "component_harvest",
+    "pa_gap": "component_pa_gap",
+}
+COMPONENT_WEIGHT_KEYS = tuple(COMPONENT_COLUMNS)
+
+
+def normalize_weights(weights: dict[str, float] | None = None) -> dict[str, float]:
+    """Non-negative component weights that sum to 1.
+
+    Missing keys count as 0. Non-finite or negative inputs are clipped to 0.
+    If nothing positive remains, fall back to HPI v1.1 (``HPI_WEIGHTS``).
+    """
+    if not weights:
+        return dict(HPI_WEIGHTS)
+    cleaned: dict[str, float] = {}
+    for key in COMPONENT_WEIGHT_KEYS:
+        try:
+            value = float(weights.get(key, 0.0))
+        except (TypeError, ValueError):
+            value = 0.0
+        if not np.isfinite(value) or value < 0.0:
+            value = 0.0
+        cleaned[key] = value
+    total = float(sum(cleaned.values()))
+    if total <= 0.0:
+        return dict(HPI_WEIGHTS)
+    return {key: cleaned[key] / total for key in COMPONENT_WEIGHT_KEYS}
+
+
+def hpi_from_components(
+    df: pd.DataFrame, weights: dict[str, float] | None = None
+) -> pd.Series:
+    """Linear HPI from stored component columns. Does not refit R, C, H, or P."""
+    missing = [col for col in COMPONENT_COLUMNS.values() if col not in df.columns]
+    if missing:
+        raise ValueError(f"HPI components missing: {missing}")
+    w = normalize_weights(weights)
+    score = sum(
+        w[key] * pd.to_numeric(df[col], errors="coerce").fillna(0.0)
+        for key, col in COMPONENT_COLUMNS.items()
+    )
+    return score.clip(0.0, 1.0)
+
+
+def weight_sensitivity(
+    df: pd.DataFrame,
+    weights: dict[str, float] | None = None,
+    *,
+    baseline: dict[str, float] | None = None,
+) -> pd.DataFrame:
+    """Cohort HPI and ranks under v1.1 vs alternate weights.
+
+    Rank 1 is the highest HPI. ``rank_delta`` > 0 means the species moved
+    toward rank 1. IUCN fields are not read or written. The input frame is
+    not modified.
+    """
+    if "scientific_name" not in df.columns:
+        raise ValueError("scientific_name column required")
+    base_score = hpi_from_components(df, baseline or HPI_WEIGHTS)
+    alt_score = hpi_from_components(df, weights)
+    out = pd.DataFrame(
+        {
+            "scientific_name": df["scientific_name"].astype(str).to_numpy(),
+            "hpi_v11": base_score.to_numpy(),
+            "hpi_sensitivity": alt_score.to_numpy(),
+        }
+    )
+    if "vernacular_ph" in df.columns:
+        vernacular = df["vernacular_ph"]
+        out["vernacular_ph"] = vernacular.where(vernacular.notna(), "").astype(str).to_numpy()
+    out["rank_v11"] = base_score.rank(ascending=False, method="min").astype(int).to_numpy()
+    out["rank_sensitivity"] = (
+        alt_score.rank(ascending=False, method="min").astype(int).to_numpy()
+    )
+    out["rank_delta"] = out["rank_v11"] - out["rank_sensitivity"]
+    out["hpi_delta"] = out["hpi_sensitivity"] - out["hpi_v11"]
+    return out
+
+
+def top_rank_movers(sensitivity: pd.DataFrame, n: int = 8) -> pd.DataFrame:
+    """Species with the largest absolute rank change, ties broken by name."""
+    if sensitivity.empty or n <= 0 or "rank_delta" not in sensitivity.columns:
+        return sensitivity.iloc[0:0].copy()
+    moved = sensitivity.loc[sensitivity["rank_delta"] != 0].copy()
+    if moved.empty:
+        return moved
+    moved["abs_delta"] = moved["rank_delta"].abs()
+    moved = moved.sort_values(
+        ["abs_delta", "scientific_name"],
+        ascending=[False, True],
+        kind="mergesort",
+    )
+    return moved.head(int(n)).drop(columns=["abs_delta"]).reset_index(drop=True)
+
+
 def hpi_formula_markdown() -> str:
     return (
         "**HPI v1.1** = 0.30·Rarity + 0.25·Climate stress + 0.25·Harvest proxy "

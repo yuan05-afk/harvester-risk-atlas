@@ -327,6 +327,60 @@ def decade_histogram(occ_sub: pd.DataFrame, title: str = "Occurrences by decade"
     return fig
 
 
+def rank_shift_bars(movers: pd.DataFrame) -> go.Figure:
+    """Signed rank-change bars for weight sensitivity.
+
+    Positive Δ moved toward rank 1 (higher relative HPI). Forest accent and
+    neutral gray only — not HPI risk-band colors. No legend (one series).
+    """
+    title = "Largest rank shifts"
+    if movers is None or movers.empty or "rank_delta" not in movers.columns:
+        fig = go.Figure()
+        fig.update_layout(
+            **LAYOUT_BASE,
+            title=_title(title),
+            height=240,
+            showlegend=False,
+            xaxis=_axis("Rank change (+ = toward rank 1)"),
+            yaxis=_axis(""),
+            margin=dict(l=72, r=24, t=52, b=56),
+        )
+        return fig
+
+    df = movers.copy()
+    df["label"] = [_short_name(name, 28) for name in df["scientific_name"].astype(str)]
+    # Ascending so the largest positive change sits at the top of a horizontal bar.
+    df = df.sort_values(["rank_delta", "label"], ascending=[True, False], kind="mergesort")
+    colors = [
+        ACCENT if int(delta) > 0 else ("#86868b" if int(delta) < 0 else "#d2d2d7")
+        for delta in df["rank_delta"]
+    ]
+    span = int(df["rank_delta"].abs().max())
+    x_extra: dict[str, Any] = dict(zeroline=True, zerolinecolor=HAIRLINE, zerolinewidth=1)
+    if span <= 15:
+        x_extra["dtick"] = 1
+    fig = go.Figure(
+        go.Bar(
+            y=df["label"],
+            x=df["rank_delta"].astype(int),
+            orientation="h",
+            marker=dict(color=colors, line=dict(width=0), cornerradius=2),
+            hovertemplate="%{y}: %{x:+d} places<extra></extra>",
+            cliponaxis=False,
+        )
+    )
+    fig.update_layout(
+        **LAYOUT_BASE,
+        title=_title(title),
+        height=max(240, 32 * len(df) + 108),
+        showlegend=False,
+        xaxis=_axis("Rank change (+ = toward rank 1)", **x_extra),
+        yaxis=_axis(""),
+        margin=dict(l=156, r=28, t=52, b=56),
+    )
+    return fig
+
+
 def fig_to_png_bytes(fig: go.Figure) -> bytes | None:
     """Static PNG for slides when kaleido is available; else None."""
     try:

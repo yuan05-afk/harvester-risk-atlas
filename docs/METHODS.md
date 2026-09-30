@@ -35,6 +35,10 @@ A component is *imputed* when live inputs (recent frac, PA frac, WorldClim sampl
 | ≤ 0.66 | Moderate |
 | > 0.66 | Higher relative pressure |
 
+## Weight sensitivity
+
+The Methods page has a single expander for oral defense. Sliders reweight the stored components \(R, C, H, P\) for the full cohort; values are clipped at zero and rescaled so they sum to 1. Rank 1 is the highest HPI. The view shows the selected species before and after, plus the largest rank shifts. This is sensitivity analysis only: it does not replace HPI v1.1 (0.30 / 0.25 / 0.25 / 0.20), does not refit components, and does not use IUCN categories.
+
 ## Data sources & licenses
 
 | Resource | Use | Access / license notes |
