@@ -67,6 +67,14 @@ from harvester_risk_atlas.charts import (  # noqa: E402
     rank_shift_bars,
 )
 from harvester_risk_atlas.suitability import suitability_sketch  # noqa: E402
+from harvester_risk_atlas.map_points import (  # noqa: E402
+    HOTSPOT_PAD_DEG,
+    PH_FIT_BOUNDS,
+    hotspot_name,
+    marker_radius,
+    on_ph_land,
+    species_plot_points,
+)
 import landing  # noqa: E402
 
 st.set_page_config(
@@ -236,6 +244,23 @@ def map_color(band: str) -> str:
     return RISK_COLORS.get(band, "#86868b")
 
 
+class _MapZoomSnap(MacroElement):
+    """Fractional zoom so fitBounds does not step out into a ring of sea."""
+
+    _template = Template(
+        """
+        {% macro script(this, kwargs) %}
+            {{ this._parent.get_name() }}.options.zoomSnap = 0.1;
+            {{ this._parent.get_name() }}.options.zoomDelta = 0.5;
+        {% endmacro %}
+        """
+    )
+
+    def __init__(self):
+        super().__init__()
+        self._name = "MapZoomSnap"
+
+
 class _LeafletAttributionMute(MacroElement):
     """Mute Leaflet credit links to tertiary ink inside the map iframe."""
 
@@ -252,15 +277,13 @@ def build_map(
     occ: pd.DataFrame,
     focus: str | None,
     color_by_archetype: bool = False,
+    zoom_to: str | None = None,
 ) -> folium.Map:
-    pts = hpi.dropna(subset=["lat_mean", "lon_mean"])
-    center = [12.5, 122.0]
-    if focus and focus in pts["scientific_name"].values:
-        row = pts.loc[pts["scientific_name"] == focus].iloc[0]
-        center = [float(row["lat_mean"]), float(row["lon_mean"])]
+    plotted = species_plot_points(hpi, occ)
+    pts = hpi.merge(plotted, on="scientific_name", how="inner")
     m = folium.Map(
-        location=center,
-        zoom_start=6 if not focus else 8,
+        location=[12.2, 122.0],
+        zoom_start=6,
         tiles="Esri.WorldGrayCanvas",
         control_scale=True,
     )
@@ -290,21 +313,40 @@ def build_map(
         )
         if arch:
             popup_html += f"<br/><span style='color:#6e6e73'>{arch}</span>"
+        if r.get("plot_source") == "land_record":
+            popup_html += (
+                "<br/><span style='color:#6e6e73'>Nearest land record. "
+                "The sample average falls offshore.</span>"
+            )
+        lat, lon = float(r["plot_lat"]), float(r["plot_lon"])
+        radius = marker_radius(r["hpi"])
+        # Quiet halo in the same HPI color. Overlap reads as density, not a choropleth.
         folium.CircleMarker(
-            location=[r["lat_mean"], r["lon_mean"]],
-            radius=8 + 10 * float(r["hpi"]),
+            location=[lat, lon],
+            radius=radius * 2.1,
+            color=col,
+            fill=True,
+            fill_color=col,
+            fill_opacity=0.12,
+            weight=0,
+        ).add_to(m)
+        folium.CircleMarker(
+            location=[lat, lon],
+            radius=radius,
             color="#ffffff",
             fill=True,
             fill_color=col,
-            fill_opacity=0.88,
-            weight=1.75,
+            fill_opacity=0.9,
+            weight=2.0,
             popup=folium.Popup(popup_html, max_width=280),
             tooltip=f"{r['scientific_name']} · {float(r['hpi']):.3f}",
         ).add_to(m)
 
-    # One-shot pulse ring on focused species (CSS, plays once — signal only)
-    if focus and focus in pts["scientific_name"].values:
-        frow = pts.loc[pts["scientific_name"] == focus].iloc[0]
+    # One-shot pulse on the camera target, else the selection, when it is plotted.
+    names = set(pts["scientific_name"]) if not pts.empty else set()
+    pulse_name = zoom_to if zoom_to in names else focus
+    if pulse_name and pulse_name in names:
+        frow = pts.loc[pts["scientific_name"] == pulse_name].iloc[0]
         pulse_css = (
             "<style>"
             "@keyframes hraPulseOnce{0%{transform:scale(.55);opacity:.55}"
@@ -318,7 +360,7 @@ def build_map(
         )
         m.get_root().html.add_child(folium.Element(pulse_css))
         folium.Marker(
-            location=[float(frow["lat_mean"]), float(frow["lon_mean"])],
+            location=[float(frow["plot_lat"]), float(frow["plot_lon"])],
             icon=folium.DivIcon(
                 html='<div class="hra-pulse"></div>',
                 icon_size=(22, 22),
@@ -327,20 +369,41 @@ def build_map(
             ),
         ).add_to(m)
 
-    if focus and not occ.empty:
-        sub = occ[occ["scientific_name"] == focus].dropna(subset=["lat", "lon"])
+    if zoom_to and not occ.empty and zoom_to in names:
+        sub = occ[occ["scientific_name"] == zoom_to].dropna(subset=["lat", "lon"])
         haze = folium.FeatureGroup(name="Occurrence sample", show=True)
-        for _, p in sub.head(120).iterrows():
+        shown = 0
+        for _, p in sub.iterrows():
+            if shown >= 80:
+                break
+            try:
+                plat, plon = float(p["lat"]), float(p["lon"])
+            except (TypeError, ValueError):
+                continue
+            if plat != plat or plon != plon or not on_ph_land(plat, plon):
+                continue
             folium.CircleMarker(
-                location=[p["lat"], p["lon"]],
-                radius=2,
+                location=[plat, plon],
+                radius=3,
                 color="#1d1d1f",
                 fill=True,
-                fill_opacity=0.25,
+                fill_opacity=0.28,
                 weight=0,
             ).add_to(haze)
-        haze.add_to(m)
-        folium.LayerControl(collapsed=True).add_to(m)
+            shown += 1
+        if shown:
+            haze.add_to(m)
+            folium.LayerControl(collapsed=True).add_to(m)
+
+    m.add_child(_MapZoomSnap())
+    if zoom_to and zoom_to in names:
+        zrow = pts.loc[pts["scientific_name"] == zoom_to].iloc[0]
+        lat, lon = float(zrow["plot_lat"]), float(zrow["plot_lon"])
+        pad = HOTSPOT_PAD_DEG
+        m.fit_bounds([[lat - pad, lon - pad], [lat + pad, lon + pad]], padding=(18, 18))
+    else:
+        (south, west), (north, east) = PH_FIT_BOUNDS
+        m.fit_bounds([[south, west], [north, east]], padding=(8, 8))
     return m
 
 
@@ -1134,7 +1197,34 @@ def main():
             </div>""",
             unsafe_allow_html=True,
         )
-        color_arch = st.checkbox("Color centroids by risk archetype", value=False)
+        ctrl_check, ctrl_focus = st.columns([1.6, 1])
+        with ctrl_check:
+            color_arch = st.checkbox("Color centroids by risk archetype", value=False)
+        plotted = species_plot_points(hpi, occ)
+        if "map_focus_hotspot" not in st.session_state:
+            st.session_state["map_focus_hotspot"] = False
+        with ctrl_focus:
+            if st.button("Focus highest-HPI hotspot", key="focus_hpi_hotspot"):
+                st.session_state["map_focus_hotspot"] = True
+        # Unlocated names (Mentha) are not `focus`. hotspot_name also refuses them.
+        zoom_to = (
+            hotspot_name(plotted, hpi, focus)
+            if st.session_state.get("map_focus_hotspot")
+            else None
+        )
+        n_snapped = int((plotted["plot_source"] == "land_record").sum()) if not plotted.empty else 0
+        if n_snapped:
+            st.caption(
+                f"{n_snapped} circles use the nearest Philippines land record "
+                "because the GBIF average falls offshore."
+            )
+        offshore = sorted(
+            set(hpi["scientific_name"].astype(str)) - set(plotted["scientific_name"].astype(str))
+        )
+        if offshore:
+            st.caption(
+                "Not plotted (no Philippines land point): " + ", ".join(offshore) + "."
+            )
         if color_arch:
             st.markdown(
                 """<div class="hra-legend">
@@ -1152,8 +1242,14 @@ def main():
                 </div>""",
                 unsafe_allow_html=True,
             )
-        m = build_map(hpi, occ, focus, color_by_archetype=color_arch)
-        st_folium(m, width=None, height=520, returned_objects=[], use_container_width=True)
+        m = build_map(
+            hpi,
+            occ,
+            focus,
+            color_by_archetype=color_arch,
+            zoom_to=zoom_to,
+        )
+        st_folium(m, width=None, height=640, returned_objects=[], use_container_width=True)
 
         st.markdown("### HPI distribution")
         fig_dist = hpi_distribution(hpi, highlight=focus)
@@ -1200,9 +1296,9 @@ def main():
             )
         dossier(row, occ, demo, hpi)
         if focus is not None:
-            m = build_map(hpi, occ, focus)
+            m = build_map(hpi, occ, focus, zoom_to=focus)
             st.markdown("### Occurrence context")
-            st_folium(m, width=None, height=400, returned_objects=[], use_container_width=True)
+            st_folium(m, width=None, height=420, returned_objects=[], use_container_width=True)
         continue_to("Continue to field brief →", "Field brief")
     else:
         st.info("Select a species from the sidebar.")
