@@ -22,7 +22,11 @@ SRC = ROOT / "src"
 if SRC.is_dir():
     sys.path.insert(0, str(SRC))
 for _mod in list(sys.modules):
-    if _mod == "harvester_risk_atlas" or _mod.startswith("harvester_risk_atlas."):
+    if (
+        _mod == "landing"
+        or _mod == "harvester_risk_atlas"
+        or _mod.startswith("harvester_risk_atlas.")
+    ):
         del sys.modules[_mod]
 
 from harvester_risk_atlas.config import (  # noqa: E402
@@ -63,12 +67,13 @@ from harvester_risk_atlas.charts import (  # noqa: E402
     rank_shift_bars,
 )
 from harvester_risk_atlas.suitability import suitability_sketch  # noqa: E402
+import landing  # noqa: E402
 
 st.set_page_config(
     page_title="Harvester Risk Atlas",
     page_icon=None,
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="auto",
 )
 
 CSS = (ROOT / "app" / "styles.css").read_text(encoding="utf-8")
@@ -81,6 +86,7 @@ RISK_COLORS = {
 }
 
 WORKFLOW_PAGES = [
+    "Home",
     "Map",
     "Species dossier",
     "Field brief",
@@ -157,21 +163,47 @@ def band_class(band: str) -> str:
 
 def header():
     st.markdown(
-        """
+        f"""
         <div class="hra-header">
           <div class="hra-kicker">EthnoHACK 2026 · Track 3 · Biodiversity &amp; Sustainability</div>
           <h1>Harvester Risk Atlas</h1>
           <p class="hra-sub">Harvest and climate pressure for PH/SEA medicinal plants.
           Pick a species → dossier → field brief. Research and education only.</p>
         </div>
-        <div class="hra-disclaimer">
-          <strong>Disclaimer.</strong> Not medical advice, not a harvest permit, not a Red List assessment.
-          Ethnobotany notes are cultural context only. IUCN categories are never invented —
-          live lookup needs an API token.
-        </div>
+        {landing.DISCLAIMER_HTML}
         """,
         unsafe_allow_html=True,
     )
+
+
+def home_page(hpi: pd.DataFrame, omitted: pd.DataFrame | None = None) -> None:
+    """Census is the full build. Unlocated rows stay out of the map, not out of the count."""
+    census = hpi
+    if omitted is not None and len(omitted):
+        census = pd.concat([hpi, omitted], ignore_index=True)
+    bands = (
+        census["hpi_band"].value_counts().to_dict() if "hpi_band" in census.columns else {}
+    )
+    n_imputed = 0
+    if "hpi_confidence" in census.columns:
+        n_imputed = int((census["hpi_confidence"] < (0.85 - 1e-9)).sum())
+    iucn_unlinked = True
+    if "iucn_status" in census.columns and len(census):
+        iucn_unlinked = bool((census["iucn_status"].fillna("not_queried") != "ok").all())
+    st.markdown(
+        landing.home_markup(
+            n_taxa=int(len(census)),
+            band_counts={str(k): int(v) for k, v in bands.items()},
+            n_imputed=n_imputed,
+            iucn_unlinked=iucn_unlinked,
+            weights=dict(HPI_WEIGHTS),
+        ),
+        unsafe_allow_html=True,
+    )
+    # on_click runs before the nav radio instantiates. Setting nav_radio
+    # inside the button's if-block raises WidgetAlreadyInstantiatedError.
+    st.button("Open the map", type="primary", key="open_map", on_click=go_to, args=("Map",))
+    st.caption("Weights, sources, and the limits of the index are on Methods.")
 
 
 def workflow_steps(active_page: str):
@@ -923,6 +955,16 @@ See dossier expander per species.
     )
 
 
+def dismiss_preface() -> None:
+    st.session_state["intro_played"] = True
+
+
+def go_to(target_page: str) -> None:
+    """Navigate before the radio widget is built."""
+    st.session_state["nav_radio"] = target_page
+    st.session_state["page"] = target_page
+
+
 def _species_row(
     selected: str | None, mapped: pd.DataFrame, omitted: pd.DataFrame
 ) -> pd.Series | None:
@@ -943,14 +985,16 @@ def _mapped_focus(selected: str | None, mapped: pd.DataFrame) -> str | None:
 
 def continue_to(label: str, target_page: str):
     st.markdown('<div class="hra-continue"></div>', unsafe_allow_html=True)
-    if st.button(label, type="primary", key=f"continue_{target_page}"):
-        st.session_state["page"] = target_page
-        st.session_state["nav_radio"] = target_page
-        st.rerun()
+    st.button(
+        label,
+        type="primary",
+        key=f"continue_{target_page}",
+        on_click=go_to,
+        args=(target_page,),
+    )
 
 
 def main():
-    header()
     try:
         mtime = HPI_CSV.stat().st_mtime if HPI_CSV.exists() else 0.0
         hpi, omitted = load_with_archetypes(mtime)
@@ -959,16 +1003,35 @@ def main():
         st.stop()
     occ = load_occurrences()
 
+    qp = st.query_params
+    if qp.get("intro") == "skip":
+        st.session_state["intro_played"] = True
+        del qp["intro"]
+    demo_qp = landing.demo_query_requested(qp)
     if "nav_radio" not in st.session_state:
-        st.session_state["nav_radio"] = "Map"
+        st.session_state["nav_radio"] = landing.default_page(demo_requested=demo_qp)
     if "page" not in st.session_state:
         st.session_state["page"] = st.session_state["nav_radio"]
     if "selected" not in st.session_state:
         st.session_state["selected"] = None
-    qp = st.query_params
-    demo_qp = qp.get("demo", "").lower() in ("1", "true", "yes") or "demo" in qp
     if "demo_mode" not in st.session_state:
         st.session_state["demo_mode"] = demo_qp
+
+    play_intro = landing.should_play_intro(
+        intro_played=bool(st.session_state.get("intro_played")),
+        demo_requested=demo_qp,
+    )
+    if play_intro:
+        st.markdown(
+            landing.preload_markup(dict(HPI_WEIGHTS)),
+            unsafe_allow_html=True,
+        )
+        # A markdown link is rewritten to target=_blank, so Skip is a real
+        # button. The click reruns the script; intro_played is already set,
+        # and the preface is omitted. on_click is a no-op marker so the
+        # widget does not also try to write nav state.
+        st.button("Skip", key="skip_intro", on_click=dismiss_preface)
+        st.session_state["intro_played"] = True
 
     with st.sidebar:
         st.markdown('<div class="hra-kicker">Navigate</div>', unsafe_allow_html=True)
@@ -991,51 +1054,60 @@ def main():
             demo_sp = pick_demo_species(hpi)
             st.session_state["selected"] = demo_sp
             st.caption(f"Demo species: *{demo_sp}*")
-            st.markdown(
-                f"""<div class="hra-talktrack">
-                <span class="tag">60-sec talk track</span>
-                <ol>
-                  <li>Map (15s): Color = HPI band; size ∝ score. Abutra = moderate harvest signal, not Red List.</li>
-                  <li>Dossier (25s): R/C/H/P + waterfall. Gaps: IUCN not linked; WorldClim; WDPCA.</li>
-                  <li>Brief (15s): HTML or PDF. Stewardship only — not a permit.</li>
-                  <li>Close (5s): Weights 0.30 / 0.25 / 0.25 / 0.20. IUCN never invented.</li>
-                </ol>
-                </div>""",
-                unsafe_allow_html=True,
-            )
+            if page != "Home":
+                st.markdown(
+                    f"""<div class="hra-talktrack">
+                    <span class="tag">60-sec talk track</span>
+                    <ol>
+                      <li>Map (15s): Color = HPI band; size ∝ score. Abutra = moderate harvest signal, not Red List.</li>
+                      <li>Dossier (25s): R/C/H/P + waterfall. Gaps: IUCN not linked; WorldClim; WDPCA.</li>
+                      <li>Brief (15s): HTML or PDF. Stewardship only — not a permit.</li>
+                      <li>Close (5s): Weights 0.30 / 0.25 / 0.25 / 0.20. IUCN never invented.</li>
+                    </ol>
+                    </div>""",
+                    unsafe_allow_html=True,
+                )
 
-        st.markdown("---")
-        st.caption("Search scientific or PH vernacular name")
-        q = st.text_input("Search", placeholder="e.g. lagundi, banaba, abutra", label_visibility="collapsed")
-        selected = st.session_state.get("selected")
-        if demo:
-            selected = pick_demo_species(hpi)
-        elif q.strip():
-            catalog = pd.concat([hpi, omitted], ignore_index=True) if len(omitted) else hpi
-            hits = resolve_query(q, catalog)
-            if hits:
-                labels = [
-                    f"{h['scientific_name']} ({h['vernacular_ph']})"
-                    for h in hits
-                    if h.get("scientific_name")
-                ]
-                choice = st.selectbox("Matches", labels)
-                if choice:
-                    selected = choice.split(" (")[0]
+        if page != "Home":
+            st.markdown("---")
+            st.caption("Search scientific or PH vernacular name")
+            q = st.text_input("Search", placeholder="e.g. lagundi, banaba, abutra", label_visibility="collapsed")
+            selected = st.session_state.get("selected")
+            if demo:
+                selected = pick_demo_species(hpi)
+            elif q.strip():
+                catalog = pd.concat([hpi, omitted], ignore_index=True) if len(omitted) else hpi
+                hits = resolve_query(q, catalog)
+                if hits:
+                    labels = [
+                        f"{h['scientific_name']} ({h['vernacular_ph']})"
+                        for h in hits
+                        if h.get("scientific_name")
+                    ]
+                    choice = st.selectbox("Matches", labels)
+                    if choice:
+                        selected = choice.split(" (")[0]
+                else:
+                    st.caption("No match in seed list.")
             else:
-                st.caption("No match in seed list.")
+                names = dossier_choices(hpi, omitted)
+                idx = names.index(selected) if selected in names else 0
+                selected = st.selectbox("Species", names, index=idx)
+            st.session_state["selected"] = selected
+
+            if selected and selected not in set(hpi["scientific_name"]):
+                st.caption("No georeferenced points — dossier only, not a map focus.")
+            elif "archetype_label" in hpi.columns and selected in set(hpi["scientific_name"]):
+                arch = hpi.loc[hpi["scientific_name"] == selected, "archetype_label"].iloc[0]
+                st.caption(f"Archetype: {arch}")
         else:
-            names = dossier_choices(hpi, omitted)
-            idx = names.index(selected) if selected in names else 0
-            selected = st.selectbox("Species", names, index=idx)
-        st.session_state["selected"] = selected
+            selected = st.session_state.get("selected")
 
-        if selected and selected not in set(hpi["scientific_name"]):
-            st.caption("No georeferenced points — dossier only, not a map focus.")
-        elif "archetype_label" in hpi.columns and selected in set(hpi["scientific_name"]):
-            arch = hpi.loc[hpi["scientific_name"] == selected, "archetype_label"].iloc[0]
-            st.caption(f"Archetype: {arch}")
+    if page == "Home":
+        home_page(hpi, omitted)
+        return
 
+    header()
     workflow_steps(page)
 
     focus = _mapped_focus(selected, hpi)

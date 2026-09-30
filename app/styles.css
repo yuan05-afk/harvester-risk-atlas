@@ -980,3 +980,231 @@ a:hover { color: #245a42; }
     animation-duration: 0.01ms !important;
   }
 }
+
+/* —— Home —— */
+.hra-home .hra-lead {
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  max-width: 40rem;
+  margin: 0.35rem 0 1.05rem 0;
+  color: var(--ink);
+}
+.hra-home h2 {
+  margin-top: 1.45rem !important;
+}
+.hra-formula {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem 0.8rem;
+  margin: 0.35rem 0 1.15rem 0;
+}
+.hra-formula .eq {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+  margin: 0.4rem 0 0.35rem 0;
+  color: var(--ink);
+}
+.hra-formula .note {
+  margin: 0;
+  color: var(--ink-secondary);
+  font-size: var(--fs-caption);
+  line-height: 1.45;
+}
+.hra-parts {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.15rem 0 0.2rem 0;
+}
+.hra-parts th {
+  text-align: left;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+  padding: 0 0.85rem 0.4rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.hra-parts td {
+  vertical-align: top;
+  padding: 0.65rem 0.85rem 0.65rem 0;
+  border-bottom: 1px solid var(--hairline);
+  font-size: var(--fs-body);
+  line-height: 1.45;
+  color: var(--ink);
+}
+.hra-parts td:first-child {
+  width: 12.5rem;
+  font-weight: 500;
+}
+.hra-parts td:first-child span {
+  display: block;
+  margin-top: 0.12rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-secondary);
+}
+.hra-path {
+  margin: 0.15rem 0 0.85rem 0;
+  padding-left: 1.15rem;
+  max-width: 40rem;
+}
+.hra-path li {
+  margin: 0.32rem 0;
+}
+.hra-cohort {
+  margin: 0.2rem 0 0.85rem 0;
+  max-width: 40rem;
+  font-size: var(--fs-caption);
+  line-height: 1.5;
+  color: var(--ink-secondary);
+}
+div[data-testid="stVerticalBlock"]:has(.hra-home) .stButton > button[kind="primary"] {
+  width: fit-content;
+  min-width: 10.5rem;
+}
+
+/* —— First-visit preface. Opacity only; no travel, no bounce. —— */
+.hra-preload {
+  position: fixed;
+  inset: 0;
+  z-index: 1000000;
+  background: var(--paper);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: hra-preload-leave 0.4s var(--ease) 7.7s forwards;
+}
+.hra-preload-stage {
+  position: relative;
+  width: min(38rem, calc(100vw - 4rem));
+  min-height: 12.5rem;
+}
+.hra-preload .beat {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: 0;
+  opacity: 0;
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: -0.022em;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.hra-preload .beat .k {
+  display: block;
+  margin-bottom: 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+}
+.hra-preload .formula {
+  top: 8.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--ink-secondary);
+}
+.hra-preload .b1 { animation: hra-beat 1.7s linear 0.2s forwards; }
+.hra-preload .b2 { animation: hra-beat 1.7s linear 2.0s forwards; }
+.hra-preload .b3 { animation: hra-beat 1.7s linear 3.8s forwards; }
+.hra-preload .b4 { animation: hra-beat-hold 2.1s linear 5.6s forwards; }
+.hra-preload .b4f { animation: hra-beat-hold 1.8s linear 5.9s forwards; }
+.hra-preload-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--hairline);
+}
+.hra-preload-bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  animation: hra-preload-bar 7.7s linear forwards;
+}
+/* Skip is a Streamlit button lifted over the preface. Markdown links
+   are forced to target=_blank, so they cannot dismiss this page. */
+.stApp:has(.hra-preload) [data-testid="stElementContainer"]:has(button[kind="secondary"]),
+.stApp:has(.hra-preload) [data-testid="stElementContainer"]:has([data-testid="stBaseButton-secondary"]) {
+  position: fixed !important;
+  left: 2rem !important;
+  bottom: 0.9rem !important;
+  z-index: 1000002 !important;
+  width: auto !important;
+  margin: 0 !important;
+}
+.stApp:has(.hra-preload) button[kind="secondary"],
+.stApp:has(.hra-preload) [data-testid="stBaseButton-secondary"] {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--hairline) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--ink-secondary) !important;
+  font-weight: 400 !important;
+  font-size: var(--fs-caption) !important;
+  line-height: 1.3 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 0 0.08rem 0 !important;
+  width: auto !important;
+}
+.stApp:has(.hra-preload) button[kind="secondary"]:hover,
+.stApp:has(.hra-preload) [data-testid="stBaseButton-secondary"]:hover {
+  color: var(--ink) !important;
+  border-bottom-color: var(--accent) !important;
+  background: transparent !important;
+}
+.stApp:has(.hra-preload) button[kind="secondary"] p,
+.stApp:has(.hra-preload) [data-testid="stBaseButton-secondary"] p {
+  color: var(--ink-secondary) !important;
+  margin: 0 !important;
+  font-size: var(--fs-caption) !important;
+  line-height: 1.3 !important;
+}
+@keyframes hra-beat {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  78% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes hra-beat-hold {
+  0% { opacity: 0; }
+  14% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes hra-preload-bar {
+  to { width: 100%; }
+}
+@keyframes hra-preload-leave {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+@media (max-width: 640px) {
+  .hra-preload .beat { font-size: 1.2rem; }
+  .hra-preload .formula { top: 10rem; }
+  .hra-preload-stage { min-height: 14.5rem; }
+  .hra-parts td:first-child { width: 8.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hra-preload { display: none !important; }
+}

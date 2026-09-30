@@ -74,6 +74,7 @@ Card section labels (Where / Stress / …) stay uppercase 12–13px tertiary —
   - Optional **one-shot** map focus pulse (`.hra-pulse`, ~0.9s, plays once)
 - Honor `prefers-reduced-motion: reduce` (transitions/animations near-zero).
 - **Banned motion:** bounce, spring, page-wide fade-up, staggered card entrances, aurora blobs.
+- **Home preface (exception, one shot):** first session only, on Home. Four sentences, opacity crossfade, a 2px progress rule, a text Skip button (markdown links open a new tab here, so Skip is a real control). `?intro=skip` also dismisses it. No position shift, no bounce, no second call to action on the page itself. `prefers-reduced-motion` removes the sheet entirely (do not only crush the duration — the delay would leave a blank screen). `?demo=1` skips it and opens the map.
 - Map controls: minimal Folium defaults; legend as hairlined floating panel
 - Markers: white/ink stroke (`weight ≥ 1.5`) so centroids read on Esri gray canvas
 
@@ -88,6 +89,9 @@ Card section labels (Where / Stress / …) stay uppercase 12–13px tertiary —
 
 ## Copy voice
 Plain scientific English. Short dossier labels: **Where / Stress / Why it matters / What to do**. Disclaimer always visible, never cute.
+
+## Home
+The app opens on **Home**, not the map. Home is one column: the problem, the index, a four-row term table, the map → dossier → brief path, and the cohort line computed from the loaded scores. One action: **Open the map**. No icon row, no stat cards, no chat, no model name helper. The optional LLM name stub stays off and off the page.
 
 ## Map & dossier microcopy
 
