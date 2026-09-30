@@ -23,5 +23,7 @@ Natural Earth parks (raw/) are US-centric and NOT used in HPI scoring.
 ph_land_mask.geojson
   Source: Natural Earth 1:10m physical land (public domain), v5.1.1.
   Clip: Philippines. A northern Borneo sliver inside the rectangle is removed.
-  Simplified to about 0.01°. Map placement only — not a survey boundary, not an HPI input.
+  Simplified to about 0.01°. Labels whether a sample average sits on Philippines land.
+  Circles stay at that average, including means in the water or west of the country.
+  Not a survey boundary, not an HPI input.
   URL: https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-land/
