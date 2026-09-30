@@ -1127,14 +1127,13 @@ def main():
         replay=replay,
     )
     if play_intro:
-        # st.html keeps the SVG mark intact. Markdown can rewrite the sheet.
-        # Replay adds hra-force-motion so Android reduced-motion still plays
-        # this one pass. An automatic visit stays hidden under that query.
+        # Replay adds hra-force-motion so one pass still plays when the OS
+        # reports reduced motion. An automatic visit stays hidden.
+        # st.html sanitizes with DOMPurify's html profile and drops <svg>,
+        # so the silhouette never arrives. This string is one HTML block;
+        # markdown keeps the mark.
         sheet = landing.preload_markup(dict(HPI_WEIGHTS), force_motion=replay)
-        if hasattr(st, "html"):
-            st.html(sheet)
-        else:
-            st.markdown(sheet, unsafe_allow_html=True)
+        st.markdown(sheet, unsafe_allow_html=True)
         # A markdown link is rewritten to target=_blank, so Skip is a real
         # button. The click reruns the script; intro_played is already set,
         # and the preface is omitted. on_click is a no-op marker so the

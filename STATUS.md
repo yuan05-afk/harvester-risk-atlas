@@ -21,6 +21,7 @@ Files: `app/streamlit_app.py`, `tests/test_cloud_import.py`, `DEPLOY.md`.
 | First-visit preface: drawn PH mark + leaf, four non-overlapping beats, formula, 3px rule, Skip at 3s. Once per session | Done |
 | `prefers-reduced-motion` removes the automatic preface and Skip. `?demo=1` skips it and opens the map | Done |
 | Sidebar **Replay intro** (quiet text, not a second primary, not on the sheet) forces that same cinematic once, including under reduced motion | Done |
+| Preface mark is `st.markdown` — `st.html` on 1.41 sanitizes with an HTML-only profile and drops the SVG | Done |
 | Species search stays off Home so the introduction is not the tool chrome | Done |
 
 Files: `app/landing.py`, `app/streamlit_app.py`, `app/styles.css`, `tests/test_landing.py`, `docs/DESIGN.md`.

@@ -161,6 +161,10 @@ class LandingStyleTests(unittest.TestCase):
         self.assertIn("on_click=replay_intro", window)
         self.assertNotIn('type="primary"', window)
         self.assertIn("force_motion=replay", self.app)
+        sheet_at = self.app.find("force_motion=replay")
+        sheet_window = self.app[sheet_at:sheet_at + 500]
+        self.assertIn("unsafe_allow_html=True", sheet_window)
+        self.assertNotIn("st.html(sheet)", sheet_window)
         self.assertIn('st.markdown(\'<div class="hra-skip"></div>\'', self.app)
         self.assertIn('st.markdown(\'<div class="hra-replay"></div>\'', self.app)
         self.assertIn("padding: 1rem 1.25rem !important", self.css)
