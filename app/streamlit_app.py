@@ -209,8 +209,8 @@ def build_map(
         control_scale=True,
     )
 
-    # Archetype palette (muted, not rainbow chrome)
-    arch_palette = ["#2d6a4f", "#52796f", "#b08968", "#6e6e73", "#9b2226"]
+    # Archetype palette — forest ramp only (risk colors stay on HPI bands)
+    arch_palette = ["#2d6a4f", "#52796f", "#74a892", "#6e6e73", "#44564a"]
     arch_labels = (
         sorted(pts["archetype_label"].dropna().unique())
         if color_by_archetype and "archetype_label" in pts.columns
@@ -328,6 +328,7 @@ def chart_download(fig, stem: str):
             data=fig_to_html_bytes(fig),
             file_name=f"{stem}.html",
             mime="text/html",
+            type="secondary",
             key=f"dl_html_{stem}",
         )
     png = fig_to_png_bytes(fig)
@@ -338,6 +339,7 @@ def chart_download(fig, stem: str):
                 data=png,
                 file_name=f"{stem}.png",
                 mime="image/png",
+                type="secondary",
                 key=f"dl_png_{stem}",
             )
         else:
@@ -564,7 +566,7 @@ def dossier(row: pd.Series, occ: pd.DataFrame, demo: bool, hpi: pd.DataFrame | N
 
 def field_brief_page(row: pd.Series, demo: bool):
     demo_caption("brief", demo)
-    st.markdown(f"### Field brief — *{row['scientific_name']}*")
+    st.markdown(f"## Field brief — *{row['scientific_name']}*")
     st.caption(f"{row.get('vernacular_ph','')} · {row.get('hpi_band','')} · HPI {float(row['hpi']):.3f}")
     acts = dossier_actions(row.to_dict())
     payload = row.to_dict()
@@ -596,7 +598,7 @@ def field_brief_page(row: pd.Series, demo: bool):
 
 
 def compare_page(hpi: pd.DataFrame):
-    st.markdown("### Compare species")
+    st.markdown("## Compare species")
     st.caption("Side-by-side components and metrics for any two atlas species.")
     names = hpi.sort_values("hpi", ascending=False)["scientific_name"].tolist()
     default_a = names[0] if names else None
@@ -775,7 +777,7 @@ def main():
         st.session_state["demo_mode"] = demo_qp
 
     with st.sidebar:
-        st.markdown("**Navigate**")
+        st.markdown('<div class="hra-kicker">Navigate</div>', unsafe_allow_html=True)
         page = st.radio(
             "Page",
             WORKFLOW_PAGES,
@@ -878,7 +880,7 @@ def main():
         m = build_map(hpi, occ, selected, color_by_archetype=color_arch)
         st_folium(m, width=None, height=520, returned_objects=[], use_container_width=True)
 
-        st.markdown("#### HPI distribution")
+        st.markdown("### HPI distribution")
         fig_dist = hpi_distribution(hpi, highlight=selected)
         st.plotly_chart(fig_dist, use_container_width=True, theme=None, config={"displayModeBar": "hover", "displaylogo": False})
         chart_download(fig_dist, "hpi_distribution_map")
@@ -911,7 +913,7 @@ def main():
         row = hpi.loc[hpi["scientific_name"] == selected].iloc[0]
         dossier(row, occ, demo, hpi)
         m = build_map(hpi, occ, selected)
-        st.markdown("#### Occurrence context")
+        st.markdown("### Occurrence context")
         st_folium(m, width=None, height=400, returned_objects=[], use_container_width=True)
         continue_to("Continue to field brief →", "Field brief")
     else:

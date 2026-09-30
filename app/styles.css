@@ -59,7 +59,7 @@ button[kind="header"] { display: none !important; }
 /* Main canvas padding — keep content clear of sidebar & edges */
 .block-container {
   padding-top: 1.5rem !important;
-  padding-bottom: 3.25rem !important;
+  padding-bottom: 5.5rem !important; /* was 3.25rem — clear Cloud Manage-app FAB */
   padding-left: 2rem !important;
   padding-right: 2rem !important;
   max-width: 1120px;
@@ -102,8 +102,8 @@ div[data-testid="stPlotlyChart"] {
   background: var(--surface);
   border: 1px solid var(--hairline);
   border-radius: var(--radius-lg);
-  padding: 0.45rem 0.3rem 0.2rem 0.3rem;
-  overflow: hidden;
+  padding: 0.5rem 0.55rem 0.85rem 0.55rem; /* was tight 0.2rem bottom */
+  overflow: visible; /* was hidden — don’t clip legend-below */
   box-shadow: var(--shadow-hair);
 }
 
@@ -415,6 +415,41 @@ div[data-baseweb="select"]:focus-within > div {
   outline: none !important;
 }
 
+/* Download buttons — same chrome as .stButton (chart + field-brief downloads) */
+.stDownloadButton > button,
+[data-testid="stDownloadButton"] > button {
+  border-radius: var(--radius) !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--hairline) !important;
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease) !important;
+}
+.stDownloadButton > button[kind="primary"],
+[data-testid="stDownloadButton"] > button[kind="primary"] {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+}
+.stDownloadButton > button:hover,
+[data-testid="stDownloadButton"] > button:hover {
+  border-color: var(--accent) !important;
+}
+.stDownloadButton > button[kind="primary"]:hover,
+[data-testid="stDownloadButton"] > button[kind="primary"]:hover {
+  background: #245a42 !important;
+  border-color: #245a42 !important;
+}
+.stDownloadButton > button:focus-visible,
+[data-testid="stDownloadButton"] > button:focus-visible {
+  box-shadow: var(--focus-ring) !important;
+  outline: none !important;
+}
+
 /* Tabs */
 .stTabs [data-baseweb="tab-list"] {
   gap: 0.3rem;
@@ -426,6 +461,12 @@ div[data-baseweb="select"]:focus-within > div {
   color: var(--ink-secondary);
   padding: 0.5rem 0.85rem;
   transition: color var(--dur) var(--ease);
+}
+.stTabs [data-baseweb="tab-highlight"] {
+  background-color: var(--accent) !important;
+}
+.stTabs [data-baseweb="tab-border"] {
+  background-color: var(--hairline) !important;
 }
 .stTabs [aria-selected="true"] {
   color: var(--ink) !important;
@@ -706,6 +747,17 @@ div[data-testid="stRadio"] label {
   color: var(--ink) !important;
   line-height: 1.45 !important;
 }
+/* Checkbox focus ring */
+div[data-testid="stCheckbox"]:focus-within [data-baseweb="checkbox"] {
+  box-shadow: var(--focus-ring) !important;
+  outline: none !important;
+  border-radius: 4px;
+}
+/* Toggle / switch (Demo mode) */
+[role="switch"]:focus-visible {
+  box-shadow: var(--focus-ring) !important;
+  outline: none !important;
+}
 
 /* —— How to read this (Map only) —— */
 .hra-howto {
@@ -824,6 +876,17 @@ div[data-testid="stRadio"] label {
   color: var(--ink-secondary);
   line-height: 1.5;
   margin: 0;
+}
+
+/* Links — accent, no theme blue */
+a { color: var(--accent); }
+a:hover { color: #245a42; }
+
+/* Expander chrome matches cards */
+[data-testid="stExpander"] {
+  border: 1px solid var(--hairline) !important;
+  border-radius: var(--radius) !important;
+  background: var(--surface);
 }
 
 /* Reduce motion: honor prefers-reduced-motion */
