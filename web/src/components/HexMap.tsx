@@ -1,5 +1,5 @@
 import * as maplibregl from "maplibre-gl";
-import type { ExpressionSpecification, Map as MLMap, MapGeoJSONFeature, MapMouseEvent } from "maplibre-gl";
+import type { ExpressionSpecification, GeoJSONSource, Map as MLMap, MapGeoJSONFeature, MapMouseEvent } from "maplibre-gl";
 // MapLibre 6 runs an ES-module worker that imports a shared chunk by relative path.
 // Let Vite bundle the worker with its imports and hand MapLibre the result.
 import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
@@ -19,6 +19,7 @@ const PH_BOUNDS: [[number, number], [number, number]] = [
 /** Below this zoom, aggregate cells (H3 res 4, ~1,770 km²) replace fine cells (res 5, ~250 km²). */
 const FINE_ZOOM = 6.5;
 const SOURCES = { fine: "cells", coarse: "cells4" } as const;
+const EMPTY = { type: "FeatureCollection" as const, features: [] };
 
 function css(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || "#999";
@@ -104,6 +105,14 @@ export function HexMap({
   const prevSelected = useRef<string | null>(null);
   const handlers = useRef({ onCellClick, onCellHover });
   handlers.current = { onCellClick, onCellHover };
+  const needs = useRef({ fine: mode === "species" });
+  const loaded = useRef({ fine: false, pa: false });
+  const load = (m: MLMap, which: "fine" | "pa") => {
+    if (loaded.current[which]) return;
+    loaded.current[which] = true;
+    const src = m.getSource(which === "fine" ? SOURCES.fine : "pa") as GeoJSONSource | undefined;
+    src?.setData(geoUrl(which === "fine" ? "cells.geojson" : "pa.geojson"));
+  };
 
   useEffect(() => {
     if (!el.current) return;
@@ -137,9 +146,10 @@ export function HexMap({
         version: 8,
         sources: {
           land: { type: "geojson", data: geoUrl("land.geojson") },
-          [SOURCES.fine]: { type: "geojson", data: geoUrl("cells.geojson"), promoteId: "h3" },
+          // Fine cells and protected areas are large; they load on first need (see `need` below).
+          [SOURCES.fine]: { type: "geojson", data: EMPTY, promoteId: "h3" },
           [SOURCES.coarse]: { type: "geojson", data: geoUrl("cells_r4.geojson"), promoteId: "h3" },
-          pa: { type: "geojson", data: geoUrl("pa.geojson") },
+          pa: { type: "geojson", data: EMPTY },
         },
         layers: [
           { id: "sea", type: "background", paint: { "background-color": css("--sea") } },
@@ -200,16 +210,22 @@ export function HexMap({
     m.on("load", () => {
       m.resize();
       m.fitBounds(PH_BOUNDS, { padding: 16, duration: 0 });
+      if (needs.current.fine) load(m, "fine");
+      if (showPA) load(m, "pa");
       setReady(true);
     });
-    // "idle" can fire before GeoJSON parsing ends; wait for the sources themselves.
+    // "idle" can fire before GeoJSON parsing ends; wait for the sources the view needs.
     const onData = () => {
-      if (m.isSourceLoaded("land") && m.isSourceLoaded(SOURCES.coarse) && m.isSourceLoaded(SOURCES.fine)) {
+      const fineOk = !needs.current.fine || m.isSourceLoaded(SOURCES.fine);
+      if (m.isSourceLoaded("land") && m.isSourceLoaded(SOURCES.coarse) && fineOk) {
         m.once("idle", () => setDrawn(true));
         m.off("sourcedata", onData);
       }
     };
     m.on("sourcedata", onData);
+    m.on("zoomend", () => {
+      if (m.getZoom() >= FINE_ZOOM - 0.5) load(m, "fine");
+    });
     // The container is often sized after the map is created (grid layout, lazy load).
     const ro = new ResizeObserver(() => m.resize());
     ro.observe(el.current);
@@ -231,6 +247,8 @@ export function HexMap({
     m.setPaintProperty("fine-fill", "fill-color", fill);
     m.setPaintProperty("coarse-fill", "fill-color", fill);
     const single = mode === "species";
+    needs.current.fine = single;
+    if (single) load(m, "fine");
     for (const part of ["fill", "edge", "hover", "selected"]) {
       m.setLayoutProperty(`coarse-${part}`, "visibility", single ? "none" : "visible");
       m.setLayerZoomRange(`coarse-${part}`, 0, FINE_ZOOM);
@@ -262,6 +280,7 @@ export function HexMap({
   useEffect(() => {
     const m = map.current;
     if (!m || !ready) return;
+    if (showPA) load(m, "pa");
     m.setLayoutProperty("pa", "visibility", showPA ? "visible" : "none");
   }, [showPA, ready]);
 
