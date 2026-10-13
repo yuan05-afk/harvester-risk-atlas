@@ -43,3 +43,4 @@ data/raw/denr/
 
 # Local browser QA output
 .playwright-mcp/
+data/raw/photos/

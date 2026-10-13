@@ -19,6 +19,7 @@ import math
 import re
 import subprocess
 import unicodedata
+from functools import lru_cache
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -32,6 +33,7 @@ from .pipeline import V2_DIR, load_cohort
 INDEX_VERSION = "2.0.0"
 WEB_DATA = ROOT / "web" / "public" / "data"
 PA_SIMPLIFY_DEG = 0.008
+CELL_SIMPLIFY_DEG = 0.006
 COORD_DP = 3  # ~100 m; ample for 250 km² cells and country-scale outlines
 
 
@@ -112,7 +114,41 @@ def record_history(raw: pd.DataFrame) -> list[dict]:
     return [{"decade": int(d), **{k: int(t.loc[d].get(k, 0)) for k in ("observation", "specimen", "literature", "other")}} for d in t.index]
 
 
+def chosen_photos() -> dict[str, dict]:
+    """slug -> photo credit, for the candidate marked ``chosen`` in photos.csv.
+
+    The chosen image is copied (already resized) into web/public/photos/.
+    """
+    import shutil
+
+    from .sources import photos
+
+    if not photos.CANDIDATES_CSV.exists():
+        return {}
+    df = pd.read_csv(photos.CANDIDATES_CSV, keep_default_na=False)
+    df = df[df["chosen"].astype(str).str.lower() == "true"]
+    out = {}
+    for r in df.itertuples(index=False):
+        src = photos.raw_path(r.slug, int(r.candidate))
+        if not src.exists():
+            continue
+        dest = photos.WEB_DIR / f"{r.slug}.jpg"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(src, dest)
+        out[r.slug] = {
+            "src": f"photos/{r.slug}.jpg",
+            "creator": r.creator,
+            "licence": r.licence,
+            "page": r.page,
+        }
+    return out
+
+
 def build_species(scores: pd.DataFrame) -> tuple[list[dict], dict[str, dict]]:
+    import h3
+
+    photos = chosen_photos()
+
     cohort = load_cohort().set_index("scientific_name")
     base = pd.read_csv(V2_DIR / "species_base.csv", encoding="utf-8").set_index("scientific_name")
     raw = pd.read_parquet(V2_DIR / "records_raw.parquet")
@@ -161,6 +197,7 @@ def build_species(scores: pd.DataFrame) -> tuple[list[dict], dict[str, dict]]:
                 "exceed_range": [_num(s.c_min), _num(s.c_max)],
             },
             "review": {"needed": bool(c["needs_review"]), "note": _str(c["review_note"])},
+            "photo": photos.get(slug),
         }
         summaries.append(summary)
 
@@ -186,6 +223,7 @@ def build_species(scores: pd.DataFrame) -> tuple[list[dict], dict[str, dict]]:
             **summary,
             "use_context": _str(c["use_context"]),
             "cells": cells,
+            "cells_r4": sorted({h3.cell_to_parent(c, 4) for c in cells}),
             "bounds": cell_bounds(cells),
             "aoo_km2": _num(b["aoo_km2"]),
             "eoo_km2": _num(b["eoo_km2"]),
@@ -223,6 +261,45 @@ def build_species(scores: pd.DataFrame) -> tuple[list[dict], dict[str, dict]]:
     return summaries, details
 
 
+@lru_cache(maxsize=1)
+def _land():
+    """Philippine land, lightly buffered so coastal cells keep their shoreline."""
+    from shapely.geometry import shape
+
+    gj = json.loads((DATA_PROCESSED / "ph_land_mask.geojson").read_text(encoding="utf-8"))
+    return shape(gj["features"][0]["geometry"]).buffer(0.004)
+
+
+def _round(coords):
+    if isinstance(coords[0], (int, float)):
+        return [round(coords[0], COORD_DP), round(coords[1], COORD_DP)]
+    return [_round(c) for c in coords]
+
+
+def _clipped_cell(cell: str) -> dict | None:
+    """The H3 cell cut to the coastline, as GeoJSON; None for cells entirely at sea."""
+    from shapely.geometry import mapping
+
+    from .grid import cell_polygon
+
+    geom = cell_polygon(cell).intersection(_land())
+    if geom.is_empty or geom.area < 1e-6:
+        return None
+    # ~600 m tolerance: invisible at atlas scales, and it keeps the files small.
+    geom = geom.simplify(CELL_SIMPLIFY_DEG, preserve_topology=True).buffer(0)
+    if geom.is_empty:
+        return None
+    g = mapping(geom)
+    if g["type"] == "GeometryCollection":
+        polys = [p for p in geom.geoms if p.geom_type in ("Polygon", "MultiPolygon")]
+        if not polys:
+            return None
+        from shapely.ops import unary_union
+
+        g = mapping(unary_union(polys))
+    return {"type": g["type"], "coordinates": _round(json.loads(json.dumps(g["coordinates"])))}
+
+
 def build_cells(summaries: list[dict], details: dict[str, dict]) -> dict:
     import h3
 
@@ -240,13 +317,14 @@ def build_cells(summaries: list[dict], details: dict[str, dict]) -> dict:
     features = []
     for c in cells:
         sp = by_cell[c]
-        ring = [[round(lng, COORD_DP), round(lat, COORD_DP)] for lat, lng in h3.cell_to_boundary(c)]
-        ring.append(ring[0])
+        geometry = _clipped_cell(c)
+        if geometry is None:
+            continue
         features.append(
             {
                 "type": "Feature",
                 "id": c,
-                "geometry": {"type": "Polygon", "coordinates": [ring]},
+                "geometry": geometry,
                 "properties": {
                     "h3": c,
                     "effort": int(effort.get(c, 0)),
@@ -287,14 +365,15 @@ def coarse_features(parents: dict, tier_of: dict[str, str]) -> dict:
 
     features = []
     for c, agg in sorted(parents.items()):
-        ring = [[round(lng, COORD_DP), round(lat, COORD_DP)] for lat, lng in h3.cell_to_boundary(c)]
-        ring.append(ring[0])
+        geometry = _clipped_cell(c)
+        if geometry is None:
+            continue
         sp = sorted(agg["species"])
         features.append(
             {
                 "type": "Feature",
                 "id": c,
-                "geometry": {"type": "Polygon", "coordinates": [ring]},
+                "geometry": geometry,
                 "properties": {
                     "h3": c,
                     "effort": int(agg["effort"]),
@@ -315,17 +394,15 @@ def build_pa() -> dict:
 
     pa = load_pa_polygons()
     pa = pa[[c for c in ("name", "desig_eng", "iucn_cat", "status") if c in pa.columns] + ["geometry"]].copy()
-    pa["geometry"] = pa.geometry.simplify(PA_SIMPLIFY_DEG, preserve_topology=True)
+    # Only the land part of each area is drawn: marine reserves and the sea
+    # inside coastal parks add outlines with nothing on them to read.
+    pa["geometry"] = pa.geometry.intersection(_land()).simplify(PA_SIMPLIFY_DEG, preserve_topology=True)
     pa = pa[~pa.geometry.is_empty]
+    pa = pa[pa.geometry.to_crs(6933).area > 1e6]  # drop slivers under 1 km²
+    pa = pa[pa.geom_type.isin(["Polygon", "MultiPolygon"])]
     gj = json.loads(pa.to_json(drop_id=True))
-
-    def rnd(coords):
-        if isinstance(coords[0], (int, float)):
-            return [round(coords[0], COORD_DP), round(coords[1], COORD_DP)]
-        return [rnd(c) for c in coords]
-
     for f in gj["features"]:
-        f["geometry"]["coordinates"] = rnd(f["geometry"]["coordinates"])
+        f["geometry"]["coordinates"] = _round(f["geometry"]["coordinates"])
     return gj
 
 
