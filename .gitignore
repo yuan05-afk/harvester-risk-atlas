@@ -33,3 +33,10 @@ data/raw/protected_areas/*.zip
 !data/processed/iucn_status.csv
 !data/processed/hpi_scores.parquet
 !data/processed/species_features.csv
+
+# v2 raw caches. GBIF, WCVP and effort caches are small and committed so the
+# build reruns offline (--offline). These are large or third-party pages:
+data/raw/cmip6/
+data/raw/stuart/
+data/raw/gfw/
+data/raw/denr/
