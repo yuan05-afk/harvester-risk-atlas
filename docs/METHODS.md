@@ -54,7 +54,7 @@ Every component is in [0, 1], where higher means more priority, and missing mean
 Mean of two parts:
 
 - **Local rarity, effort-corrected.** Raw record counts mix rarity with attention: a roadside weed collects more citizen-science records than a forest liana.
-  - The *reporting rate* is the share of **well-surveyed** Philippine cells (≥ 100 GBIF vascular-plant records; 322 of 1,244 cells) where the species was recorded.
+  - The *reporting rate* is the share of **well-surveyed** Philippine cells (≥ 100 GBIF vascular-plant records; 332 of the 1,267 cells covering Philippine land and the cohort's records) where the species was recorded.
   - The effort layer is a target-group count of all Tracheophyta records per cell (`sources/effort.py`).
   - It is scored on a log scale: a 50% reporting rate gives 0, and 0.5% gives 1.
   - A species never recorded in a well-surveyed cell is *unmeasured* there, not "rare".

@@ -1,106 +1,157 @@
-# Design system — Harvester Risk Atlas
+# Design system: Field Atlas
 
-Calm research tool: Apple Maps density + field-science clarity. Map and data are the hero; chrome stays invisible.
+Harvester Risk Atlas v2 tells people which wild medicinal plants of the Philippines need attention first, where, why, and how sure we are. The interface borrows from two working documents of field botany: the **herbarium sheet** (a specimen on white, with a typed label that carries every fact and its source) and the **atlas grid** (one unit of area, repeated across the archipelago).
 
-## Tokens
+Four principles decide every screen.
 
-### Color
-| Token | Value | Use |
-|-------|-------|-----|
-| `--ink` | `#1d1d1f` | Primary text |
-| `--ink-secondary` | `#6e6e73` | Labels, captions |
-| `--ink-tertiary` | `#86868b` | Hints, meta |
-| `--paper` | `#f5f5f7` | App background (cool gray) |
-| `--surface` | `#ffffff` | Cards, panels, chart wells |
-| `--hairline` | `#d2d2d7` | Borders, dividers |
-| `--accent` | `#2d6a4f` | Single muted forest accent (links, focus, primary actions, non-HPI charts) |
-| `--accent-soft` | `#e8f0eb` | Soft accent wash (selected chips, step active) |
-| `--risk-low` | `#40916c` | HPI lower band / map markers only |
-| `--risk-mid` | `#b08968` | HPI moderate (muted amber-earth) |
-| `--risk-high` | `#9b2226` | HPI higher band |
-| `--mono-bg` | `#f0f0f2` | Code / metric wells |
+1. **The hexagon is the unit of truth.** Every geographic statement is drawn as H3 cells (about 250 km²), never as points or averages. The method uses the same cell, so what you see is what was scored. It also generalises locations of plants at risk from collection.
+2. **No rank without its interval.** A rank always appears with its 90% interval, and a tier is shown before a score. Three-decimal scores never appear on their own.
+3. **Every fact carries its source.** Labels name the dataset and date, as a specimen label does. Missing evidence is shown as missing, never as a filler value.
+4. **Calm chrome, loud data.** Interface chrome is ink on paper. Colour is reserved for data: priority tiers and the three score components. One highlighter yellow marks what the reader has selected.
 
-**Semantic risk colors** (`--risk-*`) appear **only** on map markers, HPI histogram bars, and band badges — never as page chrome, component-bar fills, or gradients. Non-HPI charts use forest accent shades (`#2d6a4f` → `#52796f` → `#74a892`).
+## Colour
 
-### Type (max 2 families)
-1. **UI:** `-apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif`
-2. **Metrics / code only:** `"JetBrains Mono", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace`
+### Surfaces and ink
 
-No third display font. No Poppins, Geist-as-brand, or decorative serifs.
+| Token | Hex | Use |
+|---|---|---|
+| `--paper` | `#F4F6F2` | Page. A cool, faintly green herbarium grey, not cream. |
+| `--sheet` | `#FFFFFF` | Charts, maps, species labels. Every chart sits on a sheet. |
+| `--ink` | `#18231D` | Primary text (14.9:1 on paper) |
+| `--ink-2` | `#46524B` | Secondary text (7.5:1) |
+| `--ink-3` | `#5D6962` | Tertiary text, axis labels (5.3:1) |
+| `--rule` | `#D5DBD4` | Hairlines between sections and table rows |
+| `--highlight` | `#EAC33F` | Selection and the brand mark. Berberine yellow, the colour of abutra's "yellow root". Always behind ink (10.2:1), never as text. |
 
-| Role | Class / element | Size | Weight | Color |
-|------|-----------------|------|--------|-------|
-| **Title** | `h1` / `.hra-title` | 28–30px (`--fs-title`) | 600 | `--ink`, tracking −0.025em |
-| **Section** | `h2` / `.hra-section` | 17–18px (`--fs-section`) | 600 | `--ink` |
-| **Body** | `p` / `.hra-body` | 14–15px (`--fs-body`) | 400 | `--ink`, line-height ~1.55 |
-| **Caption** | `.hra-caption` / `st.caption` | 12–13px (`--fs-caption`) | 400 | `--ink-secondary` |
-| **Mono metrics** | `.hra-metric .value` / `.hra-mono` | 20–22px (`--fs-metric`) | 500 | `--ink`, tabular-nums |
+### Data colours (validated)
 
-Card section labels (Where / Stress / …) stay uppercase 12–13px tertiary — not a fifth type role; they are caption-weight labels inside cards.
+All values were checked with the dataviz validator (`validate_palette.js`): OKLab ΔE under Machado protan and deutan simulation, the normal-vision floor, and contrast on `--sheet`.
 
-### Spacing & shape
-- Page padding: 24–40px (`.block-container`)
-- Column gap: ≥18px (`stHorizontalBlock`)
-- Card gap: 14–20px; denser dossier metric grid (`minmax(118px)`, 0.6rem gap)
-- Section rhythm: ~22–28px after header / steps; hairline dividers on header + continue row
-- Radius: **8px** default, **12px** max (panels, map iframe, chart wells)
-- Borders: 1px `--hairline`; prefer hairlines over shadows
-- Shadow (rare): `0 1px 2px rgba(0,0,0,0.04)` on floating panels / chart wells only
+**Score components.** These are categorical, in this fixed order everywhere: map, bars, strip plots, briefs and Methods.
 
-### Layout anti-overlap rules
-- Hide Streamlit header/toolbar/deploy chrome (zero-height header).
-- Sidebar `z-index` above main; main canvas `overflow-x: hidden`.
-- Folium iframes and Plotly wells get hairline frames + internal padding so titles/legends never sit under map tiles or modebar.
-- Step indicator: ≥12px padding, ≥8px between steps/separators; wrap cleanly on narrow widths.
-- Map legend: **floating hairline panel** above the map (`.hra-legend` + rare hair shadow) and compact on-map Folium panel; marker dots ≥10px with hairline stroke.
+| Component | Hex | Why this hue |
+|---|---|---|
+| R. Range restriction | `#3664BE` | blue: space, extent |
+| H. Harvest sensitivity | `#C97F14` | turmeric ochre: roots, bark, the harvested part |
+| E. Habitat exposure | `#006E3B` | forest green: habitat |
+| C. Climate exposure (weight 0) | `--ink-3` | grey, because it is reported but not weighted |
 
-### Charts (Plotly)
-- Paper/plot background: transparent inside a white chart well (CSS), or `#ffffff`.
-- Grid: muted `#e8e8ed`; no heavy zerolines.
-- Titles: 13px secondary ink; axis titles always set (not empty).
-- Legends: horizontal, **below** plot (`y < 0`) or with ≥48px top margin if above — never colliding with title or bars.
-- Heights: component bars ≥240px; waterfall ≥280px; HPI histogram ≥280px; compare ≥300px; decade ≥240px.
-- Soft bar `cornerradius` (2–3) on forest-accent bars; risk histogram stays flat-fill.
-- **Cohort HPI spark** (dossier): tiny SVG polyline under metrics — selected species as accent tick; no Plotly chrome.
+The set passes all checks **all-pairs**, so it is safe for small multiples:
+- worst CVD ΔE 13.0 (protan)
+- worst normal-vision ΔE 22.4
+- contrast on sheet ≥ 3.2:1
 
-### Interaction & motion
-- Focus ring: 2px `--accent` at 40% opacity (`--focus-ring`)
-- Buttons: flat fill `--accent` or ghost hairline; no glow; **150ms** hover ease
-- Motion = **signal only** (`--dur: 150ms`, `--ease: cubic-bezier(0.25, 0.1, 0.25, 1)`):
-  - Step chips (active / done wash)
-  - Cards (border + hair shadow on hover)
-  - Sidebar radio selected wash
-  - Button / input hover + focus
-  - Optional **one-shot** map focus pulse (`.hra-pulse`, ~0.9s, plays once)
-- Honor `prefers-reduced-motion: reduce` (transitions/animations near-zero; the automatic preface is removed).
-- **Banned motion:** bounce, spring, staggered card entrances, aurora blobs.
-- **Page enter:** main column only, 180ms opacity and a 3px rise. Not on the sidebar. Not while the preface is showing.
-- **Home preface (exception, one shot):** first session only, about nine seconds. A Philippines silhouette draws north to south, occurrence dots settle, and one leaf traces on. Four short lines then enter and leave one at a time (fade plus a slight lift — beats do not overlap). The formula sits inside the last line. A 3px accent rule and a mono beat index run with the sheet. Skip is a real button and stays hidden until 3 seconds. `?intro=skip` also dismisses it. No bounce, no second call to action on the sheet. `prefers-reduced-motion` removes the automatic sheet and Skip entirely (do not only crush the duration — the delay would leave a blank screen). **Replay intro** in the sidebar is a quiet text control, not a filled button and not a second control on the sheet. It plays that same cinematic once, including when the OS reports reduced motion. `?demo=1` skips the automatic sheet and opens the map.
-- Map controls: minimal Folium defaults; legend as hairlined floating panel
-- Markers: white/ink stroke (`weight ≥ 1.5`) so centroids read on Esri gray canvas
+Ochre falls to 2.96:1 on paper, which is why charts sit on sheets.
 
-## Banned (anti-slop)
-- Purple / aurora / neon gradients, glassmorphism blobs
-- Emoji as icons or section markers
-- Hero pill + dual CTAs, three equal icon feature cards
-- Glow borders, fade-up-everywhere motion
-- Marketing fluff (“unlock”, “seamlessly”, “revolutionize”)
-- Rainbow chrome outside HPI semantics
-- Risk-red/amber on non-HPI component charts
+**Priority tiers.** An ordinal ramp in one hue: plum, OKLCH hue 355.
 
-## Copy voice
-Plain scientific English. Short dossier labels: **Where / Stress / Why it matters / What to do**. Disclaimer always visible, never cute.
+| Tier | Hex |
+|---|---|
+| High attention | `#7C1A4B` |
+| Watch | `#BB4E7F` |
+| Lower | `#D496AD` |
+| Not scored | 45° hatch in `--ink-3` on `#E6E9E5` |
 
-## Home
-The app opens on **Home**, not the map. Home is one column: the problem, the index, a four-row term table, the map → dossier → brief path, and the cohort line computed from the loaded scores. One action: **Open the map**. No icon row, no stat cards, no chat, no model name helper. The optional LLM name stub stays off and off the page.
+The ramp passes the ordinal checks: monotone lightness, ΔL ≥ 0.06 per step, light end 2.4:1, a single hue. Tiers always carry their name as text. The colour is never the only cue.
 
-## Map & dossier microcopy
+**Sequential maps.** The hotspot map counts High and Watch species per cell in four plum steps:
 
-- **How to read this** — Map page only. 1–2 lines: each circle is one species at its sample average; color deepens with HPI; size follows the score; water between circles is not scored. No emoji, no dual CTAs, no interpolated surface.
-- **Callouts** — Quiet uppercase label plus body, or a full hairline. No left or vertical color rail, including black or mint. Streamlit alerts are flattened to a top hairline.
-- **Weights transparency** — Methods expander table (R/C/H/P + weights + one plain sentence why). Match METHODS.md numbers.
-- **Weight sensitivity** — Methods only, one collapsed expander under that table. Sliders reweight stored components for oral defense. Not a new nav page, not a new official index, and not shown on Map or Dossier.
-- **Demo talk track** — Sidebar under Demo mode only. Numbered 60-sec script; plain scientific English.
-- **IUCN badge** — Dossier chip: linked category when `iucn_status=ok`; otherwise muted `IUCN not linked`. Never show a fake LC/VU.
-- **Field brief** — HTML + PDF; same structure (Where / Stress / Why / What to do). Typography follows tokens above.
-- **Cohort spark** — Dossier only; “Cohort HPI · selected marked” with rank caption.
+| Species in cell | Hex |
+|---|---|
+| 1 | `#E39CB7` |
+| 2 | `#C86890` |
+| 3 | `#A4386A` |
+| 4 or more | `#731946` |
+
+The ramp passes the ordinal checks, with its light end at 2.2:1. Survey effort uses a neutral grey ramp (`#EDEFED` → `#59605A`), so effort is never confused with priority.
+
+Avoided on purpose: green-to-red "risk" ramps (they fail colour-vision deficiency, and they imply "green is fine"), and rainbow scales.
+
+## Type
+
+One family: **Atkinson Hyperlegible Next** (Braille Institute, OFL), variable weight 200–800, self-hosted with `@fontsource-variable`.
+- It was drawn for legibility: distinct letterforms for I/l/1 and O/0, and open apertures. That suits field staff reading on phones in daylight, and readers with low vision.
+- Its true italic carries binomials (*Cinnamomum mercadoi*).
+
+| Role | Size / line-height | Weight | Notes |
+|---|---|---|---|
+| Display | 49 / 1.05 | 750 | Overview headline only; tracking −0.02em |
+| H1 | 39 / 1.1 | 700 | Page and species titles |
+| H2 | 25 / 1.2 | 650 | Section titles |
+| H3 | 20 / 1.3 | 650 | Figure titles |
+| Body | 16 / 1.55 | 400 | Measure ≤ 68ch |
+| Small | 14 / 1.45 | 450 | Captions, table cells, sources |
+| Micro | 13 / 1.35 | 500 | Axis ticks, chip text. Sentence case, never all caps. |
+
+Numbers in tables and labels use tabular figures. Scale ratio is 1.25 on 16 px.
+
+## Layout
+
+- Content grid: 12 columns, maximum 1,240 px, 24 px gutters, 16 px side margins on phones.
+- Atlas: a full-bleed map. On desktop a 380 px panel sits on the right; on phones it becomes a bottom sheet with three detents.
+- Spacing base: 4 px. Steps 4, 8, 12, 16, 24, 32, 48, 72.
+- Radius: 4 px for chips and controls, 8 px for sheets. Nothing pill-shaped except toggles.
+- Elevation: none by default. Sheets sit on paper by tone alone. Only the floating map panel and popovers take a single soft shadow.
+
+### Page skeletons
+
+```
+Overview
+┌───────────────────────────────────────────────────────────────┐
+│ [mark] Harvester Risk Atlas    Overview Atlas Rankings Methods [Search] │
+├──────────────────────────────┬────────────────────────────────┤
+│ Which wild medicinal plants  │  hex archipelago: cells shaded   │
+│ need attention first?        │  by priority species recorded;   │
+│ two-line lede                │  top five pinned as labels       │
+│ [Open the atlas] [Rankings]  │                                  │
+├──────────────────────────────┴────────────────────────────────┤
+│ Top of the list: five specimen labels with rank intervals     │
+│ How a species is scored: R  H  E  (one sheet, three columns)  │
+│ What the atlas cannot tell you                                │
+└───────────────────────────────────────────────────────────────┘
+
+Species profile
+┌──────────────────┬────────────────────────────────────────────┐
+│ Specimen label   │ Why it ranks here: contribution bar and    │
+│ (sticky)         │   strip plots against the cohort           │
+│ name, family     │ Where it was recorded: hex mini-map with PAs │
+│ native status    │ Record history: decades by record type     │
+│ tier, rank + CI  │ Climate outlook (reported, not scored)     │
+│ [Field brief]    │ Evidence: every input with source and date │
+└──────────────────┴────────────────────────────────────────────┘
+```
+
+## Components
+
+| Component | Notes |
+|---|---|
+| Specimen label | Bordered sheet with labelled fields (family, native status, records, tier, rank). It mirrors a herbarium label, and every field is real data. |
+| Tier chip | Tier colour swatch plus the tier name. "Not scored" uses the hatch and names its reason. |
+| Rank interval | Dot (median) plus line (90% interval) on a shared rank axis. The same glyph appears in tables, labels and the caterpillar chart. |
+| Contribution bar | Stacked R, H and E segments with 2 px sheet gaps and direct labels. |
+| Figure frame | Title, one-line takeaway, the chart, then a source line and a "Show as table" toggle. |
+| Highlighter | `--highlight` fill behind the selected row, cell or label. |
+
+## Interaction and motion
+- Every chart has a hover or focus tooltip and a table view. Every map action has a list equivalent.
+- Motion answers actions only: panel open, sheet drag, map fly-to on explicit selection (300 ms). One moment on load: the Overview mark draws once, in at most 1.2 s.
+- `prefers-reduced-motion` removes fly-to and drawing.
+- Focus: a 2 px `--ink` outline, offset 2 px, on every interactive element.
+- The URL holds state: species, layer, filters and weights are all deep-linkable.
+
+## Voice
+Plain, specific, sentence case. Name things by what readers know: "native to the Philippines", not "WCVP status = native".
+- Errors say what happened and what to do next.
+- Empty states invite an action.
+- No developer instructions reach readers.
+
+Not used:
+- all-caps eyebrows
+- middle-dot meta strings
+- arrows appended to buttons
+- monospace data labels
+- emoji
+- "unlock" or "seamless"
+
+## Disclaimers
+One persistent footer line on every page: "Research and education only. Not medical advice, not a harvest permit, not a Red List assessment." Context-specific notes appear where a claim is made.

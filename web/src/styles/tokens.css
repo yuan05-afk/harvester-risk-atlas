@@ -1,0 +1,83 @@
+/* Field Atlas tokens. Values and their validation are documented in docs/DESIGN.md. */
+:root {
+  color-scheme: light;
+
+  /* Surfaces and ink */
+  --paper: #f4f6f2;
+  --sheet: #ffffff;
+  --ink: #18231d;
+  --ink-2: #46524b;
+  --ink-3: #5d6962;
+  --rule: #d5dbd4;
+  --rule-strong: #b9c1b9;
+  --highlight: #eac33f;
+  --highlight-soft: #f6e4a3;
+  --sea: #e9eef0;
+  --land: #fbfcfa;
+
+  /* Score components (categorical, fixed order) */
+  --c-range: #3664be;
+  --c-harvest: #c97f14;
+  --c-habitat: #006e3b;
+  --c-climate: #5d6962;
+
+  /* Priority tiers (ordinal, one hue) */
+  --tier-high: #7c1a4b;
+  --tier-watch: #bb4e7f;
+  --tier-lower: #d496ad;
+  --tier-none: #e6e9e5;
+
+  /* Hotspot map: High + Watch species per cell (1, 2, 3, 4+) */
+  --hot-1: #e39cb7;
+  --hot-2: #c86890;
+  --hot-3: #a4386a;
+  --hot-4: #731946;
+
+  /* Type */
+  --font: "Atkinson Hyperlegible Next Variable", "Atkinson Hyperlegible Next", system-ui, sans-serif;
+  --fs-micro: 0.8125rem;
+  --fs-small: 0.875rem;
+  --fs-body: 1rem;
+  --fs-h3: 1.25rem;
+  --fs-h2: 1.5625rem;
+  --fs-h1: 2.4375rem;
+  --fs-display: 3.0625rem;
+
+  /* Space and shape */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 72px;
+  --r-control: 4px;
+  --r-sheet: 8px;
+  --max: 1240px;
+  --gutter: 24px;
+  --shadow-float: 0 1px 2px rgb(24 35 29 / 0.06), 0 8px 24px rgb(24 35 29 / 0.10);
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t-fast: 140ms;
+  --t-move: 300ms;
+
+  --hatch: repeating-linear-gradient(45deg, var(--ink-3) 0 1px, transparent 1px 5px);
+}
+
+@media (max-width: 720px) {
+  :root {
+    --fs-h1: 1.9375rem;
+    --fs-display: 2.25rem;
+    --fs-h2: 1.375rem;
+    --gutter: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-fast: 0ms;
+    --t-move: 0ms;
+  }
+}

@@ -40,3 +40,6 @@ data/raw/cmip6/
 data/raw/stuart/
 data/raw/gfw/
 data/raw/denr/
+
+# Local browser QA output
+.playwright-mcp/

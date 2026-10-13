@@ -4,7 +4,8 @@
   species.json           one summary row per cohort species
   species/<slug>.json    profile detail: cells, record history, traits, cleaning
   validation.json        robustness and plausibility checks
-  geo/cells.geojson      H3 cells with effort, PA cover and per-tier species counts
+  geo/cells.geojson      H3 res-5 cells with effort, PA cover and per-tier species counts
+  geo/cells_r4.geojson   the same, aggregated to res-4 parents for the country view
   geo/land.geojson       Philippine land mask
   geo/pa.geojson         WDPCA Philippines, simplified
 
@@ -81,6 +82,17 @@ def _num(v):
 
 def _str(v) -> str:
     return "" if v is None or (isinstance(v, float) and math.isnan(v)) else str(v)
+
+
+def cell_bounds(cells: list[str]) -> list[float] | None:
+    """[west, south, east, north] around a set of H3 cells, for framing a map."""
+    import h3
+
+    if not cells:
+        return None
+    pts = [p for c in cells for p in h3.cell_to_boundary(c)]
+    lats, lngs = [p[0] for p in pts], [p[1] for p in pts]
+    return [round(min(lngs), 3), round(min(lats), 3), round(max(lngs), 3), round(max(lats), 3)]
 
 
 def record_history(raw: pd.DataFrame) -> list[dict]:
@@ -169,10 +181,12 @@ def build_species(scores: pd.DataFrame) -> tuple[list[dict], dict[str, dict]]:
             "duplicate",
         ]
         provinces = sp_clean["gadm_level1"].dropna().value_counts()
+        cells = json.loads(b["hex_cells"])
         details[slug] = {
             **summary,
             "use_context": _str(c["use_context"]),
-            "cells": json.loads(b["hex_cells"]),
+            "cells": cells,
+            "bounds": cell_bounds(cells),
             "aoo_km2": _num(b["aoo_km2"]),
             "eoo_km2": _num(b["eoo_km2"]),
             "reporting_rate": _num(s.reporting_rate),
@@ -242,6 +256,54 @@ def build_cells(summaries: list[dict], details: dict[str, dict]) -> dict:
                     "n_lower": sum(1 for s in sp if s["tier"] == "Lower"),
                     "n_cohort": len(sp),
                     "species": [s["slug"] for s in sp],
+                },
+            }
+        )
+    return {"type": "FeatureCollection", "features": features}
+
+
+def build_cells_coarse(cells: dict) -> dict:
+    """Parent H3 resolution-4 cells (about 1,770 km²) for the country-scale view.
+
+    Counts are of distinct species across the children, so a species recorded in
+    three child cells counts once in their parent.
+    """
+    import h3
+
+    parents: dict[str, dict] = {}
+    for f in cells["features"]:
+        p = f["properties"]
+        parent = h3.cell_to_parent(p["h3"], 4)
+        agg = parents.setdefault(parent, {"effort": 0, "species": set(), "pa": []})
+        agg["effort"] += p["effort"]
+        agg["species"].update(p["species"])
+        if p["pa"] is not None:
+            agg["pa"].append(p["pa"])
+    return parents
+
+
+def coarse_features(parents: dict, tier_of: dict[str, str]) -> dict:
+    import h3
+
+    features = []
+    for c, agg in sorted(parents.items()):
+        ring = [[round(lng, COORD_DP), round(lat, COORD_DP)] for lat, lng in h3.cell_to_boundary(c)]
+        ring.append(ring[0])
+        sp = sorted(agg["species"])
+        features.append(
+            {
+                "type": "Feature",
+                "id": c,
+                "geometry": {"type": "Polygon", "coordinates": [ring]},
+                "properties": {
+                    "h3": c,
+                    "effort": int(agg["effort"]),
+                    "pa": round(float(np.mean(agg["pa"])), 3) if agg["pa"] else None,
+                    "n_high": sum(1 for s in sp if tier_of.get(s) == "High attention"),
+                    "n_watch": sum(1 for s in sp if tier_of.get(s) == "Watch"),
+                    "n_lower": sum(1 for s in sp if tier_of.get(s) == "Lower"),
+                    "n_cohort": len(sp),
+                    "species": sp,
                 },
             }
         )
@@ -344,11 +406,16 @@ def build_manifest(summaries: list[dict]) -> dict:
 def run_export() -> dict[str, int]:
     scores = pd.read_csv(V2_DIR / "scores.csv", encoding="utf-8", keep_default_na=False, na_values=[""])
     summaries, details = build_species(scores)
+    cells = build_cells(summaries, details)
     sizes = {
         "manifest.json": _write(WEB_DATA / "manifest.json", build_manifest(summaries)),
         "species.json": _write(WEB_DATA / "species.json", summaries),
         "validation.json": _write(WEB_DATA / "validation.json", json.loads((V2_DIR / "validation.json").read_text(encoding="utf-8"))),
-        "geo/cells.geojson": _write(WEB_DATA / "geo" / "cells.geojson", build_cells(summaries, details)),
+        "geo/cells.geojson": _write(WEB_DATA / "geo" / "cells.geojson", cells),
+        "geo/cells_r4.geojson": _write(
+            WEB_DATA / "geo" / "cells_r4.geojson",
+            coarse_features(build_cells_coarse(cells), {s["slug"]: s["tier"] for s in summaries}),
+        ),
         "geo/land.geojson": _write(
             WEB_DATA / "geo" / "land.geojson",
             json.loads((DATA_PROCESSED / "ph_land_mask.geojson").read_text(encoding="utf-8")),
