@@ -1,157 +1,101 @@
 # Design system: Field Atlas
 
-Harvester Risk Atlas v2 tells people which wild medicinal plants of the Philippines need attention first, where, why, and how sure we are. The interface borrows from two working documents of field botany: the **herbarium sheet** (a specimen on white, with a typed label that carries every fact and its source) and the **atlas grid** (one unit of area, repeated across the archipelago).
+Harvester Risk Atlas tells people which wild medicinal plants of the Philippines need attention first, where, why, and how sure we are. It should feel like a **field guide that was printed for the Philippines**: plates of pen drawings with numbered figures, herbarium sheets with a determination stamp, ruled ledgers of results, inks made from Philippine dye plants on abaca-coloured paper. It must never look like a template.
 
-Four principles decide every screen.
+Five principles decide every screen.
 
-1. **The hexagon is the unit of truth.** Every geographic statement is drawn as H3 cells (about 250 km²), never as points or averages. The method uses the same cell, so what you see is what was scored. It also generalises locations of plants at risk from collection.
-2. **No rank without its interval.** A rank always appears with its 90% interval, and a tier is shown before a score. Three-decimal scores never appear on their own.
-3. **Every fact carries its source.** Labels name the dataset and date, as a specimen label does. Missing evidence is shown as missing, never as a filler value.
-4. **Calm chrome, loud data.** Interface chrome is ink on paper. Colour is reserved for data: priority tiers and the three score components. One highlighter yellow marks what the reader has selected.
+1. **Plain words first.** Readers are rangers, harvesters, LGU staff and students, not data scientists. Tiers are named ("Needs attention now", "Keep watch", "Lower concern", "Not ranked"). Components are named by what they mean ("Rarity", "Harvest harm", "Habitat pressure"). Numbers come second, behind a disclosure.
+2. **The hexagon is the unit of truth.** Places are H3 cells clipped to land: res 4 (about 1,770 km²) when zoomed out, res 5 (about 250 km²) when zoomed in. There are no points, so plants at risk stay hard to find.
+3. **No rank without its range.** A rank is always said with how far it could move ("Ranked 2nd of 29. It could be anywhere from 1st to 3rd").
+4. **Draw, don't decorate.** Every illustration explains something: the rarity plate shows searched cells against found cells, and the harvest plate inks the roots that harvest takes. No stock icons sit in tinted squares.
+5. **Calm chrome, loud data.** Chrome is ink on paper with hairline rules. Colour is kept for data and for the one turmeric highlighter.
+
+## Banned patterns (generic "AI" UI)
+- **Coloured left-stripe boxes or callouts.** Banned everywhere.
+- **Icon in a pastel rounded square above a title** (the "feature card").
+- **Pill badges for status** ("Holds up" in a green pill). Use a drawn verdict mark and small caps instead.
+- **Grids of identical white rounded cards for prose.** Use ruled plates, ledgers or footnotes.
+- **Lucide or other stock icons for meaning.** They are allowed only for UI affordances: search, close, back, arrows, print, download.
+- **Fully rounded buttons and fields; 14 px+ card radii.**
+- **Tableau-like blue, orange and green; cool grey "SaaS" backgrounds; red-to-green risk ramps.**
 
 ## Colour
 
-### Surfaces and ink
+Palette: abaca paper and iron-gall ink, with inks from Philippine dye plants.
 
+### Surfaces and ink
 | Token | Hex | Use |
 |---|---|---|
-| `--paper` | `#F4F6F2` | Page. A cool, faintly green herbarium grey, not cream. |
-| `--sheet` | `#FFFFFF` | Charts, maps, species labels. Every chart sits on a sheet. |
-| `--ink` | `#18231D` | Primary text (14.9:1 on paper) |
-| `--ink-2` | `#46524B` | Secondary text (7.5:1) |
-| `--ink-3` | `#5D6962` | Tertiary text, axis labels (5.3:1) |
-| `--rule` | `#D5DBD4` | Hairlines between sections and table rows |
-| `--highlight` | `#EAC33F` | Selection and the brand mark. Berberine yellow, the colour of abutra's "yellow root". Always behind ink (10.2:1), never as text. |
+| `--paper` | `#F2EEE4` | Page, with a faint fibre grain (`--grain`) |
+| `--sheet` | `#FBF8F1` | Cards, panels, the brief |
+| `--ink` | `#1D1A15` | Text (16.4:1 on sheet) |
+| `--ink-2` | `#48433A` | Secondary text (8.5:1 on paper) |
+| `--ink-3` | `#645E53` | Tertiary text and ticks (5.6:1 on paper) |
+| `--rule` / `--rule-strong` | `#DDD5C5` / `#BDB3A1` | Hairlines and ledger rules |
+| `--highlight` | `#E2B33C` | **Dilaw** (turmeric): the marker under the active nav item, "Biggest reason", and step 4. Always behind ink, never as text. |
+| `--sea` / `--land` | `#DFE5E1` / `#FBF8F1` | Map |
 
-### Data colours (validated)
+### Data inks (validated)
+The script `scripts/check_palette.py` uses Machado 2009 simulation and CIEDE2000. Run it again whenever a value changes.
 
-All values were checked with the dataviz validator (`validate_palette.js`): OKLab ΔE under Machado protan and deutan simulation, the normal-vision floor, and contrast on `--sheet`.
+| Component | Ink | Hex | Text contrast on sheet |
+|---|---|---|---|
+| Rarity | **tayum** indigo | `#33408F` | 8.7:1 |
+| Harvest harm | **atsuete** (annatto) | `#B5531E` | 4.7:1 |
+| Habitat pressure | **bakawan** (mangrove bark) | `#2E5F3E` | 7.0:1 |
+| Climate (weight 0) | `--ink-3` | `#645E53` | 6.1:1 |
 
-**Score components.** These are categorical, in this fixed order everywhere: map, bars, strip plots, briefs and Methods.
+Worst all-pairs ΔE00, including tier High: normal 26, protan 11, deutan 10, tritan 11. The rejected rust and moss pair scored ΔE 5 under deutan.
 
-| Component | Hex | Why this hue |
-|---|---|---|
-| R. Range restriction | `#3664BE` | blue: space, extent |
-| H. Harvest sensitivity | `#C97F14` | turmeric ochre: roots, bark, the harvested part |
-| E. Habitat exposure | `#006E3B` | forest green: habitat |
-| C. Climate exposure (weight 0) | `--ink-3` | grey, because it is reported but not weighted |
-
-The set passes all checks **all-pairs**, so it is safe for small multiples:
-- worst CVD ΔE 13.0 (protan)
-- worst normal-vision ΔE 22.4
-- contrast on sheet ≥ 3.2:1
-
-Ochre falls to 2.96:1 on paper, which is why charts sit on sheets.
-
-**Priority tiers.** An ordinal ramp in one hue: plum, OKLCH hue 355.
+**Priority tiers.** Ordinal, one hue, **sibukaw** (sappanwood):
 
 | Tier | Hex |
 |---|---|
 | High attention | `#7C1A4B` |
 | Watch | `#BB4E7F` |
 | Lower | `#D496AD` |
-| Not scored | 45° hatch in `--ink-3` on `#E6E9E5` |
+| Not ranked | hatch on `#E8E2D5` |
 
-The ramp passes the ordinal checks: monotone lightness, ΔL ≥ 0.06 per step, light end 2.4:1, a single hue. Tiers always carry their name as text. The colour is never the only cue.
+**Hotspots.** 1 / 2 / 3 / 4+ species per cell: `#E39CB7` `#C86890` `#A4386A` `#731946`. Survey effort uses a neutral grey ramp.
 
-**Sequential maps.** The hotspot map counts High and Watch species per cell in four plum steps:
-
-| Species in cell | Hex |
-|---|---|
-| 1 | `#E39CB7` |
-| 2 | `#C86890` |
-| 3 | `#A4386A` |
-| 4 or more | `#731946` |
-
-The ramp passes the ordinal checks, with its light end at 2.2:1. Survey effort uses a neutral grey ramp (`#EDEFED` → `#59605A`), so effort is never confused with priority.
-
-Avoided on purpose: green-to-red "risk" ramps (they fail colour-vision deficiency, and they imply "green is fine"), and rainbow scales.
+Tiers always carry their name; colour is never the only cue.
 
 ## Type
+| Family | Role |
+|---|---|
+| **Fraunces** (variable, opsz cut, OFL) | h1 and h2, the display headline, plate, ledger and reason titles, the brand, plant names in cards, step numerals, binomials in italic. `SOFT 30`. |
+| **Atkinson Hyperlegible Next** (OFL) | Body, UI, tables, numbers. Chosen for legibility in daylight on phones. |
 
-One family: **Atkinson Hyperlegible Next** (Braille Institute, OFL), variable weight 200–800, self-hosted with `@fontsource-variable`.
-- It was drawn for legibility: distinct letterforms for I/l/1 and O/0, and open apertures. That suits field staff reading on phones in daylight, and readers with low vision.
-- Its true italic carries binomials (*Cinnamomum mercadoi*).
+Figure numbers ("FIG. 1 · RARITY"), verdicts ("HOLDS UP") and "Biggest reason" are the only small-caps or uppercase text, as in a printed flora. Numbers use tabular lining figures.
 
-| Role | Size / line-height | Weight | Notes |
-|---|---|---|---|
-| Display | 49 / 1.05 | 750 | Overview headline only; tracking −0.02em |
-| H1 | 39 / 1.1 | 700 | Page and species titles |
-| H2 | 25 / 1.2 | 650 | Section titles |
-| H3 | 20 / 1.3 | 650 | Figure titles |
-| Body | 16 / 1.55 | 400 | Measure ≤ 68ch |
-| Small | 14 / 1.45 | 450 | Captions, table cells, sources |
-| Micro | 13 / 1.35 | 500 | Axis ticks, chip text. Sentence case, never all caps. |
+## Shape and layout
+- Radius: 3 px for controls, 4 px for cards and sheets, 6 px for map frames. Pills only for genuine toggles.
+- Section heads sit on a 2 px ink rule; items are divided by 1 px hairlines (plates, steps, ledger).
+- Maximum width 1,240 px. Spacing base 4 px.
+- Atlas: full-bleed map with a 380 px right panel; on phones, a bottom sheet.
 
-Numbers in tables and labels use tabular figures. Scale ratio is 1.25 on 16 px.
-
-## Layout
-
-- Content grid: 12 columns, maximum 1,240 px, 24 px gutters, 16 px side margins on phones.
-- Atlas: a full-bleed map. On desktop a 380 px panel sits on the right; on phones it becomes a bottom sheet with three detents.
-- Spacing base: 4 px. Steps 4, 8, 12, 16, 24, 32, 48, 72.
-- Radius: 4 px for chips and controls, 8 px for sheets. Nothing pill-shaped except toggles.
-- Elevation: none by default. Sheets sit on paper by tone alone. Only the floating map panel and popovers take a single soft shadow.
-
-### Page skeletons
-
-```
-Overview
-┌───────────────────────────────────────────────────────────────┐
-│ [mark] Harvester Risk Atlas    Overview Atlas Rankings Methods [Search] │
-├──────────────────────────────┬────────────────────────────────┤
-│ Which wild medicinal plants  │  hex archipelago: cells shaded   │
-│ need attention first?        │  by priority species recorded;   │
-│ two-line lede                │  top five pinned as labels       │
-│ [Open the atlas] [Rankings]  │                                  │
-├──────────────────────────────┴────────────────────────────────┤
-│ Top of the list: five specimen labels with rank intervals     │
-│ How a species is scored: R  H  E  (one sheet, three columns)  │
-│ What the atlas cannot tell you                                │
-└───────────────────────────────────────────────────────────────┘
-
-Species profile
-┌──────────────────┬────────────────────────────────────────────┐
-│ Specimen label   │ Why it ranks here: contribution bar and    │
-│ (sticky)         │   strip plots against the cohort           │
-│ name, family     │ Where it was recorded: hex mini-map with PAs │
-│ native status    │ Record history: decades by record type     │
-│ tier, rank + CI  │ Climate outlook (reported, not scored)     │
-│ [Field brief]    │ Evidence: every input with source and date │
-└──────────────────┴────────────────────────────────────────────┘
-```
-
-## Components
-
+## Signature components
 | Component | Notes |
 |---|---|
-| Specimen label | Bordered sheet with labelled fields (family, native status, records, tier, rank). It mirrors a herbarium label, and every field is real data. |
-| Tier chip | Tier colour swatch plus the tier name. "Not scored" uses the hatch and names its reason. |
-| Rank interval | Dot (median) plus line (90% interval) on a shared rank axis. The same glyph appears in tables, labels and the caterpillar chart. |
-| Contribution bar | Stacked R, H and E segments with 2 px sheet gaps and direct labels. |
-| Figure frame | Title, one-line takeaway, the chart, then a source line and a "Show as table" toggle. |
-| Highlighter | `--highlight` fill behind the selected row, cell or label. |
+| **Stamp** (`Stamp.tsx`) | A worn rubber stamp in the tier ink. The tier is written round the ring and the rank sits in the centre. It is pressed onto a paper disc so it reads over photos, and lands with a spring "thunk". It replaces tier chips and side stripes. |
+| **Plates** (`Figures.tsx` `ComponentFigure`) | Annotated pen drawings for R, H, E and C. They draw themselves in once on scroll. |
+| **Glyphs** (`ComponentGlyph`, `NavGlyph`) | The same hand at 24–34 px: reason tiles and the mobile tab bar (a compass, hexes, a leaf, a balance). |
+| **Ledger** (`HowItWorks` `Checks`, `charts/CheckFigures.tsx`) | One row per robustness test: a drawn verdict mark, a serif title, plain text, and a small figure of the actual number (agreement scale, rank strip, interval). |
+| **Plant card / row** | A photo mounted like a print, with the stamp on its corner, the common name in serif and the binomial in italic. Rows in a list already grouped by tier show only "No. n". |
+| **Reason tile** | Glyph, level meter (four blocks), one plain sentence. The main driver gets a 3 px top rule in its ink and a turmeric "Biggest reason" marker. |
+| **Footnotes** | "Read this first" caveats are marked * † ‡ § in sappan. |
+| **Field brief** | One A4 page: all 51 briefs were verified at ≤ 297 mm in print emulation. |
 
-## Interaction and motion
-- Every chart has a hover or focus tooltip and a table view. Every map action has a list equivalent.
-- Motion answers actions only: panel open, sheet drag, map fly-to on explicit selection (300 ms). One moment on load: the Overview mark draws once, in at most 1.2 s.
-- `prefers-reduced-motion` removes fly-to and drawing.
-- Focus: a 2 px `--ink` outline, offset 2 px, on every interactive element.
-- The URL holds state: species, layer, filters and weights are all deep-linkable.
+## Motion
+- **Intro (preloader).** On the first visit to `/`: the PH outline draws, hexes bloom north to south, then the sheet clips away (3.6 s). It has a Skip button and Esc, is skipped under reduced motion, and can be replayed from the footer.
+- **Pages.** 220 ms fade/rise between pages. Plates and verdict marks draw in once. The stamp lands with a spring. Cards lift 4 px on hover.
+- **Map.** Fly-to only on explicit selection.
+- **Reduced motion.** `prefers-reduced-motion` removes all of the above (`MotionConfig reducedMotion="user"`, plus `useReducedMotion` in figures).
 
 ## Voice
-Plain, specific, sentence case. Name things by what readers know: "native to the Philippines", not "WCVP status = native".
-- Errors say what happened and what to do next.
-- Empty states invite an action.
-- No developer instructions reach readers.
-
-Not used:
-- all-caps eyebrows
-- middle-dot meta strings
-- arrows appended to buttons
-- monospace data labels
-- emoji
-- "unlock" or "seamless"
+- **Plain and specific.** No developer or curation text reaches readers.
+- **Device-neutral.** "Point at", "Tap or click".
+- **Errors and empty states.** Errors say what happened and what to do; empty states invite an action.
 
 ## Disclaimers
-One persistent footer line on every page: "Research and education only. Not medical advice, not a harvest permit, not a Red List assessment." Context-specific notes appear where a claim is made.
+A persistent footer line: "For research and education. Not medical advice, not a harvest permit, and not a Red List assessment." Context notes appear where a claim is made.

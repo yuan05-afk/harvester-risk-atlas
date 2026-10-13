@@ -6,7 +6,7 @@ export function NotFound({ what = "page" }: { what?: string }) {
       <h1>That {what} is not in the atlas</h1>
       <p>
         The link may be out of date. Search for a plant with <kbd>/</kbd>, or start from the{" "}
-        <Link to="/rankings">full ranking</Link>.
+        <Link to="/plants">list of plants</Link>.
       </p>
     </div>
   );

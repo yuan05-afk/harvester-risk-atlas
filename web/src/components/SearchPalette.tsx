@@ -5,7 +5,8 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSpeciesList } from "../data/api";
 import type { SpeciesSummary } from "../data/schema";
-import { TierChip } from "./TierChip";
+import { TIER_LABEL, TIER_META } from "../lib/vocab";
+import { PlantPhoto } from "./PlantPhoto";
 
 /** Find a plant by scientific name, Filipino name or family. Opens with "/" or Ctrl/⌘ K. */
 export function SearchPalette({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
@@ -76,7 +77,7 @@ export function SearchPalette({ open, onOpenChange }: { open: boolean; onOpenCha
               }}
             />
           </div>
-          <p className="palette__hint">{query.trim() ? `${results.length} matches` : "Ranked high or on watch"}</p>
+          <p className="palette__hint">{query.trim() ? `${results.length} ${results.length === 1 ? "match" : "matches"}` : "Plants that need attention or watching"}</p>
           <ul id="palette-results" role="listbox" className="palette__list">
             {results.map((s, i) => (
               <li
@@ -88,11 +89,15 @@ export function SearchPalette({ open, onOpenChange }: { open: boolean; onOpenCha
                 onMouseEnter={() => setActive(i)}
                 onClick={() => go(s)}
               >
+                <PlantPhoto s={s} ratio="1 / 1" credit="none" className="palette__thumb" />
                 <span className="palette__names">
+                  <span className="palette__vern">{s.vernacular || s.name}</span>
                   <i className="binomial">{s.name}</i>
-                  <span className="palette__vern">{s.vernacular}</span>
                 </span>
-                <TierChip tier={s.tier} compact />
+                <span className="palette__tier">
+                  <span className={`dot dot--${TIER_META[s.tier].key}`} aria-hidden="true" />
+                  {TIER_LABEL[s.tier]}
+                </span>
               </li>
             ))}
             {query.trim() && results.length === 0 && (
@@ -103,7 +108,7 @@ export function SearchPalette({ open, onOpenChange }: { open: boolean; onOpenCha
                   onClick={(e) => {
                     e.preventDefault();
                     onOpenChange(false);
-                    navigate("/rankings");
+                    navigate("/plants");
                   }}
                 >
                   full list

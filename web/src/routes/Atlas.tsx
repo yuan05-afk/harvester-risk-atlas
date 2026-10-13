@@ -1,35 +1,37 @@
-import { X } from "lucide-react";
+import { ArrowLeft, FileText, Layers, Search, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import type { MapMode } from "../components/HexMap";
+import type { CellSet, HoverInfo, MapMode } from "../components/HexMap";
 import { HexMap } from "../components/HexMapLazy";
-import { WithData } from "../components/Status";
-import { TierChip } from "../components/TierChip";
+import { MapTooltip } from "../components/MapTooltip";
+import { PlantRow } from "../components/PlantCard";
+import { PlantPhoto } from "../components/PlantPhoto";
+import { LevelMeter } from "../components/Reasons";
+import { Stamp } from "../components/Stamp";
+import { Loading, WithData } from "../components/Status";
 import { useCells, useCellsCoarse, useSpecies, useSpeciesList } from "../data/api";
-import type { CellProps, SpeciesSummary } from "../data/schema";
+import type { CellProps, SpeciesDetail, SpeciesSummary, Tier } from "../data/schema";
+import { explain, summary } from "../lib/explain";
 import { fmtInt, fmtPct } from "../lib/format";
-import { TIER_ORDER } from "../lib/vocab";
-
-const LAYERS: { id: MapMode; label: string; hint: string }[] = [
-  { id: "hotspots", label: "Priority hotspots", hint: "Plants on high attention or watch recorded in each cell" },
-  { id: "species", label: "One plant", hint: "Cells where the chosen plant was recorded" },
-  { id: "effort", label: "Survey effort", hint: "All plant records in GBIF per cell: where botanists have looked" },
-];
+import { useWidth } from "../lib/useWidth";
+import { COMPONENT_META, rankSentence, SCORED_COMPONENTS, TIER_LABEL, TIER_META, TIER_ORDER } from "../lib/vocab";
 
 export function Atlas() {
   const list = useSpeciesList();
-  const cells = useCells();
+  const fine = useCells();
   const coarse = useCellsCoarse();
   return (
     <WithData state={list}>
       {(species) => (
-        <WithData state={cells}>
-          {(fine) => (
+        <WithData state={fine}>
+          {(f) => (
             <WithData state={coarse}>
-              {(agg) => (
+              {(c) => (
                 <AtlasView
                   species={species}
-                  cells={[...fine.features, ...agg.features].map((f) => f.properties)}
+                  fine={f.features.map((x) => x.properties)}
+                  coarse={c.features.map((x) => x.properties)}
                 />
               )}
             </WithData>
@@ -40,19 +42,36 @@ export function Atlas() {
   );
 }
 
-function AtlasView({ species, cells }: { species: SpeciesSummary[]; cells: CellProps[] }) {
+function AtlasView({ species, fine, coarse }: { species: SpeciesSummary[]; fine: CellProps[]; coarse: CellProps[] }) {
   const [params, setParams] = useSearchParams();
   const sp = params.get("sp");
-  const layer = (params.get("layer") as MapMode) ?? (sp ? "species" : "hotspots");
   const cellId = params.get("cell");
-  const [showPA, setShowPA] = useState(true);
-  const [hover, setHover] = useState<CellProps | null>(null);
+  const layer: MapMode = sp ? "species" : params.get("layer") === "effort" ? "effort" : "hotspots";
+  const [showPA, setShowPA] = useState(false);
+  const [hover, setHover] = useState<HoverInfo>(null);
+  const [previewSlug, setPreviewSlug] = useState<string | null>(null);
+  const [mapRef, mapW] = useWidth<HTMLDivElement>(900);
 
   const bySlug = useMemo(() => new Map(species.map((s) => [s.slug, s])), [species]);
-  const byCell = useMemo(() => new Map(cells.map((c) => [c.h3, c])), [cells]);
+  const cellsOf = useMemo(() => {
+    const idx = new Map<string, CellSet>();
+    const add = (cells: CellProps[], key: keyof CellSet) => {
+      for (const c of cells)
+        for (const s of c.species) {
+          if (!idx.has(s)) idx.set(s, { fine: [], coarse: [] });
+          idx.get(s)![key].push(c.h3);
+        }
+    };
+    add(fine, "fine");
+    add(coarse, "coarse");
+    return idx;
+  }, [fine, coarse]);
+  const byCell = useMemo(() => new Map([...fine, ...coarse].map((c) => [c.h3, c])), [fine, coarse]);
+
   const chosen = sp ? bySlug.get(sp) ?? null : null;
-  const detail = useSpecies(layer === "species" && chosen ? chosen.slug : undefined);
+  const detail = useSpecies(chosen?.slug);
   const selected = cellId ? byCell.get(cellId) ?? null : null;
+  const nScored = species.filter((s) => !s.gate).length;
 
   const update = (patch: Record<string, string | null>) => {
     const p = new URLSearchParams(params);
@@ -60,223 +79,313 @@ function AtlasView({ species, cells }: { species: SpeciesSummary[]; cells: CellP
       if (v === null) p.delete(k);
       else p.set(k, v);
     }
-    setParams(p, { replace: true });
+    setParams(p, { replace: false });
   };
 
-  const ranked = species
-    .filter((s) => !s.gate)
-    .sort((a, b) => TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier) || (a.rank ?? 0) - (b.rank ?? 0));
-  const memberCells = detail.status === "ready" ? detail.data.cells : undefined;
-  const bounds = detail.status === "ready" ? detail.data.bounds : null;
-  const activeLayer = LAYERS.find((l) => l.id === layer) ?? LAYERS[0];
+  const member = chosen ? cellsOf.get(chosen.slug) ?? null : null;
+  const preview = previewSlug && previewSlug !== chosen?.slug ? cellsOf.get(previewSlug) ?? null : null;
+  const bounds = chosen && detail.status === "ready" ? detail.data.bounds : null;
 
   return (
     <div className="atlas">
-      <div className="atlas__map">
+      <div className="atlas__map" ref={mapRef}>
         <HexMap
           mode={layer}
-          memberCells={layer === "species" ? memberCells : []}
-          memberColor="var(--tier-high)"
+          member={member}
+          preview={preview}
           showPA={showPA}
           selectedCell={cellId}
-          bounds={layer === "species" ? bounds : null}
-          onCellHover={setHover}
-          onCellClick={(c) => update({ cell: c ? c.h3 : null })}
-          label={`Atlas map. Layer: ${activeLayer.label}. Use the panel to choose plants and cells.`}
+          bounds={bounds}
+          padding={{ top: 60, bottom: 60, left: 60, right: 60 }}
+          onHover={setHover}
+          onCellClick={(c) => update({ cell: c && (c.n_cohort > 0 || layer === "effort") ? c.h3 : null })}
+          label="Atlas map of the Philippines. The panel beside it lists the same plants and areas."
         />
-        {hover ? (
-          <div className="atlas__hover" aria-hidden="true">
-            <CellSummaryLine c={hover} />
+        <MapTooltip info={hover} bySlug={bySlug} mode={layer} width={mapW} height={800} />
+        <div className="map-controls">
+          <div className="map-controls__group" role="group" aria-label="What the map shows">
+            <Layers size={16} aria-hidden="true" />
+            <button
+              type="button"
+              aria-pressed={layer !== "effort"}
+              className={layer !== "effort" ? "is-on" : ""}
+              onClick={() => update({ layer: null })}
+            >
+              Priority
+            </button>
+            <button
+              type="button"
+              aria-pressed={layer === "effort"}
+              className={layer === "effort" ? "is-on" : ""}
+              onClick={() => update({ layer: "effort", sp: null })}
+            >
+              Survey coverage
+            </button>
           </div>
-        ) : null}
+          <label className="map-controls__check">
+            <input type="checkbox" checked={showPA} onChange={(e) => setShowPA(e.target.checked)} />
+            Protected areas
+          </label>
+        </div>
+        <MapLegend layer={layer} chosen={chosen} />
       </div>
 
-      <aside className="atlas__panel" aria-label="Atlas controls and details">
-        <div className="atlas__panel-grip" aria-hidden="true" />
-        <fieldset className="segmented">
-          <legend className="sr-only">Map layer</legend>
-          {LAYERS.map((l) => (
-            <label key={l.id} className={`segmented__opt${layer === l.id ? " is-on" : ""}`}>
-              <input
-                type="radio"
-                name="layer"
-                value={l.id}
-                checked={layer === l.id}
-                onChange={() => update({ layer: l.id })}
+      <aside className="atlas__panel" aria-label="Plants and areas">
+        <div className="atlas__grip" aria-hidden="true" />
+        <AnimatePresence mode="wait" initial={false}>
+          {chosen ? (
+            <motion.div key={`sp-${chosen.slug}`} {...panelMotion}>
+              {detail.status === "ready" ? (
+                <PlantPanel d={detail.data} nScored={nScored} onBack={() => update({ sp: null })} />
+              ) : (
+                <Loading label="Opening the plant" />
+              )}
+            </motion.div>
+          ) : selected ? (
+            <motion.div key={`cell-${selected.h3}`} {...panelMotion}>
+              <AreaPanel
+                c={selected}
+                bySlug={bySlug}
+                onClose={() => update({ cell: null })}
+                onPick={(slug) => update({ sp: slug, cell: null })}
+                onHover={setPreviewSlug}
               />
-              {l.label}
-            </label>
-          ))}
-        </fieldset>
-        <p className="atlas__hint">{activeLayer.hint}.</p>
-        <Legend layer={layer} />
-        <label className="check">
-          <input type="checkbox" checked={showPA} onChange={(e) => setShowPA(e.target.checked)} />
-          Show protected areas (dashed)
-        </label>
-
-        {selected ? (
-          <CellCard c={selected} bySlug={bySlug} onClose={() => update({ cell: null })} onPick={(slug) => update({ sp: slug, layer: "species" })} />
-        ) : null}
-
-        {layer === "species" ? (
-          <div className="atlas__section">
-            <label className="field">
-              <span className="field__label">Plant</span>
-              <select value={chosen?.slug ?? ""} onChange={(e) => update({ sp: e.target.value || null })}>
-                <option value="">Choose a plant…</option>
-                {species
-                  .slice()
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((s) => (
-                    <option key={s.slug} value={s.slug}>
-                      {s.name}
-                      {s.vernacular ? ` (${s.vernacular})` : ""}
-                    </option>
-                  ))}
-              </select>
-            </label>
-            {chosen ? (
-              <div className="atlas__chosen">
-                <TierChip tier={chosen.tier} />
-                <p>
-                  Recorded in <b className="num">{fmtInt(chosen.n_cells)}</b> cells.{" "}
-                  <Link to={`/species/${chosen.slug}`}>Open the full profile</Link>
-                </p>
-              </div>
-            ) : null}
-          </div>
-        ) : null}
-
-        {layer !== "species" ? (
-          <div className="atlas__section">
-            <h2 className="atlas__h">Ranked plants</h2>
-            <ul className="atlas__list">
-              {ranked.map((s) => (
-                <li key={s.slug}>
-                  <button type="button" className="atlas__item" onClick={() => update({ sp: s.slug, layer: "species", cell: null })}>
-                    <span>
-                      <i className="binomial">{s.name}</i>
-                      <span className="atlas__vern">{s.vernacular}</span>
-                    </span>
-                    <TierChip tier={s.tier} compact />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
+            </motion.div>
+          ) : (
+            <motion.div key="browse" {...panelMotion}>
+              <BrowsePanel species={species} onPick={(slug) => update({ sp: slug })} onHover={setPreviewSlug} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </aside>
     </div>
   );
 }
 
-function Legend({ layer }: { layer: MapMode }) {
-  if (layer === "species") {
-    return (
-      <div className="legend-row">
-        <span className="legend__swatch" style={{ background: "var(--tier-high)" }} aria-hidden="true" /> Cell with at
-        least one usable record
-      </div>
-    );
-  }
-  if (layer === "effort") {
-    const steps = ["#edefed", "#d1d6d1", "#adb3ae", "#818882", "#59605a"];
-    return (
-      <div className="legend-ramp">
-        <span className="ramp" aria-hidden="true">
-          {steps.map((c) => (
-            <i key={c} style={{ background: c }} />
-          ))}
-        </span>
-        <span className="ramp__ends">
-          <span>under 10 records</span>
-          <span>500 or more</span>
-        </span>
-      </div>
-    );
-  }
+const panelMotion = {
+  initial: { opacity: 0, x: 16 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -12 },
+  transition: { duration: 0.2, ease: "easeOut" as const },
+};
+
+function MapLegend({ layer, chosen }: { layer: MapMode; chosen: SpeciesSummary | null }) {
   return (
-    <div className="legend-ramp">
-      <span className="ramp" aria-hidden="true">
-        <i style={{ background: "var(--hot-1)" }} />
-        <i style={{ background: "var(--hot-2)" }} />
-        <i style={{ background: "var(--hot-3)" }} />
-        <i style={{ background: "var(--hot-4)" }} />
-      </span>
-      <span className="ramp__ends">
-        <span>1 plant</span>
-        <span>4 or more</span>
-      </span>
+    <div className="map-legend map-legend--atlas">
+      {layer === "species" && chosen ? (
+        <>
+          <span className="map-legend__title">
+            Where {chosen.vernacular || chosen.name} was recorded
+          </span>
+          <span className="legend-row">
+            <span className="legend__swatch" style={{ background: "var(--tier-high)" }} aria-hidden="true" /> Area with at
+            least one reliable record
+          </span>
+        </>
+      ) : layer === "effort" ? (
+        <>
+          <span className="map-legend__title">How thoroughly botanists have recorded plants here</span>
+          <span className="ramp" aria-hidden="true">
+            {["#edefed", "#d1d6d1", "#adb3ae", "#818882", "#59605a"].map((c) => (
+              <i key={c} style={{ background: c }} />
+            ))}
+          </span>
+          <span className="ramp__ends">
+            <span>few records</span>
+            <span>500 or more</span>
+          </span>
+        </>
+      ) : (
+        <>
+          <span className="map-legend__title">Plants needing attention or watching, per area</span>
+          <span className="ramp" aria-hidden="true">
+            <i style={{ background: "var(--hot-1)" }} />
+            <i style={{ background: "var(--hot-2)" }} />
+            <i style={{ background: "var(--hot-3)" }} />
+            <i style={{ background: "var(--hot-4)" }} />
+          </span>
+          <span className="ramp__ends">
+            <span>1</span>
+            <span>4 or more</span>
+          </span>
+        </>
+      )}
     </div>
   );
 }
 
-function CellSummaryLine({ c }: { c: CellProps }) {
-  const pri = c.n_high + c.n_watch;
+function BrowsePanel({
+  species,
+  onPick,
+  onHover,
+}: {
+  species: SpeciesSummary[];
+  onPick: (slug: string) => void;
+  onHover: (slug: string | null) => void;
+}) {
+  const [q, setQ] = useState("");
+  const query = q.trim().toLowerCase();
+  const match = (s: SpeciesSummary) =>
+    !query || s.name.toLowerCase().includes(query) || s.vernacular.toLowerCase().includes(query) || s.family.toLowerCase().includes(query);
+  const groups = (["High attention", "Watch", "Lower"] as Tier[]).map((t) => ({
+    tier: t,
+    items: species.filter((s) => s.tier === t && match(s)).sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0)),
+  }));
+  const total = groups.reduce((a, g) => a + g.items.length, 0);
   return (
-    <span>
-      {pri ? `${pri} on high attention or watch, ` : ""}
-      {c.n_cohort} atlas plants recorded; {fmtInt(c.effort)} plant records in all
-      {c.pa !== null ? `; ${fmtPct(c.pa)} protected` : ""}
-    </span>
+    <div className="panel">
+      <h1 className="panel__title">Explore the atlas</h1>
+      <p className="panel__lede">
+        Point at a plant to see where it grows, or choose one to learn why it ranks where it does. Tap or click an area on
+        the map to see what grows there.
+      </p>
+      <label className="panel-search">
+        <Search size={16} aria-hidden="true" />
+        <span className="sr-only">Filter plants</span>
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Filter by name or family" />
+      </label>
+      {total === 0 ? <p className="empty-note">No ranked plant matches “{q}”.</p> : null}
+      {groups.map((g) =>
+        g.items.length ? (
+          <section key={g.tier} className="panel__group">
+            <h2 className="panel__group-title">
+              <span className={`dot dot--${TIER_META[g.tier].key}`} aria-hidden="true" />
+              {TIER_LABEL[g.tier]}
+              <span className="num panel__count">{g.items.length}</span>
+            </h2>
+            <ul className="plant-list">
+              {g.items.map((s) => (
+                <li key={s.slug}>
+                  <PlantRow s={s} showTier={false} onSelect={onPick} onHover={onHover} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null,
+      )}
+    </div>
   );
 }
 
-function CellCard({
+function PlantPanel({ d, nScored, onBack }: { d: SpeciesDetail; nScored: number; onBack: () => void }) {
+  const why = explain(d);
+  const provinces = d.provinces.slice(0, 6);
+  return (
+    <div className="panel panel--plant">
+      <button type="button" className="back-button" onClick={onBack}>
+        <ArrowLeft size={16} aria-hidden="true" /> All plants
+      </button>
+      <div className="panel-plant__media">
+        <PlantPhoto s={d} credit="below" eager />
+        <Stamp tier={d.tier} rank={d.rank} of={d.rank !== null ? nScored : undefined} size={84} className="panel-plant__stamp" />
+      </div>
+      <h1 className="panel-plant__name">
+        {d.vernacular ? <span>{d.vernacular}</span> : null}
+        <i className="binomial">{d.name}</i>
+      </h1>
+      <p className="panel-plant__summary">{summary(d, nScored)}</p>
+      {d.rank !== null ? <p className="panel-plant__rank">{rankSentence(d, nScored)}</p> : null}
+
+      {!d.gate ? (
+        <ul className="mini-reasons">
+          {SCORED_COMPONENTS.map((k) => (
+            <li key={k}>
+              <span className="mini-reasons__label">{COMPONENT_META[k].label}</span>
+              <LevelMeter value={d.components[k]} color={COMPONENT_META[k].color} label={COMPONENT_META[k].label} />
+              <p>{why[k]}</p>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      <section className="panel-plant__where">
+        <h2>Where it grows</h2>
+        <p>
+          Recorded in <b className="num">{fmtInt(d.n_cells)}</b> areas across <b className="num">{d.provinces.length}</b>{" "}
+          provinces. {d.pa_share !== null ? <>{fmtPct(d.pa_share)} of that area is protected.</> : null}
+        </p>
+        {provinces.length ? (
+          <ul className="chips">
+            {provinces.map((p) => (
+              <li key={p.name}>{p.name}</li>
+            ))}
+            {d.provinces.length > provinces.length ? <li className="chips__more">+{d.provinces.length - provinces.length} more</li> : null}
+          </ul>
+        ) : null}
+      </section>
+
+      <div className="panel__actions">
+        <Link to={`/species/${d.slug}`} className="button button--primary">
+          Full profile
+        </Link>
+        <Link to={`/species/${d.slug}/brief`} className="button">
+          <FileText size={16} aria-hidden="true" /> Field brief
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function AreaPanel({
   c,
   bySlug,
   onClose,
   onPick,
+  onHover,
 }: {
   c: CellProps;
   bySlug: Map<string, SpeciesSummary>;
   onClose: () => void;
   onPick: (slug: string) => void;
+  onHover: (slug: string | null) => void;
 }) {
-  const here = c.species
+  const plants = c.species
     .map((s) => bySlug.get(s))
     .filter((s): s is SpeciesSummary => !!s)
-    .sort((a, b) => TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier) || a.name.localeCompare(b.name));
+    .sort((a, b) => TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier) || (a.rank ?? 99) - (b.rank ?? 99));
+  const ranked = plants.filter((s) => !s.gate);
+  const coarse = c.h3[1] === "4";
   return (
-    <section className="cellcard sheet" aria-live="polite" aria-label="Selected cell">
-      <header className="cellcard__head">
-        <h2 className="atlas__h">Selected area, about {c.h3[1] === "4" ? "1,770" : "250"} km²</h2>
-        <button type="button" className="icon-button" onClick={onClose} aria-label="Clear the selected cell">
-          <X size={16} />
-        </button>
-      </header>
-      <dl className="cellcard__facts">
+    <div className="panel">
+      <button type="button" className="back-button" onClick={onClose}>
+        <X size={16} aria-hidden="true" /> Close this area
+      </button>
+      <h1 className="panel__title">This area</h1>
+      <p className="panel__lede">
+        About {coarse ? "1,770" : "250"} km². Zoom in on the map to see smaller areas.
+      </p>
+      <dl className="area-stats">
         <div>
-          <dt>Atlas plants recorded</dt>
-          <dd className="num">{c.n_cohort}</dd>
+          <dt>Ranked plants recorded</dt>
+          <dd className="num">{ranked.length}</dd>
+        </div>
+        <div>
+          <dt>Needing attention or watching</dt>
+          <dd className="num">{c.n_high + c.n_watch}</dd>
         </div>
         <div>
           <dt>Protected</dt>
           <dd className="num">{fmtPct(c.pa)}</dd>
         </div>
         <div>
-          <dt>All plant records</dt>
+          <dt>Plant records from botanists</dt>
           <dd className="num">{fmtInt(c.effort)}</dd>
         </div>
       </dl>
-      {here.length ? (
-        <ul className="atlas__list">
-          {here.map((s) => (
+      {ranked.length ? (
+        <ul className="plant-list">
+          {ranked.map((s) => (
             <li key={s.slug}>
-              <button type="button" className="atlas__item" onClick={() => onPick(s.slug)}>
-                <span>
-                  <i className="binomial">{s.name}</i>
-                  <span className="atlas__vern">{s.vernacular}</span>
-                </span>
-                <TierChip tier={s.tier} compact />
-              </button>
+              <PlantRow s={s} onSelect={onPick} onHover={onHover} />
             </li>
           ))}
         </ul>
       ) : (
-        <p className="empty-note">No atlas plant has a usable record in this cell. Survey effort here may be low.</p>
+        <p className="empty-note">
+          No ranked plant has a reliable record here. Few botanists may have recorded plants in this area; switch to
+          Survey coverage to check.
+        </p>
       )}
-    </section>
+    </div>
   );
 }

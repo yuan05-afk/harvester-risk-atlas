@@ -389,6 +389,20 @@ def coarse_features(parents: dict, tier_of: dict[str, str]) -> dict:
     return {"type": "FeatureCollection", "features": features}
 
 
+def hex_points(cells: dict) -> list[list[float]]:
+    """[lon, lat, priority] for every res-4 cell with atlas plants: the preloader's bloom."""
+    import h3
+
+    out = []
+    for f in cells["features"]:
+        p = f["properties"]
+        if p["n_cohort"] == 0:
+            continue
+        lat, lng = h3.cell_to_latlng(f["id"])
+        out.append([round(lng, 2), round(lat, 2), int(p["n_high"] + p["n_watch"])])
+    return out
+
+
 def build_pa() -> dict:
     from .protected_areas import load_pa_polygons
 
@@ -484,6 +498,7 @@ def run_export() -> dict[str, int]:
     scores = pd.read_csv(V2_DIR / "scores.csv", encoding="utf-8", keep_default_na=False, na_values=[""])
     summaries, details = build_species(scores)
     cells = build_cells(summaries, details)
+    coarse = coarse_features(build_cells_coarse(cells), {s["slug"]: s["tier"] for s in summaries})
     sizes = {
         "manifest.json": _write(WEB_DATA / "manifest.json", build_manifest(summaries)),
         "species.json": _write(WEB_DATA / "species.json", summaries),
@@ -491,8 +506,9 @@ def run_export() -> dict[str, int]:
         "geo/cells.geojson": _write(WEB_DATA / "geo" / "cells.geojson", cells),
         "geo/cells_r4.geojson": _write(
             WEB_DATA / "geo" / "cells_r4.geojson",
-            coarse_features(build_cells_coarse(cells), {s["slug"]: s["tier"] for s in summaries}),
+            coarse,
         ),
+        "geo/hex_points.json": _write(WEB_DATA / "geo" / "hex_points.json", hex_points(coarse)),
         "geo/land.geojson": _write(
             WEB_DATA / "geo" / "land.geojson",
             json.loads((DATA_PROCESSED / "ph_land_mask.geojson").read_text(encoding="utf-8")),

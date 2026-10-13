@@ -42,12 +42,18 @@ export const SpeciesSummary = z.object({
   driver: z.string(),
   climate: z.object({ dT: num, dT_range: pair, exceed: num, exceed_range: pair }),
   review: z.object({ needed: z.boolean(), note: z.string() }),
+  photo: z
+    .object({ src: z.string(), creator: z.string(), licence: z.string(), page: z.string() })
+    .nullable()
+    .optional()
+    .transform((p) => p ?? null),
 });
 export type SpeciesSummary = z.infer<typeof SpeciesSummary>;
 
 export const SpeciesDetail = SpeciesSummary.extend({
   use_context: z.string(),
   cells: z.array(z.string()),
+  cells_r4: z.array(z.string()),
   bounds: z.tuple([z.number(), z.number(), z.number(), z.number()]).nullable(),
   aoo_km2: num,
   eoo_km2: num,

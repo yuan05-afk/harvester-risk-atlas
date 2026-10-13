@@ -31,6 +31,9 @@ v1 data are archived unchanged in `data/archive/v1.1/`, with checksums. The full
 | 2026-10-14 | v1 audit; baseline tag; v1 data archived; this ledger started. |
 | 2026-10-14 | Data pipeline v2: GBIF exact counts and full PH records, cleaning, WCVP nativity, H3 grid, survey-effort layer, cell-based PA cover, GFW forest loss, CMIP6 clips, DENR DAO 2026-20 parser. |
 | 2026-10-14 | HPI v2 (Harvest Priority Index): anchored components R/H/E/C, gates, Monte Carlo rank intervals, priority tiers, validation suite; cohort expanded to 51 with 16 cited native candidates; METHODS v2; static-data export for the web app. |
+| 2026-10-14 | Web app (Vite + React + TypeScript + MapLibre), Field Atlas design system, land-clipped H3 map layers, iNaturalist plant photos (CC0 / CC BY, CC BY-NC fallback). |
+| 2026-10-14 | Usability redesign after team review: plain-language tiers and components, rubber-stamp priority badge, photo plant cards, Atlas browse / plant / area panels with map hover previews, plain-sentence "why it ranks here", How it works page, one-page A4 field brief, new intro animation. |
+| 2026-10-14 | Visual identity rework: natural-dye palette (tayum, atsuete, bakawan, sibukaw, dilaw) validated for colour-vision deficiency, Fraunces display type, hand-drawn explanatory figures replacing stock icons, robustness ledger with data figures, error boundary, lazy search palette. |
 
 ## Hack-week log (2–8 Nov 2026)
 
@@ -45,7 +48,9 @@ _Empty until 2 Nov._
 | Data | WDPCA Philippines, UNEP-WCMC via HDX | Protected Planet / WDPA terms, non-commercial |
 | Data | Natural Earth land | Public domain |
 | Data | IUCN Red List API v4 (optional) | IUCN terms of use; categories never invented |
-| Libraries | See `requirements.txt` / `pyproject.toml` (and `web/package.json` once added) | Each under its own licence |
+| Libraries | See `requirements.txt` / `pyproject.toml` and `web/package.json` | Each under its own licence |
+| Data | iNaturalist research-grade photos via GBIF | CC0, CC BY 4.0 or CC BY-NC 4.0; creator credited on each plant |
+| Fonts | Atkinson Hyperlegible Next (Braille Institute), Fraunces (Undercase Type) via Fontsource | SIL Open Font License 1.1 |
 
 ## AI assistance
 

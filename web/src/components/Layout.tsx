@@ -1,17 +1,21 @@
-import { BookOpen, ListOrdered, Map as MapIcon, Search, Sprout } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import { Search } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { Suspense, useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useManifest } from "../data/api";
 import { fmtDate } from "../lib/format";
+import { NavGlyph } from "./Figures";
 import { Mark } from "./Mark";
-import { SearchPalette } from "./SearchPalette";
+import { replayIntro } from "./Preloader";
+import { SearchPalette } from "./SearchPaletteLazy";
+import { Loading, PageErrorBoundary } from "./Status";
 
 const NAV = [
-  { to: "/", label: "Overview", icon: Sprout, end: true },
-  { to: "/atlas", label: "Atlas", icon: MapIcon, end: false },
-  { to: "/rankings", label: "Rankings", icon: ListOrdered, end: false },
-  { to: "/methods", label: "Methods", icon: BookOpen, end: false },
-];
+  { to: "/", label: "Overview", glyph: "overview", end: true },
+  { to: "/atlas", label: "Atlas", glyph: "atlas", end: false },
+  { to: "/plants", label: "Plants", glyph: "plants", end: false },
+  { to: "/how-it-works", label: "How it works", glyph: "how", end: false },
+] as const;
 
 export function Layout({ children, bleed = false }: { children: ReactNode; bleed?: boolean }) {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -19,7 +23,7 @@ export function Layout({ children, bleed = false }: { children: ReactNode; bleed
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const typing = (e.target as HTMLElement)?.closest("input, textarea, [contenteditable]");
+      const typing = (e.target as HTMLElement)?.closest("input, textarea, select, [contenteditable]");
       if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || (e.key === "/" && !typing)) {
         e.preventDefault();
         setSearchOpen(true);
@@ -30,7 +34,21 @@ export function Layout({ children, bleed = false }: { children: ReactNode; bleed
   }, []);
 
   useEffect(() => {
-    if (!location.hash) window.scrollTo(0, 0);
+    if (!location.hash) {
+      window.scrollTo(0, 0);
+      return;
+    }
+    // Sections render once their data arrives, so wait briefly for the target.
+    const id = location.hash.slice(1);
+    let tries = 0;
+    let timer = 0;
+    const seek = () => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView();
+      else if (tries++ < 40) timer = window.setTimeout(seek, 50);
+    };
+    seek();
+    return () => window.clearTimeout(timer);
   }, [location.pathname, location.hash]);
 
   return (
@@ -50,23 +68,36 @@ export function Layout({ children, bleed = false }: { children: ReactNode; bleed
             </NavLink>
           ))}
         </nav>
-        <button type="button" className="search-trigger" onClick={() => setSearchOpen(true)}>
+        <button type="button" className="search-trigger" onClick={() => setSearchOpen(true)} aria-label="Find a plant">
           <Search size={16} aria-hidden="true" />
           <span className="search-trigger__text">Find a plant</span>
           <kbd className="search-trigger__key">/</kbd>
         </button>
       </header>
 
-      <main id="main" tabIndex={-1} className="main">
-        {children}
-      </main>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.main
+          key={location.pathname}
+          id="main"
+          tabIndex={-1}
+          className="main"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.22, ease: "easeOut" }}
+        >
+          <PageErrorBoundary resetKey={location.pathname}>
+            <Suspense fallback={<Loading />}>{children}</Suspense>
+          </PageErrorBoundary>
+        </motion.main>
+      </AnimatePresence>
 
       {!bleed && <Footer />}
 
       <nav className="bottomtabs" aria-label="Main">
         {NAV.map((n) => (
           <NavLink key={n.to} to={n.to} end={n.end} className="bottomtabs__link">
-            <n.icon size={20} aria-hidden="true" />
+            <NavGlyph name={n.glyph} />
             <span>{n.label}</span>
           </NavLink>
         ))}
@@ -82,18 +113,32 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer__inner">
+        <div className="footer__brand">
+          <Mark size={36} />
+          <p>
+            <b>Harvester Risk Atlas</b>
+            <br />
+            Which wild medicinal plants of the Philippines need attention first.
+          </p>
+        </div>
         <p className="footer__disclaimer">
-          Research and education only. Not medical advice, not a harvest permit, not a Red List assessment.
+          For research and education. Not medical advice, not a harvest permit, and not a Red List assessment.
         </p>
         <p className="footer__meta">
           {manifest.status === "ready" ? (
             <>
-              {manifest.data.index} v{manifest.data.version}, built {fmtDate(manifest.data.built_at)}.{" "}
+              {manifest.data.index} v{manifest.data.version}, updated {fmtDate(manifest.data.built_at)}.{" "}
             </>
           ) : null}
-          Data from GBIF, WCVP, WDPCA, Global Forest Watch and WorldClim.{" "}
-          <Link to="/methods#data">Sources and licences</Link>.{" "}
-          <Link to="/methods#originality">What was built when</Link>.
+          Data from GBIF, the World Checklist of Vascular Plants, WDPCA, Global Forest Watch and WorldClim. Photos
+          from iNaturalist observers, credited on each plant.
+        </p>
+        <p className="footer__links">
+          <Link to="/how-it-works#sources">Sources and licences</Link>
+          <Link to="/how-it-works#built">What was built when</Link>
+          <button type="button" className="link-button" onClick={replayIntro}>
+            Replay intro
+          </button>
         </p>
       </div>
     </footer>
