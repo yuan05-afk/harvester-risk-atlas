@@ -2,7 +2,7 @@
 
 You are continuing **Harvester Risk Atlas v2** for EthnoHack 2026, Track 3 (hackathon Nov 2–8 2026; submission Nov 8). This file replaces the old chat. It is enough to continue: read the plan only if a step here is unclear (`C:\Users\Yuan\.claude\plans\harvester-risk-atlas-virtual-eagle.md`).
 
-**Updated:** 2026-10-14, after Phase 4 (tests and parity, complete). Branch `v2-rebuild`. Run `git log --oneline -5` for the latest commit.
+**Updated:** 2026-10-14, after Phase 4 (tests and parity, complete). Default branch `main` (v2 merged; live at https://harvester-risk-atlas.vercel.app). Run `git log --oneline -5` for the latest commit.
 
 ## 1. Rules (non-negotiable)
 - **Approvals.** Commit at the end of each phase, which the user has approved. **Never push, deploy, make the repo public, or tag a release without asking.**
@@ -84,7 +84,8 @@ Work in order. Each phase ends with: verify, then update `ORIGINALITY.md` and **
 
 ### Phase 5 status (2026-10-14)
 Done: CI (`.github/workflows/ci.yml`, green on PR #20), zod out of the production bundle, CLS 0, a11y and responsive e2e (16 widths/routes), README rewrite, Vercel project `harvester-risk-atlas` (team yuans-projects-e4a11f96, root `web`, production branch `main`, live at https://harvester-risk-atlas.vercel.app), `main` protected (checks `python` and `web` must pass; no force-push or deletion; admins may bypass).
-**Waiting on the user:** merge PR #20 into `main` (the assistant's merge was blocked), so pushes to `main` redeploy. Then decide on deleting the old Streamlit code (item 4 below) and tagging `v2.0-pre-hackathon`.
+PR #20 merged into `main` on 2026-10-14; every push to `main` now redeploys production. Work on a branch and merge by PR (checks must pass).
+**Still the user's call:** deleting the old Streamlit code (item 4 below) and tagging `v2.0-pre-hackathon`.
 Lighthouse mobile (slow-4G, 4x CPU lab) is still about 70 on Overview (LCP ~4.6 s) because the app renders on the client; desktop is 86-100. Pre-rendering would be the next step.
 
 ### Phase 5: QA, docs and cutover (original plan)
