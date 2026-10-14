@@ -9,7 +9,7 @@ EthnoHACK 2026, Track 3: Biodiversity & Sustainability. Version 2 (Harvest Prior
 
 | | |
 |--|--|
-| **Live app** | LIVE_URL |
+| **Live app** | https://harvester-risk-atlas.vercel.app |
 | **Method** | [`docs/METHODS.md`](docs/METHODS.md) |
 | **Design system** | [`docs/DESIGN.md`](docs/DESIGN.md) |
 | **What was built when** | [`docs/ORIGINALITY.md`](docs/ORIGINALITY.md) |

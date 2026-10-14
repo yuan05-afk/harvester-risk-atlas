@@ -82,7 +82,12 @@ Work in order. Each phase ends with: verify, then update `ORIGINALITY.md` and **
 
    Already cut: the Compare page and pre-built PDFs (browser print to PDF is enough).
 
-### Phase 5: QA, docs and cutover (Oct 29 – Nov 1)
+### Phase 5 status (2026-10-14)
+Done: CI (`.github/workflows/ci.yml`, green on PR #20), zod out of the production bundle, CLS 0, a11y and responsive e2e (16 widths/routes), README rewrite, Vercel project `harvester-risk-atlas` (team yuans-projects-e4a11f96, root `web`, production branch `main`, live at https://harvester-risk-atlas.vercel.app), `main` protected (checks `python` and `web` must pass; no force-push or deletion; admins may bypass).
+**Waiting on the user:** merge PR #20 into `main` (the assistant's merge was blocked), so pushes to `main` redeploy. Then decide on deleting the old Streamlit code (item 4 below) and tagging `v2.0-pre-hackathon`.
+Lighthouse mobile (slow-4G, 4x CPU lab) is still about 70 on Overview (LCP ~4.6 s) because the app renders on the client; desktop is 86-100. Pre-rendering would be the next step.
+
+### Phase 5: QA, docs and cutover (original plan)
 1. **CI** (`.github/workflows/ci.yml`): pytest, `npm ci`, typecheck, vitest, build, Playwright plus axe. Never fetch raw data in CI.
 2. **Performance.** The Overview first load is 144.8 KB (main) + 31 KB (`api` chunk, mostly zod) = 176 KB gz, against a 150 KB target. Fix: switch `src/data/schema.ts` to `zod/mini`, or validate only on dev or error. Lighthouse targets: Performance ≥ 90, Accessibility ≥ 95, LCP < 2 s.
 3. **Accessibility and responsive pass.** Keyboard-only through every route; focus order; `aria-live` on Atlas selection. Widths 360, 390, 768, 1024, 1280, 1440. Reduced motion.
