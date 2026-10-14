@@ -49,3 +49,5 @@ data/raw/photos/
 web/test-results/
 web/playwright-report/
 .lh-*.json
+
+.vercel
