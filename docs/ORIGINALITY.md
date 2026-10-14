@@ -34,7 +34,7 @@ v1 data are archived unchanged in `data/archive/v1.1/`, with checksums. The full
 | 2026-10-14 | Web app (Vite + React + TypeScript + MapLibre), Field Atlas design system, land-clipped H3 map layers, iNaturalist plant photos (CC0 / CC BY, CC BY-NC fallback). |
 | 2026-10-14 | Usability redesign after team review: plain-language tiers and components, rubber-stamp priority badge, photo plant cards, Atlas browse / plant / area panels with map hover previews, plain-sentence "why it ranks here", How it works page, one-page A4 field brief, new intro animation. |
 | 2026-10-14 | Visual identity rework: natural-dye palette (tayum, atsuete, bakawan, sibukaw, dilaw) validated for colour-vision deficiency, Fraunces display type, hand-drawn explanatory figures replacing stock icons, robustness ledger with data figures, error boundary, lazy search palette. |
-| 2026-10-14 | Tests: golden `parity.json` from the pipeline checked against the web score maths, unit tests for plain-language text and map tooltip, Playwright end-to-end plus axe accessibility checks on every route; fixed bad plant links showing a data error instead of "not in the atlas" on hosts with an SPA fallback. |
+| 2026-10-14 | Tests: golden `parity.json` from the pipeline checked against the web score maths, unit tests for plain-language text and map tooltip, Playwright end-to-end plus axe accessibility checks on every route; fixed bad plant links showing a data error instead of "not in the atlas" on hosts with an SPA fallback. Weight explorer settings now live in the URL (?w=R,H,E,C) so a ranking can be shared. |
 
 ## Hack-week log (2–8 Nov 2026)
 

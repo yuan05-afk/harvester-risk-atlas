@@ -1,8 +1,8 @@
 import * as Slider from "@radix-ui/react-slider";
 import { ArrowDown, ArrowUp, Minus } from "lucide-react";
 import { motion } from "motion/react";
-import { useMemo, useState, type ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { useMemo, type ReactNode } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { AgreementScale, IntervalGlyph, RankStrip } from "../components/charts/CheckFigures";
 import { VerdictMark } from "../components/Figures";
 import { PlantPhoto } from "../components/PlantPhoto";
@@ -10,7 +10,7 @@ import { WithData } from "../components/Status";
 import { useManifest, useSpeciesList, useValidation } from "../data/api";
 import type { Component, SpeciesSummary, Validation } from "../data/schema";
 import { fmtDate, fmtInt } from "../lib/format";
-import { aggregate, DEFAULT_WEIGHTS, KEYS, normalize, ranks, type Weights } from "../lib/score";
+import { aggregate, DEFAULT_WEIGHTS, KEYS, normalize, ranks, weightsFromParam, weightsToParam, type Weights } from "../lib/score";
 import { COMPONENT_META, SCORED_COMPONENTS, TIER_LABEL } from "../lib/vocab";
 import { Disclosure } from "./Species";
 
@@ -196,7 +196,17 @@ const PRESETS: { label: string; w: Weights }[] = [
 ];
 
 function WeightExplorer({ species }: { species: SpeciesSummary[] }) {
-  const [raw, setRaw] = useState<Weights>(PRESETS[0].w);
+  // The sliders live in the URL (?w=R,H,E,C) so a particular ranking can be shared.
+  const [params, setParams] = useSearchParams();
+  const raw = useMemo(() => weightsFromParam(params.get("w")), [params]);
+  const setRaw = (next: Weights | ((r: Weights) => Weights)) => {
+    const w = typeof next === "function" ? next(raw) : next;
+    const p = new URLSearchParams(params);
+    const v = weightsToParam(w);
+    if (v === null) p.delete("w");
+    else p.set("w", v);
+    setParams(p, { replace: true, preventScrollReset: true });
+  };
   const weights = normalize(raw);
   const scored = useMemo(() => species.filter((s) => !s.gate), [species]);
   const base = useMemo(() => {

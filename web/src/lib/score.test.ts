@@ -27,3 +27,18 @@ describe("score.ts matches the Python pipeline (golden parity.json)", () => {
     expect(normalize({ R: 0, H: -1, E: NaN, C: 0 })).toEqual(normalize(parity.sets[0].weights));
   });
 });
+
+import { weightsFromParam, weightsToParam } from "./score";
+
+describe("weights in the URL", () => {
+  it("round-trips and omits the published weights", () => {
+    expect(weightsToParam({ R: 1, H: 1, E: 1, C: 0 })).toBeNull();
+    const w = { R: 3, H: 0.5, E: 1.25, C: 4 };
+    expect(weightsFromParam(weightsToParam(w))).toEqual(w);
+  });
+  it("falls back to published weights on malformed input", () => {
+    for (const bad of [null, "", "1,2", "a,b,c,d", "1,1,1,9", "-1,1,1,1", "1,1,1,"]) {
+      expect(weightsFromParam(bad)).toEqual({ R: 1, H: 1, E: 1, C: 0 });
+    }
+  });
+});

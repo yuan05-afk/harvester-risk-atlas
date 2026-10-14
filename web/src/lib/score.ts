@@ -41,3 +41,18 @@ export function ranks(scores: (number | null)[]): (number | null)[] {
     return 1 + scores.filter((o) => o !== null && o > s).length;
   });
 }
+
+/** Slider weights as a URL value, "R,H,E,C" (e.g. "1,1,1,0"); null when they are the published ones. */
+export function weightsToParam(w: Weights): string | null {
+  const text = KEYS.map((k) => String(w[k])).join(",");
+  return text === "1,1,1,0" ? null : text;
+}
+
+/** Inverse of weightsToParam. Anything malformed falls back to the published equal weights. */
+export function weightsFromParam(p: string | null): Weights {
+  const parts = (p ?? "").split(",");
+  if (parts.length !== KEYS.length) return { R: 1, H: 1, E: 1, C: 0 };
+  const nums = parts.map((x) => (x.trim() === "" ? NaN : Number(x)));
+  if (nums.some((n) => !Number.isFinite(n) || n < 0 || n > 4)) return { R: 1, H: 1, E: 1, C: 0 };
+  return Object.fromEntries(KEYS.map((k, i) => [k, Math.round(nums[i] * 4) / 4])) as Weights;
+}

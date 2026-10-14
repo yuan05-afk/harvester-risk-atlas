@@ -46,6 +46,36 @@ test("Atlas: pick a plant from a map area", async ({ page }) => {
   await expect(page.locator(".panel--plant h1")).toBeVisible();
 });
 
+test("Atlas: clicking an area on the map opens its panel", async ({ page }) => {
+  await page.goto("/atlas");
+  await settled(page);
+  const canvas = page.locator(".atlas__map canvas").first();
+  await expect(canvas).toBeVisible();
+  await page.waitForTimeout(1500);
+  const box = (await canvas.boundingBox())!;
+  let hit = false;
+  for (let fy = 0.15; fy < 0.95 && !hit; fy += 0.07) {
+    for (let fx = 0.2; fx < 0.8 && !hit; fx += 0.05) {
+      await page.mouse.click(box.x + box.width * fx, box.y + box.height * fy);
+      await page.waitForTimeout(150); // spaced out so two clicks never count as a double-click zoom
+      hit = /[?&]cell=/.test(page.url());
+    }
+  }
+  expect(hit, "a click on the map should select an area").toBe(true);
+  await expect(page.getByRole("heading", { name: "This area" })).toBeVisible();
+});
+
+test("How it works: weights live in the URL", async ({ page }) => {
+  await page.goto("/how-it-works?w=3,1,1,0");
+  await expect(page.getByRole("button", { name: "Rarity first" })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Harvest first" }).click();
+  await expect(page).toHaveURL(/w=1(%2C|,)3(%2C|,)1(%2C|,)0/);
+  await page.getByRole("button", { name: "Equal (published)" }).click();
+  await expect(page).not.toHaveURL(/w=/);
+  await page.goto("/how-it-works?w=garbage");
+  await expect(page.getByRole("button", { name: "Equal (published)" })).toHaveAttribute("aria-pressed", "true");
+});
+
 test("a bad slug shows NotFound", async ({ page }) => {
   await page.goto("/species/not-a-plant");
   await expect(page.getByRole("heading", { name: /is not in the atlas/ })).toBeVisible();

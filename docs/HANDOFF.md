@@ -2,7 +2,7 @@
 
 You are continuing **Harvester Risk Atlas v2** for EthnoHack 2026, Track 3 (hackathon Nov 2–8 2026; submission Nov 8). This file replaces the old chat. It is enough to continue: read the plan only if a step here is unclear (`C:\Users\Yuan\.claude\plans\harvester-risk-atlas-virtual-eagle.md`).
 
-**Updated:** 2026-10-14, after Phase 4 (tests and parity; only the optional weights-in-URL item is left). Branch `v2-rebuild`. Run `git log --oneline -5` for the latest commit.
+**Updated:** 2026-10-14, after Phase 4 (tests and parity, complete). Branch `v2-rebuild`. Run `git log --oneline -5` for the latest commit.
 
 ## 1. Rules (non-negotiable)
 - **Approvals.** Commit at the end of each phase, which the user has approved. **Never push, deploy, make the repo public, or tag a release without asking.**
@@ -53,7 +53,7 @@ You are continuing **Harvester Risk Atlas v2** for EthnoHack 2026, Track 3 (hack
 cd web && npm run dev            # http://localhost:5173 (also .claude/launch.json "atlas-web")
 cd web && npm run build          # tsc + vite; main chunk 144.8 KB gz
 cd web && npm test               # vitest: 61 pass (parity, text, tooltip)
-cd web && npm run e2e            # Playwright + axe, 14 pass; builds and serves on :4173
+cd web && npm run e2e            # Playwright + axe, 16 pass; builds and serves on :4173
 ```
 
 **Browser QA.** Use the Playwright MCP tools (`browser_run_code_unsafe` for mouse and viewport control). Screenshots go to the repo root, in `.playwright-mcp/` (gitignored). The in-app browser pane is too small to judge 1440 px layouts.
@@ -66,7 +66,7 @@ Gotchas:
 ## 4. Phase status and what to do next
 Work in order. Each phase ends with: verify, then update `ORIGINALITY.md` and **this file's status lines**, then commit.
 
-### Phase 4 remainder: tests and parity (DONE except item 4)
+### Phase 4 remainder: tests and parity (DONE, incl. weights in the URL: ?w=R,H,E,C)
 1. **Golden parity test.** `export.py` writes `web/public/data/parity.json`: weights and ranks for 3 weight sets. Then a vitest `src/lib/score.test.ts` asserts that `lib/score.ts` reproduces the ranks exactly. Install `jsdom` if vitest asks for it.
    *Done when:* `npm test` is green and `pytest` is still green.
 2. **Unit tests** for `vocab.level()`, `explain()` (no undefined or NaN text across all 51 species) and `MapTooltip` counts.
