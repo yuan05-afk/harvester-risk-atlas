@@ -105,29 +105,31 @@ export function RecordHistory({ history }: { history: SpeciesDetail["history"] }
 
 export function RecordHistoryTable({ history }: { history: SpeciesDetail["history"] }) {
   return (
-    <table className="data-table">
-      <thead>
-        <tr>
-          <th scope="col">Decade</th>
-          {RECORD_KINDS.map((k) => (
-            <th scope="col" key={k.key} className="num">
-              {k.label}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {history.map((d) => (
-          <tr key={d.decade}>
-            <th scope="row">{d.decade}s</th>
+    <div className="table-wrap" role="region" aria-label="Records per decade" tabIndex={0}>
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th scope="col">Decade</th>
             {RECORD_KINDS.map((k) => (
-              <td key={k.key} className="num">
-                {d[k.key]}
-              </td>
+              <th scope="col" key={k.key} className="num">
+                {k.label}
+              </th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {history.map((d) => (
+            <tr key={d.decade}>
+              <th scope="row">{d.decade}s</th>
+              {RECORD_KINDS.map((k) => (
+                <td key={k.key} className="num">
+                  {d[k.key]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

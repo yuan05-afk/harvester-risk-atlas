@@ -115,18 +115,56 @@ for (const route of routes) {
   });
 }
 
-const widths = [360, 390, 768, 1024, 1280, 1440];
+// Phones (small to large), tablets in both orientations, laptops and a wide desktop.
+const widths = [320, 360, 390, 430, 600, 768, 820, 1024, 1280, 1440, 1920];
 for (const w of widths) {
-  test(`no horizontal scroll at ${w}px on any route`, async ({ page }) => {
+  test(`no horizontal scroll at ${w}px on any route, disclosures open`, async ({ page }) => {
     await page.setViewportSize({ width: w, height: 844 });
     for (const route of routes) {
       await page.goto(route);
       await settled(page);
+      // Charts and tables hide inside disclosures; open them so they are measured too.
+      await page.evaluate(() => document.querySelectorAll("details").forEach((d) => (d.open = true)));
+      await page.waitForTimeout(150);
       const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(over, `${route} overflows by ${over}px at ${w}px`).toBeLessThanOrEqual(0);
     }
   });
 }
+
+test("the active tab is marked by ink, not a coloured marker", async ({ page }) => {
+  for (const [w, sel] of [
+    [1280, ".topnav__link.active"],
+    [390, ".bottomtabs__link.active"],
+  ] as const) {
+    await page.setViewportSize({ width: w, height: 844 });
+    await page.goto("/plants");
+    await settled(page);
+    const look = await page.locator(sel).first().evaluate((el) => {
+      const after = getComputedStyle(el, "::after");
+      const svg = el.querySelector("svg");
+      return {
+        color: getComputedStyle(el).color,
+        marker: after.backgroundColor,
+        wash: svg ? getComputedStyle(svg).background : "",
+      };
+    });
+    expect(look.color).toBe("rgb(21, 24, 28)");
+    expect(look.marker).not.toContain("226, 179, 60"); // --highlight (turmeric)
+    expect(look.wash).not.toContain("226, 179, 60");
+  }
+});
+
+test("a phone turned sideways puts the Atlas map and panel side by side", async ({ page }) => {
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.goto("/atlas");
+  await settled(page);
+  const map = await page.locator(".atlas__map").boundingBox();
+  const panel = await page.locator(".atlas__panel").boundingBox();
+  expect(map && panel).toBeTruthy();
+  expect(panel!.x).toBeGreaterThanOrEqual(map!.x + map!.width - 1);
+  expect(map!.height).toBeGreaterThan(250);
+});
 
 test("reduced motion skips the intro", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });

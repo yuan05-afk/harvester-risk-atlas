@@ -40,7 +40,10 @@ v1 data are archived unchanged in `data/archive/v1.1/`, with checksums. The full
 
 ## Hack-week log (2–8 Nov 2026)
 
-_Empty until 2 Nov._
+| 2026-10-14 | Device fit and look pass (done before the week, logged here because it follows the tag). Page ground moved from cream to a neutral cool grey with white sheets, paper grain removed, harvest orange darkened to keep 4.5:1 text contrast; the turmeric marker under the active tab is gone (ink and a 2 px rule on the top bar, heavier glyph on the bottom tabs). Responsive fixes: the "How sure is this order?" chart and the evidence table no longer push the page sideways on phones, previous/next plant cards stack, tablet portrait gets a two-column plant hero and a compact home hero, phones in landscape get a side-by-side Atlas and compact tab bar, 44 px touch targets on touch screens, small-phone and large-monitor tweaks. e2e now opens every disclosure and checks 11 widths from 320 to 1920. |
+| 2026-10-14 | Every plant now has a picture. Abutra and Dudoa had no open field photo, so each uses a botanist-identified herbarium specimen scan from GBIF (Naturalis Biodiversity Center, Smithsonian NMNH; both CC0), cropped to the leafy part and captioned "Herbarium specimen, cropped". `photos.csv` gained `kind`, `source` and `crop` columns; `sources/photos.py` gained `crop_box`, crop support in `download` and a `fetch_chosen` command; a test fails if any plant loses its photo. |
+
+_Hack-week work proper starts 2 Nov._
 
 ## Third-party code, data and tools
 

@@ -305,10 +305,12 @@ function EvidenceTable({ d }: { d: SpeciesDetail }) {
     ["IUCN Red List", "Not retrieved for this version; no category is shown or guessed", "IUCN Red List"],
     [
       "Photo",
-      d.photo ? `${d.photo.creator}, ${d.photo.licence}` : "No openly licensed photo found",
+      d.photo
+        ? `${d.photo.kind === "specimen" ? "Herbarium specimen, cropped. " : ""}${d.photo.creator}, ${d.photo.licence}`
+        : "No openly licensed photo found",
       d.photo ? (
         <a href={d.photo.page} target="_blank" rel="noreferrer">
-          iNaturalist
+          {d.photo.kind === "specimen" ? "GBIF specimen record" : "iNaturalist"}
         </a>
       ) : (
         "—"

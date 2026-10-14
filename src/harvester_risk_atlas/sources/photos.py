@@ -8,6 +8,12 @@ Candidates are listed in data/curated/photos.csv. A person picks one per
 species (column ``chosen``) after looking at the contact sheet; the build
 then saves a resized copy to web/public/photos/<slug>.jpg with its credit.
 Only the photo is used. The observation's location is never shown.
+
+A few rare plants have no open field photo. For those, a herbarium specimen scan
+(a botanist-identified museum sheet, CC0 or CC BY, via GBIF) is used instead and is
+labelled as such: ``kind`` is "specimen", ``source`` names the museum, and ``crop``
+trims the sheet to its leafy part. Run ``python -m harvester_risk_atlas.sources.photos``
+to download any chosen image that is missing locally.
 """
 from __future__ import annotations
 
@@ -81,17 +87,44 @@ def candidates(taxon_key: int, n: int = 6, licenses: tuple[str, ...] = LICENSES)
     return out
 
 
-def download(url: str, dest: Path) -> Path:
+def crop_box(size: tuple[int, int], spec: str) -> tuple[int, int, int, int] | None:
+    """Pixel box from ``spec`` = "x0,y0,x1,y1" given as fractions of the image, or None."""
+    if not spec or not str(spec).strip():
+        return None
+    x0, y0, x1, y1 = (float(v) for v in str(spec).split(","))
+    if not (0 <= x0 < x1 <= 1 and 0 <= y0 < y1 <= 1):
+        raise ValueError(f"bad crop {spec!r}: need 0 <= x0 < x1 <= 1 and 0 <= y0 < y1 <= 1")
+    w, h = size
+    return round(x0 * w), round(y0 * h), round(x1 * w), round(y1 * h)
+
+
+def download(url: str, dest: Path, crop: str = "") -> Path:
+    """Save a resized JPEG. ``crop`` (fractions) trims a herbarium sheet to its leafy part."""
     from PIL import Image
 
     dest.parent.mkdir(parents=True, exist_ok=True)
     r = session().get(url, timeout=60)
     r.raise_for_status()
     img = Image.open(io.BytesIO(r.content)).convert("RGB")
+    box = crop_box(img.size, crop)
+    if box:
+        img = img.crop(box)
     if img.width > MAX_WIDTH:
         img = img.resize((MAX_WIDTH, round(img.height * MAX_WIDTH / img.width)), Image.LANCZOS)
     img.save(dest, "JPEG", quality=80, optimize=True, progressive=True)
     return dest
+
+
+def fetch_chosen() -> list[Path]:
+    """Download the chosen candidate of every species whose raw copy is missing."""
+    df = pd.read_csv(CANDIDATES_CSV, keep_default_na=False)
+    df = df[df["chosen"].astype(str).str.lower() == "true"]
+    got = []
+    for r in df.itertuples(index=False):
+        dest = raw_path(r.slug, int(r.candidate))
+        if not dest.exists():
+            got.append(download(r.image_url, dest, getattr(r, "crop", "")))
+    return got
 
 
 def build_candidates(taxa: pd.DataFrame, slugify) -> pd.DataFrame:
@@ -115,3 +148,8 @@ def build_candidates(taxa: pd.DataFrame, slugify) -> pd.DataFrame:
 
 def raw_path(slug: str, candidate: int) -> Path:
     return RAW_DIR / f"{slug}_{candidate}.jpg"
+
+
+if __name__ == "__main__":
+    for path in fetch_chosen():
+        print("saved", path)

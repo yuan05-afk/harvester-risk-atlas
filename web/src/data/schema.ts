@@ -43,7 +43,15 @@ export const SpeciesSummary = z.object({
   climate: z.object({ dT: num, dT_range: pair, exceed: num, exceed_range: pair }),
   review: z.object({ needed: z.boolean(), note: z.string() }),
   photo: z
-    .object({ src: z.string(), creator: z.string(), licence: z.string(), page: z.string() })
+    .object({
+      src: z.string(),
+      creator: z.string(),
+      licence: z.string(),
+      page: z.string(),
+      /** "specimen" is a cropped herbarium sheet, used where no open field photo exists. */
+      kind: z.enum(["photo", "specimen"]).default("photo"),
+      source: z.string().default("iNaturalist"),
+    })
     .nullable()
     .optional()
     .transform((p) => p ?? null),

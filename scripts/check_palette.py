@@ -41,4 +41,4 @@ for s in sets:
     worst={}
     for k in ['norm','prot','deut','trit']:
         worst[k]=min(de2000(lab(sim(hex2rgb(a),k)),lab(sim(hex2rgb(b),k))) for a,b in itertools.combinations(names,2))
-    print(s, {k:round(v,1) for k,v in worst.items()}, 'contrast vs #FBF8F1:', [float(round(cr(c,'#FBF8F1'),1)) for c in s])
+    print(s, {k:round(v,1) for k,v in worst.items()}, 'contrast vs #FCFCFD:', [float(round(cr(c,'#FCFCFD'),1)) for c in s])
