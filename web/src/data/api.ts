@@ -26,6 +26,9 @@ export function load<T>(path: string, schema: z.ZodType<T>): Promise<T> {
       .then(async (res) => {
         if (res.status === 404) throw new DataError(`${path} is not in this build.`, "missing");
         if (!res.ok) throw new DataError(`${path} returned ${res.status}.`, "network");
+        // Hosts with an SPA fallback answer unknown files with index.html and a 200.
+        if ((res.headers.get("content-type") ?? "").includes("text/html"))
+          throw new DataError(`${path} is not in this build.`, "missing");
         const parsed = schema.safeParse(await res.json());
         if (!parsed.success) {
           throw new DataError(`${path} does not match the expected format (${parsed.error.issues[0]?.path.join(".")}).`, "schema");

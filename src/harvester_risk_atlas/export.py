@@ -27,7 +27,7 @@ import numpy as np
 import pandas as pd
 
 from .config import DATA_PROCESSED, ROOT
-from .index import DEFAULT_WEIGHTS, MIN_CELLS, TIER_HIGH, TIER_WATCH
+from .index import COMPONENTS, DEFAULT_WEIGHTS, MIN_CELLS, TIER_HIGH, TIER_WATCH, normalize, ranks, score as index_score
 from .pipeline import V2_DIR, load_cohort
 
 INDEX_VERSION = "2.0.0"
@@ -494,6 +494,39 @@ def build_manifest(summaries: list[dict]) -> dict:
     }
 
 
+PARITY_WEIGHT_SETS = {
+    "default": dict(DEFAULT_WEIGHTS),
+    "with_climate": {"R": 1.0, "H": 1.0, "E": 1.0, "C": 1.0},
+    "harm_heavy": {"R": 0.2, "H": 0.6, "E": 0.1, "C": 0.1},
+}
+
+
+def build_parity(summaries: list[dict]) -> dict:
+    """Golden file: the pipeline's own ranks for several weight sets, computed
+    from the same rounded component values the web app receives, so
+    web/src/lib/score.ts can be tested against it exactly."""
+    scored = [s for s in summaries if not s["gate"]]
+    comps = pd.DataFrame(
+        [{k: (np.nan if s["components"][k] is None else s["components"][k]) for k in COMPONENTS} for s in scored]
+    )
+    sets = []
+    for name, raw in PARITY_WEIGHT_SETS.items():
+        sc = index_score(comps, raw)
+        rk = ranks(sc.to_numpy())
+        sets.append(
+            {
+                "name": name,
+                "weights": normalize(raw),
+                "ranks": {s["slug"]: _num(r) for s, r in zip(scored, rk)},
+            }
+        )
+    return {
+        "note": "Golden ranks from harvester_risk_atlas.index; tested by web/src/lib/score.test.ts",
+        "components": {s["slug"]: s["components"] for s in scored},
+        "sets": sets,
+    }
+
+
 def run_export() -> dict[str, int]:
     scores = pd.read_csv(V2_DIR / "scores.csv", encoding="utf-8", keep_default_na=False, na_values=[""])
     summaries, details = build_species(scores)
@@ -502,6 +535,7 @@ def run_export() -> dict[str, int]:
     sizes = {
         "manifest.json": _write(WEB_DATA / "manifest.json", build_manifest(summaries)),
         "species.json": _write(WEB_DATA / "species.json", summaries),
+        "parity.json": _write(WEB_DATA / "parity.json", build_parity(summaries)),
         "validation.json": _write(WEB_DATA / "validation.json", json.loads((V2_DIR / "validation.json").read_text(encoding="utf-8"))),
         "geo/cells.geojson": _write(WEB_DATA / "geo" / "cells.geojson", cells),
         "geo/cells_r4.geojson": _write(
