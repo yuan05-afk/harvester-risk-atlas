@@ -12,7 +12,7 @@ html {
 }
 body {
   margin: 0;
-  background: var(--grain), var(--paper);
+  background: var(--paper);
   color: var(--ink);
   font-family: var(--font);
   font-size: var(--fs-body);
@@ -235,23 +235,21 @@ kbd {
 .topnav__link.active {
   color: var(--ink);
 }
-/* The active page is underlined with a turmeric marker stroke. */
+/* The active page is marked by ink and a thin straight rule, nothing coloured. */
 .topnav__link::after {
   content: "";
   position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: 5px;
-  height: 7px;
-  z-index: -1;
-  background: var(--highlight);
-  border-radius: 2px 5px 3px 6px;
-  transform: rotate(-1.2deg) scaleX(0);
-  transform-origin: left;
-  transition: transform 260ms var(--ease);
+  left: 14px;
+  right: 14px;
+  bottom: 2px;
+  height: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 200ms var(--ease);
 }
 .topnav__link.active::after {
-  transform: rotate(-1.2deg) scaleX(1);
+  transform: scaleX(1);
 }
 .search-trigger {
   display: inline-flex;
@@ -353,14 +351,15 @@ kbd {
   }
   .bottomtabs__link.active {
     color: var(--ink);
+    font-weight: 700;
   }
-  .bottomtabs__link.active svg {
-    background: linear-gradient(transparent 58%, var(--highlight) 58%, var(--highlight) 86%, transparent 86%);
-    padding: 0 10px;
-    box-sizing: content-box;
+  /* Active tab: ink, a heavier pen line and a faint ink wash in the glyph. */
+  .bottomtabs__link.active .nav-glyph g {
+    stroke-width: 2;
   }
   .bottomtabs__link.active .nav-glyph__fill {
-    fill: var(--highlight);
+    fill: currentColor;
+    fill-opacity: 0.16;
   }
 }
 @media (max-width: 420px) {
@@ -398,7 +397,7 @@ kbd {
   color: var(--sheet);
 }
 .button--primary:hover {
-  background: #3a352c;
+  background: #2f343b;
   box-shadow: var(--shadow-card);
 }
 .button--small {
@@ -547,6 +546,7 @@ kbd {
 }
 .disclosure__body {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--s4);
   padding-bottom: var(--s4);
 }
@@ -622,10 +622,10 @@ kbd {
   line-height: 0;
   transform: rotate(-8deg);
   border-radius: 50%;
-  filter: drop-shadow(0 1px 1px rgb(29 26 21 / 0.18)) drop-shadow(0 4px 10px rgb(29 26 21 / 0.14));
+  filter: drop-shadow(0 1px 1px rgb(21 24 28 / 0.18)) drop-shadow(0 4px 10px rgb(21 24 28 / 0.14));
 }
 .stamp__paper {
-  fill: #fffdf7;
+  fill: #fdfdfe;
 }
 .stamp svg {
   overflow: visible;
@@ -2191,6 +2191,11 @@ svg .tick {
   background: var(--ink);
   margin-right: -10px;
 }
+.caterpillar {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
 .caterpillar__axis svg {
   display: block;
 }
@@ -2369,7 +2374,7 @@ svg .tick {
 .palette__overlay {
   position: fixed;
   inset: 0;
-  background: rgb(29 26 21 / 0.36);
+  background: rgb(21 24 28 / 0.36);
   backdrop-filter: blur(2px);
   z-index: 60;
 }
@@ -2650,7 +2655,7 @@ svg .tick {
 
 /* ===================== Field brief ===================== */
 body.is-brief {
-  background: #e9ece7;
+  background: #e6e9ec;
 }
 .brief-wrap {
   padding: var(--s5) var(--gutter) var(--s8);
@@ -2777,7 +2782,7 @@ body.is-brief {
   height: auto;
 }
 .mini-land {
-  fill: #f1f3f0;
+  fill: #f4f6f8;
   stroke: var(--rule-strong);
   stroke-width: 0.5;
 }
@@ -2824,6 +2829,210 @@ body.is-brief {
   size: A4;
   margin: 0;
 }
+/* ===================== Device fit =====================
+   Tablets, small phones and landscape phones. Rules here are deliberately
+   last so they win over the base layout above. */
+body {
+  overflow-wrap: break-word;
+}
+img,
+video {
+  max-width: 100%;
+}
+.app {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Large monitors: let the page breathe a little more */
+@media (min-width: 1800px) {
+  :root {
+    --max: 1440px;
+  }
+}
+
+/* Tablets in portrait: keep the hero compact, two columns where there is room */
+@media (min-width: 601px) and (max-width: 1000px) {
+  .display {
+    max-width: 20ch;
+    font-size: clamp(2.75rem, 6.4vw, 3.6rem);
+  }
+  .hero {
+    padding-top: var(--s5);
+  }
+  .hero__map {
+    height: clamp(380px, 52vh, 560px);
+  }
+  .bottomtabs {
+    grid-template-columns: repeat(4, minmax(0, 150px));
+    justify-content: center;
+  }
+  .bottomtabs__link {
+    font-size: 0.8rem;
+  }
+}
+@media (min-width: 640px) and (max-width: 900px) {
+  .profile-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--s5);
+    align-items: start;
+  }
+  .where {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+  .where__map {
+    height: 420px;
+  }
+}
+@media (min-width: 561px) and (max-width: 1100px) {
+  .step:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    border-left: 0;
+  }
+}
+
+/* Plant photo: the rank stamp sits inside the picture, never over its credit */
+@media (max-width: 900px) {
+  .profile-hero__stamp {
+    right: 10px;
+    bottom: 30px;
+  }
+  .plants-toolbar {
+    top: 58px;
+  }
+}
+
+/* Previous/next plant: stack on narrow screens instead of pushing the page wide */
+.pager {
+  flex-wrap: wrap;
+}
+.pager__link {
+  min-width: 0;
+  max-width: 100%;
+}
+@media (max-width: 560px) {
+  .pager__link {
+    flex: 1 1 100%;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .map-controls__group svg {
+    display: none;
+  }
+  .map-controls__group button {
+    padding: 6px 10px;
+    font-size: var(--fs-micro);
+  }
+  .map-controls__check {
+    font-size: var(--fs-micro);
+    padding: 5px 10px 5px 8px;
+  }
+  .panel {
+    padding: var(--s4);
+  }
+  .page {
+    padding-top: var(--s5);
+  }
+}
+@media (max-width: 360px) {
+  .bottomtabs__link {
+    font-size: 0.66rem;
+  }
+  .hero__stats {
+    flex-wrap: wrap;
+    gap: var(--s3) var(--s5);
+  }
+  .actions .button {
+    flex: 1 1 100%;
+  }
+}
+/* Short phones in portrait (iPhone SE, small Androids): leave the map room to breathe */
+@media (max-width: 900px) and (max-height: 680px) {
+  .atlas__panel {
+    max-height: 42dvh;
+  }
+}
+
+/* Phones turned sideways: little height, so the chrome shrinks and the atlas goes side by side */
+@media (max-height: 500px) and (orientation: landscape) {
+  .topbar {
+    height: 48px;
+  }
+  .plants-toolbar {
+    top: 48px;
+  }
+  .bottomtabs__link {
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 2px;
+    font-size: 0.8rem;
+  }
+  .bottomtabs__link .nav-glyph {
+    width: 20px;
+    height: 20px;
+  }
+  .footer {
+    padding-bottom: calc(var(--s6) + 52px);
+  }
+  .hero {
+    min-height: 0;
+  }
+  .hero__map {
+    height: 85vh;
+    min-height: 300px;
+  }
+  .atlas {
+    padding-bottom: 44px;
+  }
+}
+@media (max-width: 900px) and (min-width: 560px) and (max-height: 500px) and (orientation: landscape) {
+  .atlas {
+    grid-template-columns: minmax(0, 1fr) min(360px, 46vw);
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .atlas__panel {
+    max-height: none;
+    border-top: 0;
+    border-left: 1px solid var(--rule);
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .atlas__grip {
+    display: none;
+  }
+  .map-controls {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: calc(100% - 64px);
+  }
+}
+
+/* Touch screens: every control at least 44 px */
+@media (pointer: coarse) {
+  .segmented-pills button,
+  .map-controls__group button,
+  .back-button,
+  .button--small {
+    min-height: 44px;
+  }
+  .map-controls__check {
+    min-height: 44px;
+  }
+  .topnav__link,
+  .footer__links a,
+  .footer__links .link-button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
 @media print {
   body,
   body.is-brief {

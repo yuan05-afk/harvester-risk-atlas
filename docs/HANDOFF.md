@@ -54,13 +54,14 @@ You are continuing **Harvester Risk Atlas v2** for EthnoHack 2026, Track 3 (hack
 cd web && npm run dev            # http://localhost:5173 (also .claude/launch.json "atlas-web")
 cd web && npm run build          # tsc + vite + pre-render; Overview first load ~132 KB gz
 cd web && npm test               # vitest: 66 pass (parity, URL weights, schemas, text, tooltip)
-cd web && npm run e2e            # Playwright + axe, 26 pass; builds and serves on :4173
+cd web && npm run e2e            # Playwright + axe, 33 pass; builds and serves on :4173
 ```
 
 **Browser QA.** Use the Playwright MCP tools (`browser_run_code_unsafe` for mouse and viewport control). Screenshots go to the repo root, in `.playwright-mcp/` (gitignored). The in-app browser pane is too small to judge 1440 px layouts.
 
 Gotchas:
 - `maplibre-gl.css` loads later than `app.css`, so override it with higher specificity.
+- A stale `vite preview` left on :4173 makes `npm run e2e` reuse an old build (`reuseExistingServer`); stop it first.
 - A full-page screenshot repeats the sticky header mid-page; that is an artifact, not a bug.
 - To skip the intro, set `sessionStorage['hra-intro-seen']='1'`.
 
@@ -74,6 +75,7 @@ Work in order. Each phase ends with: verify, then update `ORIGINALITY.md` and **
 - **Cut on purpose:** the Compare page, pre-built PDFs (browser print is enough), GitHub Pages (Vercel replaced it).
 
 ### Phase 6: hack week (Nov 2–8)
+- **Done early (2026-10-14, branch `handoff-phase6`, not pushed):** look and device-fit pass, logged in the hack-week section of `ORIGINALITY.md`. The cream ground is now a neutral cool grey (`--paper #EFF1F3`, `--sheet #FCFCFD`, grain removed; see `docs/DESIGN.md`), the turmeric marker under the active nav item is gone, and the responsive fixes are in the "Device fit" block at the end of `app.css`. e2e: 33 pass (opens every disclosure, 11 widths 320–1920, landscape phone Atlas). Open question for the user: the turmeric "Biggest reason" marker on the Reason tiles and step 4 still exist; remove them too?
 - **Everything after `v2.0-pre-hackathon` is hack-week work:** log each change in the hack-week section of `docs/ORIGINALITY.md`.
 - Do real new work inside the week and log it. Candidates: SDMs with spatial block cross-validation (`elapid`, species with ≥ 30 cells), province profiles, Filipino briefs (need native-speaker review), and cohort round 2.
 - Devpost: Problem → Data → Method → Prototype → Results → Impact → Limitations, plus a clear pre-existing vs hack-week split.
