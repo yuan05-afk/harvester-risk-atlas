@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState, type ComponentProps } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, type ComponentProps } from "react";
 import type { HexMap as HexMapType } from "./HexMap";
 
 // MapLibre is the heaviest dependency; it loads after the page's text is on screen.
@@ -17,8 +17,24 @@ function useIdle(timeout: number) {
   return idle;
 }
 
+/** True once the element comes within a screen of the viewport (e.g. a map below the fold on a phone). */
+function useNearView<T extends Element>() {
+  const ref = useRef<T>(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || near) return;
+    if (!("IntersectionObserver" in window)) return setNear(true);
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: "100% 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near]);
+  return [ref, near] as const;
+}
+
 export function HexMap(props: ComponentProps<typeof HexMapType>) {
   const idle = useIdle(1500);
-  const loading = <div className="hexmap hexmap--loading" role="img" aria-label={`${props.label} (loading)`} />;
-  return idle ? <Suspense fallback={loading}><HexMapInner {...props} /></Suspense> : loading;
+  const [ref, near] = useNearView<HTMLDivElement>();
+  const loading = <div ref={ref} className="hexmap hexmap--loading" role="img" aria-label={`${props.label} (loading)`} />;
+  return idle && near ? <Suspense fallback={loading}><HexMapInner {...props} /></Suspense> : loading;
 }

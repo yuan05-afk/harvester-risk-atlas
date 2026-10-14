@@ -20,14 +20,26 @@ const HEX_FILL = ["var(--tier-lower)", "var(--hot-1)", "var(--hot-2)", "var(--ho
 /** Inner paths of the mark SVG, without its outer <svg> wrapper. */
 const MARK_INNER = markSvg.replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
 
+/**
+ * The pre-rendered Overview is on screen before the app starts. On a slow
+ * connection the visitor is already reading it by then, so the intro would
+ * interrupt rather than introduce: skip it (and count it as seen).
+ */
+const LATE_START_MS = 1500;
+
 export function shouldPlayIntro(): boolean {
   if (typeof window === "undefined") return false;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
   try {
-    return sessionStorage.getItem(SESSION_KEY) !== "1";
+    if (sessionStorage.getItem(SESSION_KEY) === "1") return false;
   } catch {
     return true;
   }
+  if (document.getElementById("root")?.dataset.prerendered !== undefined && performance.now() > LATE_START_MS) {
+    markSeen();
+    return false;
+  }
+  return true;
 }
 
 function markSeen() {
@@ -91,24 +103,25 @@ export function Preloader({ onDone }: { onDone: () => void }) {
           role="dialog"
           aria-modal="true"
           aria-label="Harvester Risk Atlas introduction"
-          initial={{ opacity: 1 }}
+          // Fades in over the pre-rendered page rather than snapping over it.
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.25 } }}
           exit={{ clipPath: "inset(0 0 100% 0)", transition: { duration: 0.7, ease: [0.7, 0, 0.2, 1] } }}
         >
           <div className="intro__stage">
             <svg className="intro__map" viewBox="0 -36 236 268" aria-hidden="true">
               <g className="intro__mark" dangerouslySetInnerHTML={{ __html: MARK_INNER }} />
               <g>
+                {/* ~260 hexagons: CSS animations, so the bloom runs off the main thread. */}
                 {hexes.map((h, i) => (
-                  <motion.path
+                  <path
                     key={i}
+                    className="intro__hex"
                     d={h.d}
                     fill={h.fill}
                     stroke="var(--paper)"
                     strokeWidth={0.6}
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: h.delay, type: "spring", stiffness: 380, damping: 18 }}
-                    style={{ transformBox: "fill-box", transformOrigin: "center" }}
+                    style={{ animationDelay: `${h.delay.toFixed(2)}s` }}
                   />
                 ))}
               </g>

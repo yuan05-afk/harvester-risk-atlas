@@ -1,5 +1,5 @@
 import { MotionConfig } from "motion/react";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useLayoutEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { Preloader, shouldPlayIntro } from "./components/Preloader";
@@ -17,7 +17,13 @@ const Species = lazy(() => import("./routes/Species").then((m) => ({ default: m.
 function Shell() {
   const location = useLocation();
   // The intro opens the Overview only; deep links go straight to their page.
-  const [intro, setIntro] = useState(() => location.pathname === "/" && shouldPlayIntro());
+  // Decided after mount (before paint) so the pre-rendered Overview hydrates without a mismatch.
+  const [intro, setIntro] = useState(false);
+  useLayoutEffect(() => {
+    if (location.pathname === "/" && shouldPlayIntro()) setIntro(true);
+    // Only the first page of a visit can play the intro.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <>
       <Routes>
@@ -43,12 +49,21 @@ function Shell() {
   );
 }
 
-export function App() {
+export const BASENAME = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+/** The app without its router: the browser wraps it in BrowserRouter, the pre-renderer in StaticRouter. */
+export function AppRoutes() {
   return (
     <MotionConfig reducedMotion="user">
-      <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-        <Shell />
-      </BrowserRouter>
+      <Shell />
     </MotionConfig>
+  );
+}
+
+export function App() {
+  return (
+    <BrowserRouter basename={BASENAME}>
+      <AppRoutes />
+    </BrowserRouter>
   );
 }

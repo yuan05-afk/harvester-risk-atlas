@@ -48,12 +48,12 @@ You are continuing **Harvester Risk Atlas v2** for EthnoHack 2026, Track 3 (hack
 
 ## 3. Commands (Windows; Git Bash or PowerShell)
 ```
-.venv/Scripts/python.exe -m pytest -q                          # 95 pass
+.venv/Scripts/python.exe -m pytest -q                          # 65 pass (v1 Streamlit tests removed)
 .venv/Scripts/python.exe -m harvester_risk_atlas all --offline  # rebuild data → web/public/data
 cd web && npm run dev            # http://localhost:5173 (also .claude/launch.json "atlas-web")
-cd web && npm run build          # tsc + vite; main chunk 144.8 KB gz
+cd web && npm run build          # tsc + vite + pre-render; main chunk ~128 KB gz
 cd web && npm test               # vitest: 61 pass (parity, text, tooltip)
-cd web && npm run e2e            # Playwright + axe, 16 pass; builds and serves on :4173
+cd web && npm run e2e            # Playwright + axe, 26 pass; builds and serves on :4173
 ```
 
 **Browser QA.** Use the Playwright MCP tools (`browser_run_code_unsafe` for mouse and viewport control). Screenshots go to the repo root, in `.playwright-mcp/` (gitignored). The in-app browser pane is too small to judge 1440 px layouts.
@@ -85,8 +85,8 @@ Work in order. Each phase ends with: verify, then update `ORIGINALITY.md` and **
 ### Phase 5 status (2026-10-14)
 Done: CI (`.github/workflows/ci.yml`, green on PR #20), zod out of the production bundle, CLS 0, a11y and responsive e2e (16 widths/routes), README rewrite, Vercel project `harvester-risk-atlas` (team yuans-projects-e4a11f96, root `web`, production branch `main`, live at https://harvester-risk-atlas.vercel.app), `main` protected (checks `python` and `web` must pass; no force-push or deletion; admins may bypass).
 PR #20 merged into `main` on 2026-10-14; every push to `main` now redeploys production. Work on a branch and merge by PR (checks must pass).
-**Still the user's call:** deleting the old Streamlit code (item 4 below) and tagging `v2.0-pre-hackathon`.
-Lighthouse mobile (slow-4G, 4x CPU lab) is still about 70 on Overview (LCP ~4.6 s) because the app renders on the client; desktop is 86-100. Pre-rendering would be the next step.
+Streamlit v1 code removed (its address shows a "moved" page via `app/streamlit_app.py` + `app/requirements.txt`); `v2.0-pre-hackathon` tagged after this lands on `main`.
+Overview is pre-rendered at build time (`web/scripts/prerender.mjs`, `src/entry-server.tsx`) and hydrated; other paths get `shell.html`. Lighthouse Overview: mobile with applied throttling 83-84 (LCP 2.3 s), Lighthouse's default simulated mobile ~65 (it counts font downloads), desktop 98; accessibility 100. The intro is CSS-animated, fades in over the pre-rendered page, and is skipped if the app starts later than 1.5 s.
 
 ### Phase 5: QA, docs and cutover (original plan)
 1. **CI** (`.github/workflows/ci.yml`): pytest, `npm ci`, typecheck, vitest, build, Playwright plus axe. Never fetch raw data in CI.
