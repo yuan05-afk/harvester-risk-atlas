@@ -153,3 +153,30 @@ export const CellProps = z.object({
   species: z.array(z.string()),
 });
 export type CellProps = z.infer<typeof CellProps>;
+
+const Geo = z.object({
+  features: z.array(
+    z.object({ id: z.string().optional(), geometry: z.object({ type: z.string(), coordinates: z.any() }) }),
+  ),
+});
+
+const CellCollection = z.object({
+  type: z.literal("FeatureCollection"),
+  features: z.array(z.object({ id: z.string(), properties: CellProps })),
+});
+
+/**
+ * Every JSON file the app loads, by kind. Production trusts the files (they ship
+ * with the build and src/data/schema.test.ts checks all of them); development
+ * validates on load so a pipeline change shows up immediately. Keeping zod out
+ * of the production bundle saves ~31 KB gzip on first load.
+ */
+export const SCHEMAS = {
+  speciesList: z.array(SpeciesSummary),
+  species: SpeciesDetail,
+  manifest: Manifest,
+  validation: Validation,
+  cells: CellCollection,
+  geo: Geo,
+};
+export type Shapes = { [K in keyof typeof SCHEMAS]: z.infer<(typeof SCHEMAS)[K]> };

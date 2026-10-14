@@ -1,14 +1,13 @@
 import { ArrowLeft, Printer } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { z } from "zod";
 import { Mark } from "../components/Mark";
 import { PlantPhoto } from "../components/PlantPhoto";
 import { LevelMeter } from "../components/Reasons";
 import { Stamp } from "../components/Stamp";
 import { WithData } from "../components/Status";
 import { load, useSpecies, useSpeciesList } from "../data/api";
-import type { SpeciesDetail } from "../data/schema";
+import type { Shapes, SpeciesDetail } from "../data/schema";
 import { explain, summary } from "../lib/explain";
 import { fmtDate, fmtInt, fmtPct } from "../lib/format";
 import { COMPONENT_META, DAO_LABEL, level, rankSentence, SCORED_COMPONENTS } from "../lib/vocab";
@@ -167,20 +166,15 @@ function BriefSheet({ d, nScored }: { d: SpeciesDetail; nScored: number }) {
   );
 }
 
-const Geo = z.object({
-  features: z.array(
-    z.object({ id: z.string().optional(), geometry: z.object({ type: z.string(), coordinates: z.any() }) }),
-  ),
-});
-type GeoT = z.infer<typeof Geo>;
+type GeoT = Shapes["geo"];
 
 /** A static SVG map for print: Philippine land and the plant's areas. */
 function MiniMap({ cells }: { cells: string[] }) {
   const [land, setLand] = useState<GeoT | null>(null);
   const [hex, setHex] = useState<GeoT | null>(null);
   useEffect(() => {
-    load("geo/land.geojson", Geo).then(setLand, () => setLand(null));
-    load("geo/cells_r4.geojson", Geo).then(setHex, () => setHex(null));
+    load("geo/land.geojson", "geo").then(setLand, () => setLand(null));
+    load("geo/cells_r4.geojson", "geo").then(setHex, () => setHex(null));
   }, []);
   const W = 220;
   const H = 300;

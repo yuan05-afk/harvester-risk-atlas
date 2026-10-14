@@ -181,6 +181,8 @@ kbd {
   flex-direction: column;
 }
 .main {
+  /* Keeps the footer below the fold while a page is still loading (no layout shift). */
+  min-height: 100vh;
   flex: 1;
   outline: none;
 }

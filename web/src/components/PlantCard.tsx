@@ -13,11 +13,14 @@ export function PlantCard({
   s,
   nScored,
   size = "regular",
+  eager = false,
   onHover,
 }: {
   s: SpeciesSummary;
   nScored: number;
   size?: "regular" | "large";
+  /** Photo is likely in the first screen: load it at once, at high priority. */
+  eager?: boolean;
   onHover?: (slug: string | null) => void;
 }) {
   return (
@@ -30,7 +33,7 @@ export function PlantCard({
     >
       <Link to={`/species/${s.slug}`} className="plant-card__link">
         <div className="plant-card__media">
-          <PlantPhoto s={s} credit="none" decorative />
+          <PlantPhoto s={s} credit="none" decorative eager={eager} />
           <Stamp tier={s.tier} rank={s.rank} of={s.rank !== null ? nScored : undefined} size={size === "large" ? 92 : 74} className="plant-card__stamp" />
         </div>
         <div className="plant-card__text">

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { z } from "zod";
-import { CellProps, Manifest, SpeciesDetail, SpeciesSummary, Validation } from "./schema";
+import type { Shapes } from "./schema";
 
 const BASE = `${import.meta.env.BASE_URL}data/`;
 
@@ -16,7 +15,7 @@ export class DataError extends Error {
 const cache = new Map<string, Promise<unknown>>();
 
 /** Fetch a JSON file once per session and validate it against its schema. */
-export function load<T>(path: string, schema: z.ZodType<T>): Promise<T> {
+export function load<K extends keyof Shapes>(path: string, kind: K): Promise<Shapes[K]> {
   const key = path;
   if (!cache.has(key)) {
     const p = fetch(BASE + path)
@@ -29,27 +28,31 @@ export function load<T>(path: string, schema: z.ZodType<T>): Promise<T> {
         // Hosts with an SPA fallback answer unknown files with index.html and a 200.
         if ((res.headers.get("content-type") ?? "").includes("text/html"))
           throw new DataError(`${path} is not in this build.`, "missing");
-        const parsed = schema.safeParse(await res.json());
-        if (!parsed.success) {
-          throw new DataError(`${path} does not match the expected format (${parsed.error.issues[0]?.path.join(".")}).`, "schema");
+        const json: unknown = await res.json();
+        if (import.meta.env.DEV) {
+          const { SCHEMAS } = await import("./schema");
+          const parsed = SCHEMAS[kind].safeParse(json);
+          if (!parsed.success) {
+            throw new DataError(`${path} does not match the expected format (${parsed.error.issues[0]?.path.join(".")}).`, "schema");
+          }
         }
-        return parsed.data;
+        return json as Shapes[K];
       });
     p.catch(() => cache.delete(key));
     cache.set(key, p);
   }
-  return cache.get(key) as Promise<T>;
+  return cache.get(key) as Promise<Shapes[K]>;
 }
 
 export type Loadable<T> = { status: "loading" } | { status: "ready"; data: T } | { status: "error"; error: DataError };
 
-export function useData<T>(path: string | null, schema: z.ZodType<T>): Loadable<T> {
-  const [state, setState] = useState<Loadable<T>>({ status: "loading" });
+export function useData<K extends keyof Shapes>(path: string | null, kind: K): Loadable<Shapes[K]> {
+  const [state, setState] = useState<Loadable<Shapes[K]>>({ status: "loading" });
   useEffect(() => {
     if (!path) return;
     let live = true;
     setState({ status: "loading" });
-    load(path, schema).then(
+    load(path, kind).then(
       (data) => live && setState({ status: "ready", data }),
       (error: unknown) =>
         live &&
@@ -61,25 +64,18 @@ export function useData<T>(path: string | null, schema: z.ZodType<T>): Loadable<
     return () => {
       live = false;
     };
-  }, [path, schema]);
+  }, [path, kind]);
   return state;
 }
 
-const SpeciesList = z.array(SpeciesSummary);
-
-export const useSpeciesList = () => useData("species.json", SpeciesList);
-export const useManifest = () => useData("manifest.json", Manifest);
-export const useValidation = () => useData("validation.json", Validation);
-export const useSpecies = (slug: string | undefined) =>
-  useData(slug ? `species/${slug}.json` : null, SpeciesDetail);
+export const useSpeciesList = () => useData("species.json", "speciesList");
+export const useManifest = () => useData("manifest.json", "manifest");
+export const useValidation = () => useData("validation.json", "validation");
+export const useSpecies = (slug: string | undefined) => useData(slug ? `species/${slug}.json` : null, "species");
 
 export function geoUrl(name: string): string {
   return `${BASE}geo/${name}`;
 }
 
-const CellCollection = z.object({
-  type: z.literal("FeatureCollection"),
-  features: z.array(z.object({ id: z.string(), properties: CellProps })),
-});
-export const useCells = () => useData("geo/cells.geojson", CellCollection);
-export const useCellsCoarse = () => useData("geo/cells_r4.geojson", CellCollection);
+export const useCells = () => useData("geo/cells.geojson", "cells");
+export const useCellsCoarse = () => useData("geo/cells_r4.geojson", "cells");

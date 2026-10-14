@@ -114,3 +114,33 @@ for (const route of routes) {
     expect(bad.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).slice(0, 3).join(" | ")}`)).toEqual([]);
   });
 }
+
+const widths = [360, 390, 768, 1024, 1280, 1440];
+for (const w of widths) {
+  test(`no horizontal scroll at ${w}px on any route`, async ({ page }) => {
+    await page.setViewportSize({ width: w, height: 844 });
+    for (const route of routes) {
+      await page.goto(route);
+      await settled(page);
+      const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(over, `${route} overflows by ${over}px at ${w}px`).toBeLessThanOrEqual(0);
+    }
+  });
+}
+
+test("reduced motion skips the intro", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.addInitScript(() => sessionStorage.removeItem("hra-intro-seen"));
+  await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Which wild medicinal plants");
+  await expect(page.getByRole("button", { name: /skip/i })).toHaveCount(0);
+});
+
+test("keyboard: skip link is first, and the Atlas announces a selection", async ({ page }) => {
+  await page.goto("/atlas");
+  await settled(page);
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+  await page.goto(`/atlas?sp=${top.slug}`);
+  await expect(page.locator('aside [role="status"]').first()).toContainText("Showing");
+});

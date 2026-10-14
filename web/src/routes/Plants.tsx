@@ -85,7 +85,7 @@ function PlantsView({ species }: { species: SpeciesSummary[] }) {
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ duration: 0.35, delay: Math.min(i, 8) * 0.04 }}
                 >
-                  <PlantCard s={s} nScored={scored.length} />
+                  <PlantCard s={s} nScored={scored.length} eager={i < 3} />
                 </motion.div>
               ))}
             </div>

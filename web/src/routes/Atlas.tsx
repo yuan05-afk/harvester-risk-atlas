@@ -131,6 +131,13 @@ function AtlasView({ species, fine, coarse }: { species: SpeciesSummary[]; fine:
       </div>
 
       <aside className="atlas__panel" aria-label="Plants and areas">
+        <p className="sr-only" role="status" aria-live="polite">
+          {chosen
+            ? `Showing ${chosen.vernacular || chosen.name}.`
+            : selected
+              ? `Showing an area with ${selected.species.filter((x) => bySlug.get(x) && !bySlug.get(x)!.gate).length} ranked plants.`
+              : ""}
+        </p>
         <div className="atlas__grip" aria-hidden="true" />
         <AnimatePresence mode="wait" initial={false}>
           {chosen ? (

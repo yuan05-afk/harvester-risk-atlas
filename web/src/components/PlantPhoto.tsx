@@ -32,6 +32,7 @@ export function PlantPhoto({
           src={`${BASE}${p.src}`}
           alt={decorative ? "" : `${s.vernacular || s.name} (${s.name})`}
           loading={eager ? "eager" : "lazy"}
+          fetchPriority={eager ? "high" : undefined}
           decoding="async"
           onError={() => setFailed(true)}
         />

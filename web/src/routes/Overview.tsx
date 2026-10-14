@@ -21,6 +21,9 @@ const rise = {
   transition: { duration: 0.5, ease: [0.2, 0.7, 0.2, 1] as const },
 };
 
+/** Hero text slides up but is never transparent, so it is painted (and counted by LCP) at once. */
+const slide = { ...rise, initial: { y: 14 }, whileInView: { y: 0 } };
+
 export function Overview() {
   const list = useSpeciesList();
   return <WithData state={list}>{(species) => <OverviewView species={species} />}</WithData>;
@@ -41,10 +44,10 @@ function OverviewView({ species }: { species: SpeciesSummary[] }) {
     <div className="overview">
       <section className="hero">
         <div className="hero__text">
-          <motion.h1 className="display" {...rise}>
+          <motion.h1 className="display" {...slide}>
             Which wild medicinal plants need attention <em>first?</em>
           </motion.h1>
-          <motion.p className="lede" {...rise} transition={{ ...rise.transition, delay: 0.08 }}>
+          <motion.p className="lede" {...slide} transition={{ ...slide.transition, delay: 0.08 }}>
             Many of the Philippines' healing plants are still gathered from the wild. This atlas shows which are most at
             risk, where they grow, and why, so that harvesters, rangers and researchers know where to look first.
           </motion.p>
@@ -52,14 +55,14 @@ function OverviewView({ species }: { species: SpeciesSummary[] }) {
             type="button"
             className="hero-search"
             onClick={() => setSearchOpen(true)}
-            {...rise}
-            transition={{ ...rise.transition, delay: 0.16 }}
+            {...slide}
+            transition={{ ...slide.transition, delay: 0.16 }}
           >
             <Search size={20} aria-hidden="true" />
             <span>Search a plant, for example kalingag or lagundi</span>
             <kbd>/</kbd>
           </motion.button>
-          <motion.div className="actions" {...rise} transition={{ ...rise.transition, delay: 0.22 }}>
+          <motion.div className="actions" {...slide} transition={{ ...slide.transition, delay: 0.22 }}>
             <Link to="/atlas" className="button button--primary">
               <MapIcon size={18} aria-hidden="true" /> Explore the map
             </Link>
@@ -130,7 +133,7 @@ function OverviewView({ species }: { species: SpeciesSummary[] }) {
         <div className="card-grid card-grid--feature">
           {top.map((s, i) => (
             <motion.div key={s.slug} {...rise} transition={{ ...rise.transition, delay: i * 0.06 }}>
-              <PlantCard s={s} nScored={scored.length} size="large" />
+              <PlantCard s={s} nScored={scored.length} size="large" eager={i < 2} />
             </motion.div>
           ))}
         </div>

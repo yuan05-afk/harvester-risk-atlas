@@ -34,7 +34,7 @@ export function HowItWorks() {
         </p>
       </header>
 
-      <WithData state={list}>
+      <WithData state={list} reserve="100vh">
         {(species) => {
           const nRecords = species.reduce((a, s) => a + s.n_records, 0);
           const nClean = species.reduce((a, s) => a + s.n_clean, 0);

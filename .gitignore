@@ -48,3 +48,4 @@ data/raw/photos/
 # Playwright
 web/test-results/
 web/playwright-report/
+.lh-*.json

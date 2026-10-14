@@ -1,9 +1,9 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import type { DataError, Loadable } from "../data/api";
 
-export function Loading({ label = "Loading" }: { label?: string }) {
+export function Loading({ label = "Loading", reserve }: { label?: string; reserve?: string }) {
   return (
-    <div className="status" role="status" aria-live="polite">
+    <div className="status" role="status" aria-live="polite" style={reserve ? { minHeight: reserve } : undefined}>
       <span className="status__pulse" aria-hidden="true" />
       {label}…
     </div>
@@ -29,8 +29,17 @@ export function ErrorView({ error }: { error: DataError }) {
 }
 
 /** Render children once the data is ready; otherwise a loading or error state. */
-export function WithData<T>({ state, children }: { state: Loadable<T>; children: (data: T) => ReactNode }) {
-  if (state.status === "loading") return <Loading />;
+export function WithData<T>({
+  state,
+  reserve,
+  children,
+}: {
+  state: Loadable<T>;
+  /** CSS min-height to hold while loading, so content below does not jump when the data arrives. */
+  reserve?: string;
+  children: (data: T) => ReactNode;
+}) {
+  if (state.status === "loading") return <Loading reserve={reserve} />;
   if (state.status === "error") return <ErrorView error={state.error} />;
   return <>{children(state.data)}</>;
 }
