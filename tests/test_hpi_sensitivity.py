@@ -161,7 +161,8 @@ class ChartAndPageTests(unittest.TestCase):
         self.assertNotIn("value=float(HPI_WEIGHTS", section)
         self.assertIn("sens_restore_pending", section)
         self.assertIn("## Weight sensitivity", methods)
-        self.assertIn("does not replace HPI v1.1", methods)
+        # METHODS now documents HPI v2; the explorer is still sensitivity analysis only.
+        self.assertIn("not a new official index", methods)
 
 
 if __name__ == "__main__":

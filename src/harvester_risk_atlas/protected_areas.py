@@ -159,6 +159,27 @@ def annotate_occurrences(
     return occ
 
 
+def hex_protected_fraction(cells: list[str], pa: "gpd.GeoDataFrame | None" = None) -> dict[str, float]:
+    """Share of each H3 cell's area inside the WDPCA Philippines union (0–1).
+
+    Cell-based coverage replaces v1's share of *points* inside PAs. Points
+    cluster where observers go, and observers go to parks; counting occupied
+    cells removes most of that bias. Areas are taken in EPSG:6933 (equal area).
+    """
+    import geopandas as gpd
+
+    from .grid import cell_polygon
+
+    unique = sorted(set(cells))
+    if not unique:
+        return {}
+    pa = pa if pa is not None else load_pa_polygons()
+    union = pa.to_crs(6933).geometry.union_all()
+    hexes = gpd.GeoSeries([cell_polygon(c) for c in unique], crs=4326).to_crs(6933)
+    covered = hexes.intersection(union).area / hexes.area
+    return {c: float(min(1.0, max(0.0, f))) for c, f in zip(unique, covered)}
+
+
 def species_pa_metrics(
     occurrences: pd.DataFrame,
     seed_names: list[str] | None = None,
