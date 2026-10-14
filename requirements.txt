@@ -1,21 +1,14 @@
-# Harvester Risk Atlas — EthnoHACK 2026 Track 3
-# Pinned for Streamlit Community Cloud (Python 3.11+).
+# Harvester Risk Atlas — data pipeline and tests (Python 3.11+).
+# The web app has its own dependencies in web/package.json.
 pandas==2.2.3
 numpy==2.1.3
 pyarrow==18.1.0
 geopandas==1.0.1
 shapely==2.0.6
 h3==4.1.2
-folium==0.19.4
-streamlit==1.41.1
-streamlit-folium==0.24.0
 plotly==5.24.1
-scikit-learn==1.6.0
 requests==2.32.3
-pygbif==0.6.5
 python-dotenv==1.0.1
-matplotlib==3.9.3
-seaborn==0.13.2
 rasterio==1.4.3
 reportlab==4.2.5
 # Optional NLP name-resolution (enable with ENABLE_LLM_NAMES=1)
@@ -26,5 +19,5 @@ reportlab==4.2.5
 # Fallback PDF engine if reportlab unavailable
 # fpdf2==2.8.2
 
-# Install local package (src/ layout) so Cloud does not rely only on sys.path
+# Install the local package (src/ layout)
 -e .

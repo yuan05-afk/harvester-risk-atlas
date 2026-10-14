@@ -213,28 +213,5 @@ class ShippedMaskTests(unittest.TestCase):
         self.assertIsNone(species_at_click(plotted, 14.6, 121.0, "Mentha × piperita · 0.990"))
         self.assertIsNone(species_at_click(plotted, 20.0, 100.0, None))
 
-    def test_app_fits_the_philippines_and_offers_the_hotspot_control(self):
-        app = (ROOT / "app" / "streamlit_app.py").read_text(encoding="utf-8")
-        self.assertIn("Focus highest-HPI hotspot", app)
-        self.assertIn("fit_bounds", app)
-        self.assertIn("PH_FIT_BOUNDS", app)
-        self.assertIn("NEVER_FOCUS", (ROOT / "src" / "harvester_risk_atlas" / "map_points.py").read_text(encoding="utf-8"))
-        self.assertNotIn("MarkerCluster", app)
-        self.assertNotIn("zoom_start=6 if not focus else 8", app)
-        self.assertNotIn("land_record", app)
-        self.assertNotIn("nearest Philippines land record", app)
-        self.assertNotIn("Nearest land record", app)
-        self.assertIn("This mean is not on Philippines land.", app)
-        self.assertIn("hpi_marker_color", app)
-        self.assertIn("species_at_click", app)
-        self.assertIn("map_zoom_species", app)
-        self.assertIn("Click a circle to center it", app)
-        self.assertIn("not scored", app)
-        self.assertNotIn("HeatMap", app)
-        self.assertNotIn("hexbin", app.lower())
-        self.assertNotIn("kriging", app.lower())
-        self.assertNotIn("idw", app.lower())
-
-
 if __name__ == "__main__":
     unittest.main()

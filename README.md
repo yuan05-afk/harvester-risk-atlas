@@ -62,7 +62,7 @@ python -m harvester_risk_atlas all --offline   # fetch -> base -> index -> valid
 ## Deploy
 
 Vercel project with **Root Directory** `web`, framework Vite, build `npm run build`, output `dist`.
-Every push to `main` redeploys. `web/vercel.json` provides the single-page-app fallback.
+Every push to `main` redeploys. Details in [`DEPLOY.md`](DEPLOY.md).
 
 ## Data and licences
 
@@ -93,4 +93,4 @@ and reviewed by the team, who are responsible for everything submitted. Scientif
 
 ## Earlier version
 
-The Streamlit prototype (v1.1, HPI v1) still lives in `app/` and `src/harvester_risk_atlas/` while the cut-over completes; see `DEPLOY.md`.
+The Streamlit prototype (v1.1, HPI v1) is retired. Its old address now shows a short "moved" page (`app/streamlit_app.py`); the v1 code remains in git history. See `DEPLOY.md`.

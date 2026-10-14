@@ -13,6 +13,14 @@ export class DataError extends Error {
 }
 
 const cache = new Map<string, Promise<unknown>>();
+/** Files already loaded, so a component can start "ready" (pre-rendering, and the first render after it). */
+const resolved = new Map<string, unknown>();
+
+/** Hand data to the cache directly; the pre-render script uses this in place of fetch. */
+export function prime(path: string, data: unknown) {
+  resolved.set(path, data);
+  cache.set(path, Promise.resolve(data));
+}
 
 /** Fetch a JSON file once per session and validate it against its schema. */
 export function load<K extends keyof Shapes>(path: string, kind: K): Promise<Shapes[K]> {
@@ -36,6 +44,7 @@ export function load<K extends keyof Shapes>(path: string, kind: K): Promise<Sha
             throw new DataError(`${path} does not match the expected format (${parsed.error.issues[0]?.path.join(".")}).`, "schema");
           }
         }
+        resolved.set(path, json);
         return json as Shapes[K];
       });
     p.catch(() => cache.delete(key));
@@ -47,10 +56,18 @@ export function load<K extends keyof Shapes>(path: string, kind: K): Promise<Sha
 export type Loadable<T> = { status: "loading" } | { status: "ready"; data: T } | { status: "error"; error: DataError };
 
 export function useData<K extends keyof Shapes>(path: string | null, kind: K): Loadable<Shapes[K]> {
-  const [state, setState] = useState<Loadable<Shapes[K]>>({ status: "loading" });
+  const [state, setState] = useState<Loadable<Shapes[K]>>(() =>
+    path && resolved.has(path) ? { status: "ready", data: resolved.get(path) as Shapes[K] } : { status: "loading" },
+  );
   useEffect(() => {
     if (!path) return;
     let live = true;
+    if (resolved.has(path)) {
+      // Keep the same object so a ready view does not re-render or flash a loading state.
+      const data = resolved.get(path) as Shapes[K];
+      setState((s) => (s.status === "ready" && s.data === data ? s : { status: "ready", data }));
+      return;
+    }
     setState({ status: "loading" });
     load(path, kind).then(
       (data) => live && setState({ status: "ready", data }),

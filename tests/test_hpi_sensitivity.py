@@ -143,27 +143,5 @@ class ChartAndPageTests(unittest.TestCase):
             self.assertNotIn(color, RISK_COLORS)
         self.assertIn("#2d6a4f", colors)
 
-    def test_methods_copy_stays_on_methods(self):
-        app = (ROOT / "app" / "streamlit_app.py").read_text(encoding="utf-8")
-        methods = (ROOT / "docs" / "METHODS.md").read_text(encoding="utf-8")
-        self.assertIn("Weight sensitivity", app)
-        self.assertIn("not a new official index", app)
-        self.assertIn("Restore v1.1 weights", app)
-        self.assertIn(
-            '"Map",\n    "Species dossier",\n    "Field brief",\n    "Compare",\n    "Methods"',
-            app,
-        )
-        self.assertNotIn('"Sensitivity"', app)
-        idx = app.index("rank_shift_bars(")
-        self.assertIn("theme=None", app[idx : idx + 400])
-        section = app[app.index("def weight_sensitivity_section") : app.index("def methods_page")]
-        # value= plus session_state on the same key surfaces a Streamlit warning after Restore.
-        self.assertNotIn("value=float(HPI_WEIGHTS", section)
-        self.assertIn("sens_restore_pending", section)
-        self.assertIn("## Weight sensitivity", methods)
-        # METHODS now documents HPI v2; the explorer is still sensitivity analysis only.
-        self.assertIn("not a new official index", methods)
-
-
 if __name__ == "__main__":
     unittest.main()

@@ -144,3 +144,34 @@ test("keyboard: skip link is first, and the Atlas announces a selection", async 
   await page.goto(`/atlas?sp=${top.slug}`);
   await expect(page.locator('aside [role="status"]').first()).toContainText("Showing");
 });
+
+test("first-visit intro fits a phone and Skip closes it", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.addInitScript(() => sessionStorage.removeItem("hra-intro-seen"));
+  await page.goto("/");
+  const stage = page.locator(".intro__stage");
+  await expect(stage).toBeVisible();
+  const box = (await stage.boundingBox())!;
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  expect(box.x + box.width).toBeLessThanOrEqual(360);
+  await page.getByRole("button", { name: "Skip intro" }).click();
+  await expect(page.locator(".intro")).toHaveCount(0);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Which wild medicinal plants");
+});
+
+test("the Overview is pre-rendered and hydrates without a mismatch", async ({ page, request }) => {
+  const html = await (await request.get("/")).text();
+  expect(html).toContain("data-prerendered");
+  expect(html).toContain("Which wild medicinal plants need attention");
+  const shell = await (await request.get("/shell.html")).text();
+  expect(shell).toContain('<div id="root"></div>');
+  const warnings: string[] = [];
+  page.on("console", (m) => /did not match|hydrat/i.test(m.text()) && warnings.push(m.text()));
+  await page.goto("/");
+  const lede = await page.evaluate(() => ((window as unknown as { __lede: Element | null }).__lede = document.querySelector(".lede")) !== null);
+  expect(lede).toBe(true);
+  await page.waitForLoadState("networkidle");
+  // Hydration keeps the painted nodes instead of replacing them.
+  expect(await page.evaluate(() => (window as unknown as { __lede: Element | null }).__lede === document.querySelector(".lede"))).toBe(true);
+  expect(warnings).toEqual([]);
+});
