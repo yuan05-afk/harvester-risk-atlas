@@ -1384,6 +1384,15 @@ kbd {
   bottom: 6px;
   z-index: 2;
 }
+/* Keep a long credit clear of the rank stamp that overhangs the photo's corner */
+.profile-hero__media .plant-photo__credit {
+  padding-right: 104px;
+}
+@media (max-width: 900px) {
+  .profile-hero__media .plant-photo__credit {
+    padding-right: 0;
+  }
+}
 .profile-hero__text {
   display: grid;
   gap: var(--s4);

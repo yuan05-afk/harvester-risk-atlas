@@ -156,7 +156,9 @@ function BriefSheet({ d, nScored }: { d: SpeciesDetail; nScored: number }) {
           <p>
             Sources: GBIF occurrence records; World Checklist of Vascular Plants; WDPCA Philippines; Global Forest Watch;
             Stuart, Philippine Medicinal Plants; DENR DAO 2026-20.
-            {d.photo ? ` Photo: ${d.photo.creator}, ${d.photo.licence}, iNaturalist.` : ""} Full page:{" "}
+            {d.photo
+              ? ` ${d.photo.kind === "specimen" ? "Herbarium specimen (cropped)" : "Photo"}: ${d.photo.creator}, ${d.photo.licence}, ${d.photo.source}.`
+              : ""} Full page:{" "}
             {window.location.origin}
             {import.meta.env.BASE_URL}species/{d.slug}
           </p>

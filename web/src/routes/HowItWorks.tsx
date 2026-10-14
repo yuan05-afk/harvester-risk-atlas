@@ -154,7 +154,7 @@ export function HowItWorks() {
                           iNaturalist research-grade photos, via GBIF
                         </a>
                       </th>
-                      <td>plant photos</td>
+                      <td>plant photos; herbarium scans (Naturalis, Smithsonian) for two plants with none</td>
                       <td>CC0, CC BY 4.0 or CC BY-NC 4.0; credited on each plant</td>
                     </tr>
                   </tbody>

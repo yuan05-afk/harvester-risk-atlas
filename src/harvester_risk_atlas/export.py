@@ -140,6 +140,9 @@ def chosen_photos() -> dict[str, dict]:
             "creator": r.creator,
             "licence": r.licence,
             "page": r.page,
+            # "photo" (iNaturalist, the default) or "specimen" (a cropped herbarium sheet)
+            "kind": getattr(r, "kind", "") or "photo",
+            "source": getattr(r, "source", "") or "iNaturalist",
         }
     return out
 

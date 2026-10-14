@@ -131,7 +131,7 @@ function Footer() {
             </>
           ) : null}
           Data from GBIF, the World Checklist of Vascular Plants, WDPCA, Global Forest Watch and WorldClim. Photos
-          from iNaturalist observers, credited on each plant.
+          from iNaturalist observers, and museum herbarium scans where none exist, credited on each plant.
         </p>
         <p className="footer__links">
           <Link to="/how-it-works#sources">Sources and licences</Link>

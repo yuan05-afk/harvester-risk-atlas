@@ -30,7 +30,7 @@ export function PlantPhoto({
       {p && !failed ? (
         <img
           src={`${BASE}${p.src}`}
-          alt={decorative ? "" : `${s.vernacular || s.name} (${s.name})`}
+          alt={decorative ? "" : `${p.kind === "specimen" ? "Herbarium specimen of " : ""}${s.vernacular || s.name} (${s.name})`}
           loading={eager ? "eager" : "lazy"}
           fetchPriority={eager ? "high" : undefined}
           decoding="async"
@@ -52,10 +52,11 @@ export function PlantPhoto({
       )}
       {p && !failed && credit !== "none" ? (
         <figcaption className="plant-photo__credit">
+          {p.kind === "specimen" ? "Herbarium specimen, cropped. " : null}
           <a href={p.page} target="_blank" rel="noreferrer">
             {p.creator || "iNaturalist observer"}
           </a>
-          , {p.licence}, via iNaturalist
+          , {p.licence}, via {p.source}
         </figcaption>
       ) : null}
     </figure>

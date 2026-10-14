@@ -85,7 +85,7 @@ Work in order. Each phase ends with: verify, then update `ORIGINALITY.md` and **
 ## 5. Waiting on the user (ask; don't assume)
 - **Curated data:** 18 cohort rows flagged `needs_review` in `data/curated/cohort.csv`, and 29 rows of `harvest_traits.csv`. Species pages show "Awaiting expert review" until cleared.
 - **Lagundi** (*Vitex negundo*): WCVP says introduced, so it is gated. Should a `nativity_override` keep it gated?
-- **Photos:** check the choices in `data/curated/photos.csv` (4 use CC BY-NC). Abutra and *Hydnocarpus* have no photo.
+- **Photos:** check the choices in `data/curated/photos.csv` (4 use CC BY-NC). Abutra (*Arcangelisia flava*) and Dudoa (*Hydnocarpus alcalae*) have no open field photo, so each shows a cropped herbarium specimen scan (Naturalis, Smithsonian; CC0), labelled as such. If you find a real field photo, replace those two rows in `photos.csv` (set `kind` to `photo`, clear `crop`).
 - **Accounts:** optional IUCN token and GBIF account (DOI downloads).
 - **Repo visibility:** the repo is already public (checked 2026-10-14).
 - **Leftover branches** (safe to delete, ask first): remote `finalize-docs`, `v2-rebuild` and the old `cursor/*` branches; local `finalize-v2` and `v2-rebuild`.
