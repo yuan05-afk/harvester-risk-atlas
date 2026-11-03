@@ -197,6 +197,87 @@ test("first-visit intro fits a phone and Skip closes it", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Which wild medicinal plants");
 });
 
+for (const startup of [
+  { name: "app bundle", url: "**/assets/index-*.js", width: 1440, height: 900 },
+  { name: "hydration data", url: "**/data/manifest.json", width: 390, height: 844 },
+]) {
+  test(`first visit covers the landing page while waiting for ${startup.name}`, async ({ page }) => {
+    await page.setViewportSize({ width: startup.width, height: startup.height });
+    await page.addInitScript(() => {
+      sessionStorage.removeItem("hra-intro-seen");
+      const observer = new MutationObserver(() => {
+        const intro = document.querySelector(".intro");
+        if (intro) {
+          (window as Window & { firstIntroOpacity?: string }).firstIntroOpacity = getComputedStyle(intro).opacity;
+          observer.disconnect();
+        }
+      });
+      observer.observe(document, { childList: true, subtree: true });
+    });
+    let releaseStartup!: () => void;
+    const ready = new Promise<void>((resolve) => { releaseStartup = resolve; });
+    await page.route(startup.url, async (route) => {
+      await ready;
+      await route.continue();
+    });
+    try {
+      // DOMContentLoaded waits for the module. Inspect the actual HTML before it can start.
+      await page.goto("/", { waitUntil: "commit" });
+      await expect(page.locator("#root")).toHaveAttribute("data-prerendered");
+      await expect(page.locator("#root")).toHaveCSS("visibility", "hidden");
+      // A slow startup must still introduce the page, even beyond the former 1.5s cutoff.
+      await page.waitForTimeout(1800);
+      await expect(page.locator("#root")).toHaveCSS("visibility", "hidden");
+      releaseStartup();
+      await expect(page.getByRole("dialog", { name: "Harvester Risk Atlas introduction" })).toBeVisible();
+      expect(await page.evaluate(() => (window as Window & { firstIntroOpacity?: string }).firstIntroOpacity)).toBe("1");
+      await expect(page.locator("html")).not.toHaveAttribute("data-intro-pending");
+      await page.getByRole("button", { name: "Skip intro" }).click();
+      await expect(page.locator(".intro")).toHaveCount(0);
+      await expect(page.getByRole("heading", { level: 1 })).toContainText("Which wild medicinal plants");
+      await page.reload();
+      await page.waitForLoadState("networkidle");
+      await expect(page.locator(".intro")).toHaveCount(0);
+      await expect(page.locator("#root")).toHaveCSS("visibility", "visible");
+    } finally {
+      releaseStartup();
+    }
+  });
+}
+
+test("a failed startup releases the cover without playing an intro late", async ({ page }) => {
+  await page.addInitScript(() => sessionStorage.removeItem("hra-intro-seen"));
+  let releaseStartup!: () => void;
+  const ready = new Promise<void>((resolve) => { releaseStartup = resolve; });
+  await page.route("**/assets/index-*.js", async (route) => {
+    await ready;
+    await route.continue();
+  });
+  try {
+    await page.goto("/", { waitUntil: "commit" });
+    await expect(page.locator("#root")).toHaveCSS("visibility", "hidden");
+    await expect(page.locator("html")).toHaveAttribute("data-intro-expired", "", { timeout: 10_000 });
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Which wild medicinal plants");
+    releaseStartup();
+    await page.waitForLoadState("networkidle");
+    await expect(page.locator(".intro")).toHaveCount(0);
+  } finally {
+    releaseStartup();
+  }
+});
+
+test("the pre-rendered landing page stays visible without JavaScript", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ baseURL, javaScriptEnabled: false });
+  try {
+    const page = await context.newPage();
+    await page.goto("/");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Which wild medicinal plants");
+    await expect(page.locator("#root")).toHaveCSS("visibility", "visible");
+  } finally {
+    await context.close();
+  }
+});
+
 test("the Overview is pre-rendered and hydrates without a mismatch", async ({ page, request }) => {
   const html = await (await request.get("/")).text();
   expect(html).toContain("data-prerendered");

@@ -6,6 +6,33 @@
     <meta name="theme-color" content="#eff1f3" />
     <meta name="description" content="Which wild medicinal plants of the Philippines need attention first, where, why, and how sure we are. A transparent, uncertainty-aware priority atlas." />
     <title>Harvester Risk Atlas</title>
+    <style>
+      html[data-intro-pending] { overflow: hidden; }
+      html[data-intro-pending] #root { visibility: hidden; }
+      html[data-intro-pending]::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: radial-gradient(1200px 700px at 50% 40%, #fcfcfd, transparent 70%), #eff1f3;
+      }
+    </style>
+    <script>
+      (() => {
+        if (location.pathname !== "%BASE_URL%" || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        try {
+          if (sessionStorage.getItem("hra-intro-seen") === "1") return;
+        } catch { /* Storage can be unavailable; the intro can still play. */ }
+        document.documentElement.setAttribute("data-intro-pending", "");
+        // Keep the pre-rendered page usable if the app cannot start.
+        setTimeout(() => {
+          if (document.documentElement.hasAttribute("data-intro-pending")) {
+            document.documentElement.removeAttribute("data-intro-pending");
+            document.documentElement.setAttribute("data-intro-expired", "");
+          }
+        }, 8000);
+      })();
+    </script>
     <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="%BASE_URL%data/species.json" as="fetch" crossorigin="anonymous" />
   </head>

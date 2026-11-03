@@ -13,7 +13,8 @@ const root = document.getElementById("root")!;
 
 /**
  * index.html carries a pre-rendered Overview. Fetch the data that page shows,
- * then hydrate it: the nodes already on screen are kept, not replaced.
+ * then hydrate it: the existing nodes are kept, not replaced. On a first visit,
+ * index.html covers the page until the opaque intro mounts.
  * Every other path is served the empty shell (shell.html) and renders as usual.
  */
 async function start() {

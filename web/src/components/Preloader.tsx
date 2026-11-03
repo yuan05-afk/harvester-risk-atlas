@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import markSvg from "../assets/mark.svg?raw";
 
 const SESSION_KEY = "hra-intro-seen";
@@ -20,22 +20,16 @@ const HEX_FILL = ["var(--tier-lower)", "var(--hot-1)", "var(--hot-2)", "var(--ho
 /** Inner paths of the mark SVG, without its outer <svg> wrapper. */
 const MARK_INNER = markSvg.replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
 
-/**
- * The pre-rendered Overview is on screen before the app starts. On a slow
- * connection the visitor is already reading it by then, so the intro would
- * interrupt rather than introduce: skip it (and count it as seen).
- */
-const LATE_START_MS = 1500;
-
 export function shouldPlayIntro(): boolean {
   if (typeof window === "undefined") return false;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
   try {
     if (sessionStorage.getItem(SESSION_KEY) === "1") return false;
   } catch {
-    return true;
+    /* Storage can be unavailable; use the first-paint guard below. */
   }
-  if (document.getElementById("root")?.dataset.prerendered !== undefined && performance.now() > LATE_START_MS) {
+  // If startup failed long enough to reveal the page, do not interrupt it later.
+  if (document.documentElement.hasAttribute("data-intro-expired")) {
     markSeen();
     return false;
   }
@@ -66,15 +60,19 @@ export function Preloader({ onDone }: { onDone: () => void }) {
       .catch(() => setPoints([]));
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    // Hand off the matching first-paint cover only after the opaque intro and
+    // scroll lock are in place, before the browser paints.
+    document.documentElement.removeAttribute("data-intro-pending");
     const finish = window.setTimeout(() => setOpen(false), 3600);
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
-    document.documentElement.style.overflow = "hidden";
     return () => {
       window.clearTimeout(finish);
       window.removeEventListener("keydown", onKey);
-      document.documentElement.style.overflow = "";
+      document.documentElement.style.overflow = previousOverflow;
     };
   }, []);
 
@@ -103,9 +101,7 @@ export function Preloader({ onDone }: { onDone: () => void }) {
           role="dialog"
           aria-modal="true"
           aria-label="Harvester Risk Atlas introduction"
-          // Fades in over the pre-rendered page rather than snapping over it.
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1, transition: { duration: 0.25 } }}
+          initial={false}
           exit={{ clipPath: "inset(0 0 100% 0)", transition: { duration: 0.7, ease: [0.7, 0, 0.2, 1] } }}
         >
           <div className="intro__stage">

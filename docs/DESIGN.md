@@ -89,7 +89,7 @@ Figure numbers ("FIG. 1 · RARITY"), verdicts ("HOLDS UP") and "Biggest reason" 
 | **Field brief** | One A4 page: all 51 briefs were verified at ≤ 297 mm in print emulation. |
 
 ## Motion
-- **Intro (preloader).** On the first visit to `/`: the PH outline draws, hexes bloom north to south, then the sheet clips away (3.6 s). It has a Skip button and Esc, is skipped under reduced motion, and can be replayed from the footer.
+- **Intro (preloader).** On the first visit to `/`: a matching opaque cover is applied in the document head before the landing page can paint. The intro takes over fully opaque: the PH outline draws, hexes bloom north to south, then the sheet clips away (3.6 s). It has a Skip button and Esc, is skipped under reduced motion and on repeat visits, and can be replayed from the footer. Deep links open directly. If startup fails, the cover releases after 8 s so the pre-rendered page remains usable.
 - **Pages.** 220 ms fade/rise between pages. Plates and verdict marks draw in once. The stamp lands with a spring. Cards lift 4 px on hover.
 - **Map.** Fly-to only on explicit selection.
 - **Reduced motion.** `prefers-reduced-motion` removes all of the above (`MotionConfig reducedMotion="user"`, plus `useReducedMotion` in figures).

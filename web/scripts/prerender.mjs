@@ -1,5 +1,6 @@
 // Pre-renders the Overview into dist/index.html after `vite build`, so the first
-// paint shows the page instead of an empty shell. The untouched shell is kept as
+// HTML already carries the page. First visits cover it until the intro mounts.
+// The untouched shell is kept as
 // dist/shell.html; vercel.json serves it for every other path.
 import { readFileSync, rmSync, writeFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";

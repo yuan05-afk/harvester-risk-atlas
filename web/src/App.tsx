@@ -21,6 +21,7 @@ function Shell() {
   const [intro, setIntro] = useState(false);
   useLayoutEffect(() => {
     if (location.pathname === "/" && shouldPlayIntro()) setIntro(true);
+    else document.documentElement.removeAttribute("data-intro-pending");
     // Only the first page of a visit can play the intro.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
