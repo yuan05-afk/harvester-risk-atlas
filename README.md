@@ -200,12 +200,10 @@ The numbers are in [`web/public/data/validation.json`](web/public/data/validatio
 
 ```mermaid
 flowchart LR
-  A[Fetch<br/>GBIF · WCVP · WDPCA<br/>GFW · WorldClim · Stuart] --> B[Clean<br/>9 rules, one reason<br/>per dropped record]
-  B --> C[Components<br/>Rarity · Harvest harm<br/>Habitat pressure · Climate]
-  C --> D[Index + gates<br/>equal weights<br/>not native or<br/>fewer than 5 cells]
-  D --> E[Uncertainty<br/>2,000 draws → rank<br/>range and tier]
-  E --> F[Validate + export<br/>static JSON]
-  F --> G[Web atlas<br/>React · MapLibre]
+  A["1 · Fetch and clean<br/>6 open sources<br/>9,660 → 4,789 records"] --> B["2 · Score<br/>Rarity · Harvest harm<br/>Habitat pressure"]
+  B --> C["3 · Rank<br/>equal weights, gates<br/>29 of 51 plants"]
+  C --> D["4 · Stress-test<br/>2,000 draws →<br/>rank range and tier"]
+  D --> E["5 · Publish<br/>validation + static JSON<br/>→ web atlas"]
 ```
 
 $$\text{HPI} = \tfrac{1}{3}R + \tfrac{1}{3}H + \tfrac{1}{3}E \qquad (C \text{ shown with weight } 0)$$
