@@ -1,0 +1,36 @@
+scientific_name,vernacular_ph,family,notes,endemism_proxy,demo_iucn_note
+Vitex negundo,lagundi,Lamiaceae,DOH-approved herbal; cough/asthma traditional use — ethnobotany only,widespread,not assessed in demo — check IUCN Red List API
+Blumea balsamifera,sambong,Asteraceae,DOH-approved; diuretic traditional use — ethnobotany only,widespread,not assessed in demo
+Momordica charantia,ampalaya,Cucurbitaceae,DOH-approved; blood sugar traditional use — ethnobotany only,cultivated_wild,not assessed in demo
+Psidium guajava,bayabas,Myrtaceae,DOH-approved; antiseptic traditional use — ethnobotany only,introduced_naturalized,not assessed in demo
+Mentha × piperita,yerba buena,Lamiaceae,DOH-listed mint complex; analgesic traditional use — ethnobotany only,cultivated,not assessed in demo
+Peperomia pellucida,ulasimang bato,Piperaceae,DOH-approved; gout/arthritis traditional use — ethnobotany only,widespread_tropics,not assessed in demo
+Combretum indicum,niyug-niyogan,Combretaceae,DOH-approved Quisqualis indica synonym; anthelmintic traditional — ethnobotany only,cultivated,not assessed in demo
+Senna alata,akapulko,Fabaceae,DOH-approved Cassia alata synonym; antifungal traditional — ethnobotany only,widespread,not assessed in demo
+Allium sativum,bawang,Amaryllidaceae,DOH-approved; hypertension traditional use — ethnobotany only,cultivated,not assessed in demo
+Ehretia microphylla,tsaang gubat,Boraginaceae,DOH-approved Carmona retusa synonym; diarrhea traditional — ethnobotany only,PH_SEA,not assessed in demo
+Tinospora crispa,makabuhay,Menispermaceae,bitter vine; fever/malaria traditional — ethnobotany only,SEA,not assessed in demo
+Arcangelisia flava,abutra,Menispermaceae,yellow root; jaundice traditional — ethnobotany only; harvest pressure concern,SEA_forest,not assessed in demo — verify IUCN separately
+Curcuma longa,luyang dilaw,Zingiberaceae,turmeric; anti-inflammatory traditional — ethnobotany only,cultivated,not assessed in demo
+Zingiber officinale,luya,Zingiberaceae,ginger; digestive traditional — ethnobotany only,cultivated,not assessed in demo
+Andrographis paniculata,sinta,Acanthaceae,king of bitters; fever traditional — ethnobotany only,SEA_India,not assessed in demo
+Orthosiphon aristatus,balbas pusa,Lamiaceae,cat's whiskers; kidney traditional — ethnobotany only,SEA,not assessed in demo
+Moringa oleifera,malunggay,Moringaceae,drumstick tree; nutrition traditional — ethnobotany only,cultivated,not assessed in demo
+Annona muricata,guyabano,Annonaceae,soursop; ethnobotanical use documented — ethnobotany only,cultivated,not assessed in demo
+Centella asiatica,takip-kohol,Apiaceae,gotu kola; wound traditional — ethnobotany only,widespread,not assessed in demo
+Phyllanthus niruri,sampasampalukan,Phyllanthaceae,stonebreaker; liver/kidney traditional — ethnobotany only,widespread_tropics,not assessed in demo
+Artemisia vulgaris,damong maria,Asteraceae,mugwort; menstrual traditional — ethnobotany only,widespread,not assessed in demo
+Ocimum basilicum,sulasi,Lamiaceae,basil; respiratory traditional — ethnobotany only,cultivated,not assessed in demo
+Piper betle,ikmo,Piperaceae,betel leaf; oral traditional — ethnobotany only,SEA_cultivated,not assessed in demo
+Cymbopogon citratus,tanglad,Poaceae,lemongrass; digestive traditional — ethnobotany only,cultivated,not assessed in demo
+Euphorbia hirta,tawa-tawa,Euphorbiaceae,asthma plant; dengue folklore — ethnobotany only NOT medical claim,widespread_weed,not assessed in demo
+Lagerstroemia speciosa,banaba,Lythraceae,pride of India; diabetes traditional — ethnobotany only,PH_SEA,not assessed in demo
+Mimosa pudica,makahiya,Fabaceae,sensitive plant; ethnobotanical use — ethnobotany only,widespread,not assessed in demo
+Jatropha curcas,tubang bakod,Euphorbiaceae,physic nut; fencing/traditional — ethnobotany only; toxic seeds,cultivated,not assessed in demo
+Pandanus amaryllifolius,pandan,Pandanaceae,fragrant pandan; culinary/traditional — ethnobotany only,SEA_cultivated,not assessed in demo
+Hibiscus rosa-sinensis,gumamela,Malvaceae,shoe flower; topical traditional — ethnobotany only,cultivated,not assessed in demo
+Eurycoma longifolia,tongkat ali,Simaroubaceae,SEA medicinal root; documented overharvest concern in literature,SEA_forest,not assessed in demo — verify IUCN separately
+Garcinia mangostana,mangosteen,Clusiaceae,SEA fruit tree; pericarp traditional — ethnobotany only,SEA_cultivated,not assessed in demo
+Imperata cylindrica,kogon,Poaceae,cogon grass; ethnobotanical/ecological,widespread,not assessed in demo
+Areca catechu,bunga,Arecaceae,betel nut; cultural/traditional — ethnobotany only,SEA_cultivated,not assessed in demo
+Cocos nucifera,niyog,Arecaceae,coconut; multipurpose traditional — ethnobotany only,cultivated_coastal,not assessed in demo
