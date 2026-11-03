@@ -1,37 +1,41 @@
 # Judging — Harvester Risk Atlas
 
-EthnoHACK 2026, Track 3: Biodiversity & Sustainability.
+EthnoHack 2026, Track 3: Biodiversity & Sustainability.
 
 **Development:** All project development to date took place on **2–3 November 2026 (Asia/Manila)**, as confirmed by the project owner. Attribution and AI assistance are disclosed in [`ORIGINALITY.md`](ORIGINALITY.md).
 
-**Demo address:** https://harvester-risk-atlas.vercel.app
+**Demo:** https://harvester-risk-atlas.vercel.app · **Slides:** `submission/Harvester-Risk-Atlas-slides.pdf` · **Method:** [`METHODS.md`](METHODS.md)
 
-## Problem and approach
+The atlas ranks which wild medicinal plants of the Philippines need conservation attention first, where they occur, why, and how uncertain each rank is. It is for research and education, not medical advice, a harvest permit or a Red List assessment.
 
-The atlas helps identify which wild medicinal plants of the Philippines need conservation attention, where they occur, why they rank as they do, and how uncertain that ranking is. It is for research and education, not medical advice, a harvest permit or a Red List assessment.
+## Where to find evidence for each criterion
 
-The **Harvest Priority Index (HPI v2)** combines three equally weighted components:
-
-| Component | Evidence |
+| Criterion | What to look at |
 |---|---|
-| Rarity | Effort-corrected occupied cells and native range |
-| Harvest sensitivity | Cited traits: harvested parts, life form and sourcing |
-| Habitat exposure | Protected-area gap and province-level forest loss |
+| **Scientific relevance** | Wild harvest of medicinal roots, bark and whole plants is a recognised conservation problem (Cunningham 2001; Schippmann et al. 2002), and no dataset measures it in the Philippines. The index combines rarity, harvest sensitivity and habitat exposure. `METHODS.md` §3 |
+| **Innovation** | Effort-corrected rarity from a target-group survey layer; a Jeffreys-posterior Monte Carlo that propagates evidence and weight uncertainty into rank intervals and tiers; a live weight explorer tested for parity with the Python index; a printable field brief per plant |
+| **Technical implementation** | `src/harvester_risk_atlas/` pipeline (`fetch → base → index → validate → export`); static React/TypeScript app in `web/`; pytest, Vitest, Playwright + axe in CI (`.github/workflows/ci.yml`); offline rebuild from a committed snapshot |
+| **Data science quality** | One recorded reason per dropped record (`METHODS.md` §2); fixed-anchor scales; gates instead of guessed values; 2,000-draw uncertainty; robustness checks in `web/public/data/validation.json` (`METHODS.md` §6) |
+| **Feasibility** | Free static hosting; open global sources (GBIF, WCVP, WDPA, Hansen) mean another country needs a new cohort and local layers rather than a new method |
+| **Impact** | A shortlist of plants and areas for DENR, protected-area boards, LGUs, harvester groups and researchers; the field brief for use offline |
+| **Presentation** | Slides (10), video ([`VIDEO_SCRIPT.md`](VIDEO_SCRIPT.md)), Devpost page ([`../submission/devpost.md`](../submission/devpost.md)) |
 
-Climate exposure is reported with default weight zero. Plants that are not native or have insufficient occupied cells are listed without a score. The bundled cohort has 51 taxa: 29 scored and 22 gated. Monte Carlo draws produce rank intervals and priority tiers. Checks test robustness rather than predictive accuracy. Full details: [`METHODS.md`](METHODS.md).
+## Index in one paragraph
+
+**HPI v2** is the equally weighted mean of rarity (R), harvest sensitivity (H) and habitat exposure (E). Climate exposure (C) is reported with default weight zero, because projected warming hardly differs between plants. Plants that are not native per WCVP, or that occupy fewer than 5 hexagons, are listed without a score. The bundled cohort has 51 taxa: 29 scored and 22 gated. The 29 scored plants fall into 5 *Needs attention now*, 4 *Keep watch* and 20 *Lower concern*. The checks test robustness, not predictive accuracy.
 
 ## Demonstration path
 
-1. **Overview:** show the question, hotspot map and priority plants.
-2. **Atlas:** select a plant or area. Locations appear as H3 cells rather than precise points.
-3. **Plant profile:** explain the main reasons, evidence gaps, uncertainty and sources.
-4. **Field brief:** open the printable A4 sheet.
-5. **How it works:** try the weight explorer, then show robustness checks and limitations.
+1. **Overview:** the question, the hotspot map and the priority plants.
+2. **Atlas:** select a plant or an area. Locations appear as H3 cells, never as precise points.
+3. **Plant profile:** the main reasons, evidence gaps, uncertainty and sources.
+4. **Field brief:** the printable A4 sheet.
+5. **How it works:** the weight explorer, then the robustness checks and limitations.
 
 ## Attribution and limitations
 
-External data, photos, fonts and libraries retain their own licences and credits. See [`ORIGINALITY.md`](ORIGINALITY.md), [`METHODS.md`](METHODS.md) and the plant-level source records.
+External data, photos, fonts and libraries keep their own licences and credits. See [`ORIGINALITY.md`](ORIGINALITY.md), [`METHODS.md`](METHODS.md) and the plant-level source records.
 
-AI assistants helped draft and edit code and documentation. The project owner is responsible for reviewing the submission. Curated traits awaiting expert verification remain marked as such. IUCN and DENR categories must never be invented.
+AI assistants, including Claude Code, helped draft and edit code and documentation, and drafted the harvest-trait rows from cited sources. The project owner is responsible for reviewing the submission. Curated traits awaiting expert verification remain marked as such. IUCN and DENR categories are never invented.
 
-Video script: [`VIDEO_SCRIPT.md`](VIDEO_SCRIPT.md). Submission checklist: [`SUBMISSION_CHECKLIST.md`](SUBMISSION_CHECKLIST.md).
+Submission checklist and rules audit: [`SUBMISSION_CHECKLIST.md`](SUBMISSION_CHECKLIST.md).

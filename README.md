@@ -16,6 +16,7 @@ Created and developed on **2–3 November 2026 (Asia/Manila)**, as confirmed by 
 | **Method** | [`docs/METHODS.md`](docs/METHODS.md) |
 | **Design system** | [`docs/DESIGN.md`](docs/DESIGN.md) |
 | **Development and attribution** | [`docs/ORIGINALITY.md`](docs/ORIGINALITY.md) |
+| **Hackathon submission** | [`submission/`](submission/): Devpost text, 10-slide PDF, gallery · [`docs/JUDGING.md`](docs/JUDGING.md) |
 
 ## A three-minute tour
 
@@ -91,7 +92,7 @@ Code: MIT (see `LICENSE`).
 
 ## AI disclosure
 
-AI assistants helped draft and edit code and documentation. The project owner is responsible for reviewing the submitted work. Scientific claims and curated values must retain citations; rows awaiting expert verification remain marked as such. See [`docs/ORIGINALITY.md`](docs/ORIGINALITY.md).
+AI assistants, including Claude Code, helped draft and edit code and documentation. The harvest-trait rows in `data/curated/harvest_traits.csv` were drafted by Claude Code from cited Stuart pages (`curated_by`), and none is expert-verified yet (`verified_by` is empty). The project owner is responsible for reviewing the submitted work. Scientific claims and curated values must retain citations; rows awaiting expert verification remain marked as such. See [`docs/ORIGINALITY.md`](docs/ORIGINALITY.md).
 
 ## Streamlit entry point
 

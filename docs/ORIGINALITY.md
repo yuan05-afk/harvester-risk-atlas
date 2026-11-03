@@ -8,6 +8,13 @@ Harvester Risk Atlas was created and developed on **2–3 November 2026 (Asia/Ma
 
 The project includes the Python data pipeline, Harvest Priority Index, uncertainty and validation calculations, web atlas, plant profiles, printable field briefs, design, tests and documentation. External datasets, libraries, photographs, fonts and published references are credited separately below and in the source records.
 
+## Team contributions
+
+| Member | Contribution |
+|---|---|
+| Yuan Andrei C. Mariano (@yuan05-afk) | Project lead: data pipeline, Harvest Priority Index, web atlas and documentation |
+| Alicia Jhyle Vilale (@asvilale) | Quality assurance and checking, the presentation, and directing and editing the pitch video |
+
 ## Third-party code, data and tools
 
 | Kind | Item | Licence / terms |
@@ -27,7 +34,7 @@ The project includes the Python data pipeline, Harvest Priority Index, uncertain
 
 ## AI assistance
 
-AI assistants have been used to help draft and edit code and documentation. The project owner is responsible for reviewing the submitted work. Specific tool usage should be named only when confirmed; do not infer tool-specific dates or completed human reviews.
+AI assistants have been used to help draft and edit code and documentation. The project owner is responsible for reviewing the submitted work. Confirmed tool use: Claude Code drafted the harvest-trait rows in `data/curated/harvest_traits.csv` from cited Stuart pages (recorded in `curated_by`), and drafted the submission materials in `submission/` and the judging, checklist and video-script documents. Specific tool usage should be named only when confirmed; do not infer tool-specific dates or completed human reviews.
 
 Scientific claims and curated values must retain their citations. Curated rows awaiting expert verification remain marked as such.
 
