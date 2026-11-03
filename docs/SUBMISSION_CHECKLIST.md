@@ -1,8 +1,10 @@
 # Submission checklist — Harvester Risk Atlas
 
-EthnoHack 2026, Track 3: Biodiversity & Sustainability. Checked against the EthnoHack overview and rules pages on **3 November 2026**.
+EthnoHack 2026, Track 3: Biodiversity & Sustainability. Checked against the EthnoHack overview, rules, resources and updates pages and the organisers' final reminder on **3 November 2026**.
 
-**Deadline:** 8 November 2026, 17:00 GMT+8 on Devpost (10:00 CET). Judging ends 15 November 2026.
+**Deadline:** **8 November 2026, 10:00 Athens time (EET, UTC+2)**: 16:00 in Manila (UTC+8) and 08:00 UTC. The Devpost form shows 17:00 GMT+8, but the organisers' final reminder gives 10:00 Athens time, so treat **16:00 Manila** as the deadline. Judging ends 15 November 2026.
+
+**Hacking period:** started 2 November 2026, 13:00 Athens time (19:00 Manila).
 
 Devpost copy, field by field: [`../submission/devpost.md`](../submission/devpost.md). Slides: `submission/Harvester-Risk-Atlas-slides.pdf`. Gallery: `submission/gallery/`.
 
@@ -44,6 +46,27 @@ Do this first:
 | No unvalidated findings presented as medical fact | Met | No health claims; disclaimer on every page, the slides and Devpost |
 | Uncertainty and limitations communicated | Met | Rank intervals, tiers, `METHODS.md` §7, slide 9 |
 
+## Organisers' final checklist
+
+From the "Final reminder" sent to participants.
+
+| Item | Where | Status |
+|---|---|---|
+| Project title | Devpost Step 1 | Drafted: "Harvester Risk Atlas" |
+| Selected challenge track | Devpost | Pick Track 3: Biodiversity & Sustainability |
+| Team members | Devpost Manage team | Done: 2 members |
+| Problem statement | Devpost "Inspiration" | Drafted, with sourced numbers |
+| Description of the solution | "What it does", "How we built it" | Drafted |
+| Technologies and tools | "Built with" tags, "How we built it" | Drafted (25 tags) |
+| Data sources and attribution | "How we built it", "Responsible research", README | Drafted |
+| Results or prototype | "Results", live app, gallery | Drafted |
+| GitHub repository | "Try it out" links | Public |
+| Pitch video ≤ 10 min | "Video demo link" | **To record** |
+| Slide deck ≤ 10 slides | Additional info upload (one file: the PDF) | Done: 10 slides |
+| Limitations, assumptions, future work | "Responsible research", "Assumptions", "What's next"; README | Drafted |
+| README explains how it works | `README.md` | Done |
+| No unvalidated results presented as medical evidence | Disclaimer on every page, README, Devpost, slides | Done |
+
 ## Before submitting
 
 - [x] Teammate added and accepted on Devpost.
@@ -54,6 +77,8 @@ Do this first:
 - [ ] Gallery images uploaded with captions.
 - [ ] Walk the demo path in a private window: Overview → Atlas → plant profile → field brief → How it works.
 - [ ] Run the checks and record the actual results: `python -m pytest -q`; in `web/`: `npm test`, `npm run build`, `npm run e2e`.
-- [ ] Submit, then open the public project page and check that it renders.
+- [ ] Every link opens in a private (signed-out) browser window: live app, GitHub, slides PDF, video.
+- [ ] Submit **before 16:00 Manila on 8 November** (10:00 Athens), well ahead of the last minutes.
+- [ ] Open the public project page and check that it renders.
 
 These boxes are pending checks, not claims of completed work. Deployment notes: [`../DEPLOY.md`](../DEPLOY.md).

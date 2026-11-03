@@ -50,7 +50,7 @@ Over the last step: "The pipeline is Python with pandas, GeoPandas and H3, and i
 
 ### 7:00 · Honest limits (slide 9) · limitations, about 35 s
 
-"This is not medical advice, a harvest permit or a Red List assessment. Records follow people, harvest harm comes from books, and tongkat ali rests on only five records. AI helped us build it and drafted the harvest traits, and none is expert-checked yet. Every plant page says so."
+"This is not medical advice, a harvest permit or a Red List assessment. Records follow people, harvest harm comes from books, and tongkat ali rests on only five records. The harvest traits come from cited sources, but none is expert-checked yet. Every plant page says so."
 
 ### 7:35 · Call to action (slide 10) · impact, future, about 25 s
 

@@ -2,7 +2,7 @@
 
 Copy each block into the matching Devpost field. Text in `[square brackets]` must be filled in or removed before submitting.
 
-Deadline: **8 November 2026, 17:00 GMT+8** (Devpost), which is 10:00 CET.
+Deadline: **8 November 2026, 10:00 Athens time (EET, UTC+2)**: 16:00 in Manila (UTC+8) and 08:00 UTC. The Devpost form shows 17:00 GMT+8, but the organisers' final reminder gives 10:00 Athens time, so treat **16:00 Manila** as the deadline.
 
 ---
 
@@ -132,6 +132,14 @@ A transparent screen with honest uncertainty is more useful than a single confid
 - **AI use:** AI assistants (including Claude Code) helped write the code and documentation and drafted the harvest-trait rows from cited Stuart pages. **None of the 29 trait rows is expert-verified yet**, and each plant page says "being checked". The project owner is responsible for the submission.
 - **Limitations:** GBIF records are presence-only and effort-biased. Harvest harm is a literature rubric, not field data. Forest loss is measured per province. IUCN categories are linked only when an API token is configured, and they are never invented.
 
+## Assumptions
+
+- Cleaned GBIF records show where a plant occurs, and a plant's absence from a well-searched hexagon reflects real scarcity.
+- Taking roots, bark or the whole plant, and harvesting slow-growing woody plants, harms a population more than taking leaves or fruit (Cunningham 2001; Schippmann et al. 2002).
+- Provincial forest loss approximates pressure in the hexagons where the plant was recorded.
+- WCVP's nativity calls are correct unless a cited source overrides them.
+- Equal weights are a neutral default when there is no consensus (OECD/JRC 2008).
+
 ## What's next for Harvester Risk Atlas
 
 1. **Expert verification** of the harvest traits and cohort with Filipino ethnobotanists and harvester communities.
@@ -210,6 +218,7 @@ node ../submission/build.mjs
 
 ## Step 4 · Before you press Submit
 
+- [ ] Correct challenge track selected: **Track 3: Biodiversity & Sustainability**.
 - [x] Team of 2 on Devpost: Yuan Andrei C. Mariano and Alicia Jhyle Vilale.
 - [ ] Alicia Jhyle Vilale confirms they registered for EthnoHack by 31 October, 23:00.
 - [x] Roles filled in for both members in the Team section above.

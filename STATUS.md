@@ -13,6 +13,13 @@ All project development to date took place on **2–3 November 2026 (Asia/Manila
 - The committed outputs contain 51 taxa, with 29 scored and 22 gated. These describe the bundled data, not completion of expert review.
 - Test suites and CI configuration are present. Their presence does not establish that the current checkout has passed them.
 
+## Submission materials
+
+- `submission/`: Devpost text, the 10-slide PDF with its HTML source and build script, and gallery screenshots of the live atlas.
+- Checked on 3 November 2026: Python **73 passed**, web unit tests **66 passed**, production build **passed**, browser tests **37 passed** (local run). GitHub Actions passed both jobs on commit `b36b525`.
+- Team: Yuan Andrei C. Mariano and Alicia Jhyle Vilale. Contributions are in [`docs/ORIGINALITY.md`](docs/ORIGINALITY.md).
+- Open items are tracked in [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md).
+
 ## Review still needed
 
 - Review curated cohort and harvest-trait rows marked as awaiting verification.
