@@ -79,4 +79,12 @@ await deck.pdf({
 });
 console.log("Harvester-Risk-Atlas-slides.pdf");
 
+// README pipeline diagram: a static image, so GitHub's diagram controls never cover it.
+const diagram = await browser.newPage({ viewport: { width: 1700, height: 400 }, deviceScaleFactor: 2 });
+await diagram.goto(pathToFileURL(join(here, "slides", "pipeline.html")).href, { waitUntil: "networkidle" });
+await diagram.evaluate(() => document.fonts.ready);
+mkdirSync(join(here, "..", "docs", "images"), { recursive: true });
+await diagram.locator("#diagram").screenshot({ path: join(here, "..", "docs", "images", "pipeline.png"), omitBackground: true });
+console.log("docs/images/pipeline.png");
+
 await browser.close();

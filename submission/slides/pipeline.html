@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Harvester Risk Atlas · pipeline diagram</title>
+<!-- README diagram. Rendered to docs/images/pipeline.png by submission/build.mjs. -->
+<link rel="stylesheet" href="../../web/node_modules/@fontsource-variable/fraunces/full.css">
+<link rel="stylesheet" href="../../web/node_modules/@fontsource-variable/atkinson-hyperlegible-next/index.css">
+<style>
+  :root { --paper: #eff1f3; --sheet: #fcfcfd; --ink: #15181c; --ink-2: #40454c; --ink-3: #596069; --rule: #d8dce1;
+          --c-range: #33408f; --c-harvest: #ad4e1a; --c-habitat: #2e5f3e; --tier-high: #7c1a4b; }
+  html, body { margin: 0; background: transparent; }
+  #diagram { width: 1600px; box-sizing: border-box; padding: 36px 40px; background: var(--paper); border-radius: 8px;
+             font-family: "Atkinson Hyperlegible Next Variable", system-ui, sans-serif; color: var(--ink); }
+  .row { display: flex; align-items: stretch; gap: 0; }
+  .step { flex: 1; background: var(--sheet); border: 1px solid var(--rule); border-top: 4px solid var(--ink); border-radius: 4px; padding: 20px 22px; }
+  .n { font-size: 15px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--ink-3); }
+  .t { font-family: "Fraunces Variable", Georgia, serif; font-variation-settings: "SOFT" 30; font-weight: 600; font-size: 30px; margin-top: 6px; }
+  .big { font-family: "Fraunces Variable", Georgia, serif; font-weight: 600; font-size: 34px; margin-top: 12px; }
+  .d { font-size: 19px; line-height: 1.45; color: var(--ink-2); margin-top: 8px; }
+  .arrow { width: 44px; display: flex; align-items: center; justify-content: center; color: var(--ink-3); font-size: 30px; }
+</style>
+</head>
+<body>
+<div id="diagram">
+  <div class="row">
+    <div class="step"><div class="n">Step 1</div><div class="t">Fetch and clean</div><div class="big">4,789</div><div class="d">reliable records kept out of 9,660, from 6 open sources</div></div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-top-color:var(--c-range)"><div class="n">Step 2</div><div class="t">Score</div><div class="d" style="margin-top:12px"><b style="color:var(--c-range)">Rarity</b><br><b style="color:var(--c-harvest)">Harvest harm</b><br><b style="color:var(--c-habitat)">Habitat pressure</b></div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="n">Step 3</div><div class="t">Rank</div><div class="big">29 of 51</div><div class="d">plants scored with equal weights; the rest gated</div></div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-top-color:var(--tier-high)"><div class="n">Step 4</div><div class="t">Stress-test</div><div class="big">2,000 draws</div><div class="d">give each plant a rank range and a tier</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="n">Step 5</div><div class="t">Publish</div><div class="big">Static JSON</div><div class="d">validation checks, then the web atlas</div></div>
+  </div>
+</div>
+</body>
+</html>

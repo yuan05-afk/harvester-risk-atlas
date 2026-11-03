@@ -76,32 +76,30 @@ Readers are rangers, local government staff, harvesters and students. Tiers and 
 
 ---
 
+## How it works
+
+<p align="center">
+  <img src="docs/images/pipeline.png" width="900" alt="Pipeline in five steps: fetch and clean 4,789 of 9,660 records; score rarity, harvest harm and habitat pressure; rank 29 of 51 plants; stress-test with 2,000 draws; publish static JSON to the web atlas" />
+</p>
+
+$$\text{HPI} = \tfrac{1}{3}R + \tfrac{1}{3}H + \tfrac{1}{3}E \qquad (C \text{ shown with weight } 0)$$
+
+| Part | Question | Evidence |
+| --- | --- | --- |
+| **Rarity (R)** | How hard is it to find? | Effort-corrected reporting rate in well-searched hexagons; number of world regions where WCVP lists it as native |
+| **Harvest harm (H)** | Does harvesting kill it? | Part harvested (roots, bark or whole plant score highest), life form and sourcing, cited per plant from Stuart |
+| **Habitat pressure (E)** | Is its home disappearing? | Share of occupied hexagons outside protected areas; 2001–2023 forest loss in its provinces, scaled by forest dependence |
+| **Climate (C)** | Shown, not scored | CMIP6 2041–2060 warming is about +1.5 °C for every plant, so it cannot separate them |
+
+All parts lie in [0, 1] on fixed anchors, not cohort min–max, so adding a plant never changes another plant's values. A missing part stays missing: the remaining weights rescale and the plant is flagged *partial*. The full method is in [`docs/METHODS.md`](docs/METHODS.md).
+
+---
+
 ## Product walkthrough
 
-From a question on the home page to a printed page in the field, in six steps.
+From a question on the home page to a printed page in the field, following tongkat ali through the app.
 
-```mermaid
-flowchart LR
-  A["1 · Overview<br/>the question, hotspot map,<br/>5 plants that need attention"] --> B["2 · Atlas<br/>pick a plant or an area;<br/>hexagons, never points"]
-  B --> C["3 · Plant profile<br/>three reasons, rank range,<br/>where it grows, sources"]
-  C --> D["4 · Field brief<br/>one A4 page<br/>to print"]
-  A --> E["5 · How it works<br/>weight explorer,<br/>robustness checks"]
-  A --> F["6 · All plants<br/>every plant by tier,<br/>CSV download"]
-  F --> C
-```
-
-| Step | Page | What to do there |
-| --- | --- | --- |
-| 1 | [`/`](https://harvester-risk-atlas.vercel.app/) | Read the question, point at the hotspot map, open one of the five plants |
-| 2 | [`/atlas`](https://harvester-risk-atlas.vercel.app/atlas?sp=eurycoma-longifolia) | Choose a plant to see its hexagons, or click an area to see what grows there |
-| 3 | [`/species/:slug`](https://harvester-risk-atlas.vercel.app/species/eurycoma-longifolia) | See why it ranks where it does, how far the rank could move, and the evidence |
-| 4 | [`/species/:slug/brief`](https://harvester-risk-atlas.vercel.app/species/eurycoma-longifolia/brief) | Print or save the brief as PDF for the field |
-| 5 | [`/how-it-works`](https://harvester-risk-atlas.vercel.app/how-it-works) | Move the weight sliders, then read how sure the ranking is |
-| 6 | [`/plants`](https://harvester-risk-atlas.vercel.app/plants) | Browse every plant by tier, including those not ranked and why |
-
-### Screenshots: Overview → Atlas → Plant → Field brief → How it works → All plants
-
-Live captures from [harvester-risk-atlas.vercel.app](https://harvester-risk-atlas.vercel.app/), following tongkat ali through the app.
+**Overview → Atlas → Plant profile → Field brief → How it works → All plants.** Live captures from [harvester-risk-atlas.vercel.app](https://harvester-risk-atlas.vercel.app/).
 
 <table>
 <tr>
@@ -193,29 +191,6 @@ There is no ground truth for harvest priority, so the checks test **robustness, 
 | Median width of the 90% rank interval | 5 places | — |
 
 The numbers are in [`web/public/data/validation.json`](web/public/data/validation.json), produced by `python -m harvester_risk_atlas validate`.
-
----
-
-## How it works: the data pipeline
-
-```mermaid
-flowchart LR
-  A["1 · Fetch and clean<br/>6 open sources<br/>9,660 → 4,789 records"] --> B["2 · Score<br/>Rarity · Harvest harm<br/>Habitat pressure"]
-  B --> C["3 · Rank<br/>equal weights, gates<br/>29 of 51 plants"]
-  C --> D["4 · Stress-test<br/>2,000 draws →<br/>rank range and tier"]
-  D --> E["5 · Publish<br/>validation + static JSON<br/>→ web atlas"]
-```
-
-$$\text{HPI} = \tfrac{1}{3}R + \tfrac{1}{3}H + \tfrac{1}{3}E \qquad (C \text{ shown with weight } 0)$$
-
-| Part | Question | Evidence |
-| --- | --- | --- |
-| **Rarity (R)** | How hard is it to find? | Effort-corrected reporting rate in well-searched hexagons; number of world regions where WCVP lists it as native |
-| **Harvest harm (H)** | Does harvesting kill it? | Part harvested (roots, bark or whole plant score highest), life form and sourcing, cited per plant from Stuart |
-| **Habitat pressure (E)** | Is its home disappearing? | Share of occupied hexagons outside protected areas; 2001–2023 forest loss in its provinces, scaled by forest dependence |
-| **Climate (C)** | Shown, not scored | CMIP6 2041–2060 warming is about +1.5 °C for every plant, so it cannot separate them |
-
-All parts lie in [0, 1] on fixed anchors, not cohort min–max, so adding a plant never changes another plant's values. A missing part stays missing: the remaining weights rescale and the plant is flagged *partial*. The full method is in [`docs/METHODS.md`](docs/METHODS.md).
 
 ---
 
