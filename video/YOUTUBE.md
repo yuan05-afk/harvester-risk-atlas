@@ -1,6 +1,6 @@
 # YouTube upload: Harvester Risk Atlas pitch
 
-Upload `out/harvester-risk-atlas-pitch-yt.mp4` (1920×1080, 60 fps, 2:48, version 4). Visibility: **Public** or **Unlisted**, so judges can watch it without signing in. Paste the link into Devpost's "Video demo link".
+Upload `out/harvester-risk-atlas-pitch-yt.mp4` (1920×1080, 60 fps, 2:48, version 4). For the organisers' own platform, which asks for 720p and under 100 MB, use `out/harvester-risk-atlas-demo-720p.mp4` (12 MB, narrated) or `out/harvester-risk-atlas-demo-720p-silent.mp4` (8 MB, no sound, to talk over live). Visibility: **Public** or **Unlisted**, so judges can watch it without signing in. Paste the link into Devpost's "Video demo link".
 
 ## Title (max 100 characters)
 
@@ -17,8 +17,8 @@ EthnoHack 2026 · Track 3: Biodiversity & Sustainability
 Team: Yuan Andrei C. Mariano and Alicia Jhyle Vilale
 
 ▶ Try it: https://harvester-risk-atlas.vercel.app
-▶ Code, data and method: https://github.com/yuan05-afk/harvester-risk-atlas
-▶ Slides: https://github.com/yuan05-afk/harvester-risk-atlas/blob/main/submission/Harvester-Risk-Atlas-slides.pdf
+▶ Code, data and method: https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability
+▶ Slides: https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/submission/Harvester-Risk-Atlas-slides.pdf
 
 Chapters
 00:00 Why it matters
@@ -35,7 +35,7 @@ Chapters
 
 How it works: for each of 29 native medicinal plants, the Harvest Priority Index combines rarity (corrected for survey effort), harvest harm (which part is taken, life form, sourcing) and habitat pressure (protected-area gap, forest loss). The ranking is re-run 2,000 times with different weights and evidence, so every plant gets a rank range and a tier. The Seasons page shows where and when each plant is recorded through the dry and wet seasons, weighed against survey effort. Plants appear only as ~250 km² hexagons, never as exact points.
 
-Data: GBIF occurrence records; World Checklist of Vascular Plants (Kew); WDPCA Philippines (UNEP-WCMC); tree-cover loss (Hansen et al. 2013, Global Forest Watch); WorldClim 2.1 and CMIP6; Stuart, Philippine Medicinal Plants; DENR DAO 2026-20 (validation only). Plant photos from iNaturalist observers, credited in the app. Problem figures: IUCN Medicinal Plant Specialist Group and TRAFFIC, "Wild at Home" (2018); Kew, State of the World's Plants and Fungi (2020).
+Data: GBIF occurrence records; World Checklist of Vascular Plants (Kew); WDPCA Philippines (UNEP-WCMC); tree-cover loss (Hansen et al. 2013, Global Forest Watch); WorldClim 2.1 and CMIP6; Stuart, Philippine Medicinal Plants; DENR DAO 2026-20 (validation only). Plant photos from iNaturalist observers, credited in the app; thumbnail photo of tongkat ali by Steven Bodzin (CC BY 4.0, iNaturalist). Problem figures: IUCN Medicinal Plant Specialist Group and TRAFFIC, "Wild at Home" (2018); Kew, State of the World's Plants and Fungi (2020).
 
 For research and education. Not medical advice, not a harvest permit, and not a Red List assessment. Harvest traits are drawn from published sources and still await expert verification.
 
@@ -48,5 +48,5 @@ Narration: an ElevenLabs synthetic voice ("Brian", eleven_v4) reading the team's
 - **Audience:** "No, it's not made for kids".
 - **Category:** Science & Technology. **Tags:** ethnohack, ethnobotany, medicinal plants, Philippines, conservation, biodiversity, GBIF, open data.
 - **Altered or synthetic content:** the narration is a synthetic voice reading your script, and the description says so. Choose what fits YouTube's current policy.
-- **Thumbnail:** `submission/gallery/01-overview.png`, or `submission/gallery/11-seasons.png` for the new Seasons page.
+- **Thumbnail:** `submission/youtube-thumbnail.png` (1280×720; rebuild with `npx remotion still src/index.ts Thumb out/youtube-thumbnail.png`). Custom thumbnails need a phone-verified YouTube account.
 - After uploading, open the link in a signed-out browser window to confirm judges can watch it.

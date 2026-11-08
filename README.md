@@ -221,8 +221,8 @@ The numbers are in [`web/public/data/validation.json`](web/public/data/validatio
 The web app is static, and its data is pre-built into `web/public/data/`.
 
 ```bash
-git clone https://github.com/yuan05-afk/harvester-risk-atlas.git
-cd harvester-risk-atlas/web
+git clone https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability.git
+cd makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/web
 npm ci
 npm run dev        # http://localhost:5173
 ```

@@ -36,7 +36,7 @@ Paste everything between the two rules below.
 
 ---
 
-**Track 3: Biodiversity & Sustainability.** Live app: https://harvester-risk-atlas.vercel.app · Code: https://github.com/yuan05-afk/harvester-risk-atlas · Slides: [PDF](https://github.com/yuan05-afk/harvester-risk-atlas/blob/main/submission/Harvester-Risk-Atlas-slides.pdf)
+**Track 3: Biodiversity & Sustainability.** Live app: https://harvester-risk-atlas.vercel.app · Code: https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability · Slides: [PDF](https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/submission/Harvester-Risk-Atlas-slides.pdf)
 
 > For research and education. Not medical advice, not a harvest permit, and not a Red List assessment.
 
@@ -182,7 +182,7 @@ A transparent screen with honest uncertainty is more useful than a single confid
 
 ## Development and attribution
 
-Created and developed on 2–3 November 2026 (Asia/Manila), during EthnoHack 2026. Third-party datasets, libraries, fonts and photos are listed with their licences in [`docs/ORIGINALITY.md`](https://github.com/yuan05-afk/harvester-risk-atlas/blob/main/docs/ORIGINALITY.md). The full method is in [`docs/METHODS.md`](https://github.com/yuan05-afk/harvester-risk-atlas/blob/main/docs/METHODS.md).
+Created and developed on 2–3 November 2026 (Asia/Manila), during EthnoHack 2026. Third-party datasets, libraries, fonts and photos are listed with their licences in [`docs/ORIGINALITY.md`](https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/docs/ORIGINALITY.md). The full method is in [`docs/METHODS.md`](https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/docs/METHODS.md).
 
 ---
 
@@ -198,9 +198,9 @@ python, pandas, numpy, geopandas, shapely, h3, rasterio, pytest, typescript, rea
 
 ```
 https://harvester-risk-atlas.vercel.app
-https://github.com/yuan05-afk/harvester-risk-atlas
-https://github.com/yuan05-afk/harvester-risk-atlas/blob/main/docs/METHODS.md
-https://github.com/yuan05-afk/harvester-risk-atlas/blob/main/submission/Harvester-Risk-Atlas-slides.pdf
+https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability
+https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/docs/METHODS.md
+https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/submission/Harvester-Risk-Atlas-slides.pdf
 ```
 
 ### Image gallery (3:2, max 5 MB each, up to 15)

@@ -10,4 +10,4 @@ st.write(
     "shows how sure each rank is, and works on phones."
 )
 st.link_button("Open the atlas", NEW_URL, type="primary")
-st.caption(f"{NEW_URL} · source: https://github.com/yuan05-afk/harvester-risk-atlas")
+st.caption(f"{NEW_URL} · source: https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability")

@@ -33,7 +33,7 @@ Do this first:
 | Addresses an official track | Met | Track 3: Biodiversity & Sustainability |
 | Meaningful use of data and computation | Met | Python pipeline, Monte Carlo uncertainty, web atlas |
 | Devpost project page with required sections | Drafted | `submission/devpost.md`: title, track, description, problem, approach, technologies, data, results, team (placeholder), impact and future |
-| Public source repository | Met | https://github.com/yuan05-afk/harvester-risk-atlas (public) |
+| Public source repository | Met | https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability (public) |
 | README, installation and reproduction | Met | `README.md`; `python -m harvester_risk_atlas all --offline` |
 | Data-processing scripts and model code | Met | `src/harvester_risk_atlas/`, `notebooks/01_eda_hpi.ipynb` |
 | Dataset references and licences | Met | `README.md`, `docs/METHODS.md` §9, `docs/ORIGINALITY.md`, How it works page |
