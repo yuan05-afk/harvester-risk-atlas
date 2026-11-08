@@ -42,24 +42,30 @@ for f in land['features']:
         if p:
             paths.append(p)
 
+# Survey effort at the country view's cell size (H3 res 4, as the app shows it zoomed out): the share of each res-4
+# cell's res-5 children that are well searched (100+ plant records).
 cells = json.load(open(GEO / 'cells.geojson', encoding='utf-8'))
-eff = []
+kids = {}
 for f in cells['features']:
     p = f['properties']
-    lat, lon = h3.cell_to_latlng(p['h3'])
+    parent = h3.cell_to_parent(p['h3'], 4)
+    kids.setdefault(parent, []).append(p['effort'] >= 100)
+eff = []
+for c, flags in kids.items():
+    lat, lon = h3.cell_to_latlng(c)
     x, y = xy(lon, lat)
-    eff.append([x, y, p['effort']])
+    eff.append([x, y, round(sum(flags) / len(flags), 2)])
 effs = sorted(e[2] for e in eff)
 
 sp = json.load(open(ROOT / 'web/public/data/species/eurycoma-longifolia.json', encoding='utf-8'))
 tongkat = []
-for c in sp['cells']:
+for c in sp['cells_r4']:
     lat, lon = h3.cell_to_latlng(c)
     tongkat.append(xy(lon, lat))
 places = {'Mindoro': (121.08, 12.93), 'Homonhon': (125.72, 10.73), 'Bucas Grande': (125.97, 9.66)}
 look = {k: xy(*v) for k, v in places.items()}
 
 out = {'w': round((E0 - W0) * K * COS), 'h': 1000, 'land': paths, 'cells': eff, 'tongkat': tongkat, 'look': look,
-       'cell_r': round(h3.average_hexagon_edge_length(5, 'km') / 111 * K, 2)}
+       'cell_r': round(h3.average_hexagon_edge_length(4, 'km') / 111 * K, 2)}
 json.dump(out, open(ROOT / 'video/src/geo.json', 'w'), separators=(',', ':'))
 print(len(paths), 'land rings', len(eff), 'cells, effort quantiles', effs[len(effs) // 2], effs[int(len(effs) * 0.75)], 'tongkat', tongkat, out['w'])

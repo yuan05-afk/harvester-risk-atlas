@@ -93,11 +93,13 @@ at.atlas = T.pick - 0.4;
 at.profile = at.atlas + clickAt('atlas', 1) + 0.1;
 at.brief = at.profile + clickAt('profile') + 0.1;
 // Weights starts so its drag lands on "slider"; the brief holds on its page until then.
-at.weights = T.slider - mark('weights', 'drag') + 0.1;
+at.weights = Math.min(T.slider - mark('weights', 'drag') + 0.1, at.brief + len('brief') - 0.05);
 at.seasons = at.weights + clickAt('weights') + 0.1;
 const DEMO_END = T.name - 0.4;
-// The cross-check take: its "Co's Digital Flora" row arrives on "agrees".
-at.check = T.agrees - mark('check', 'cdfp');
+// The cross-check take rises after the credit to Leonardo Co; its start is trimmed so the hand reaches the
+// "Co's Digital Flora" row on "agrees".
+at.check = T.leonardo + 0.9;
+const CHECK_FROM = Math.max(0, mark('check', 'cdfp') - (T.agrees - at.check));
 const CHECK_END = T.but2 + 0.2;
 
 // --------------------------------------------------------------------------- the plane the app footage sits on
@@ -111,6 +113,11 @@ const onPlane = (b: Box, cam = FULL) => {
   const top = PLANE_Y - (PLANE_W * 9) / 16 / 2;
   return { x: left + (b.x - cam.x) * s, y: top + (b.y - cam.y) * s, w: b.w * s, h: b.h * s };
 };
+
+/** A drawn underline beneath a line of text in the footage (film px), as long as the text, at most 900 px. */
+const UnderBox: React.FC<{ t: number; at: number; out: number; b: Box }> = ({ t, at: a, out, b }) => (
+  <Under t={t} at={a} out={out} x={b.x} y={b.y + b.h + 8} w={Math.min(900, b.w)} />
+);
 
 /** A plain caption on a white slip under the footage: what to look at, in a few words. */
 const Caption: React.FC<{ t: number; at: number; out: number; children: React.ReactNode }> = ({ t, at: a, out, children }) => {
@@ -276,7 +283,8 @@ const Method: React.FC<{ t: number }> = ({ t }) => {
       <Rise t={t} at={cue('searched.')} out={effOut} style={{ left: 160, top: 620, width: 900 }}>
         <div style={{ display: 'flex', gap: 30, fontSize: 32, fontWeight: 600, color: C.secondary, alignItems: 'center' }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 12 }}><i style={{ width: 22, height: 22, background: C.ink, display: 'inline-block' }} />searched well</span>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 12 }}><i style={{ width: 22, height: 22, background: '#C9CFD6', display: 'inline-block' }} />barely searched</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 12 }}><i style={{ width: 22, height: 22, background: '#7D858F', display: 'inline-block' }} />partly</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 12 }}><i style={{ width: 22, height: 22, background: '#FCFCFD', border: '1px solid #9AA2AC', display: 'inline-block' }} />barely searched</span>
         </div>
         <div style={{ fontSize: 28, color: C.tertiary, marginTop: 14 }}>332 of 1,267 areas have 100 or more plant records</div>
       </Rise>
@@ -322,12 +330,16 @@ const Demo: React.FC<{ t: number }> = ({ t }) => {
   if (t < start - 0.6 || t > end + 0.8) return null;
   const until = (i: number) => (i < ORDER.length - 1 ? at[ORDER[i + 1]] : end);
   const zoomRank = { x: 860, y: 120, w: 1060 };
+  // While the year plays: the chart and the map fill the frame.
+  const zoomYear = { x: 230, y: 330, w: 1300 };
+  const playStart = at.seasons + mark('seasons', 'playing');
+  const calStart = at.seasons + mark('seasons', 'calendar');
   const cams: Record<string, Cam> = {
     atlas: [[0, FULL]],
-    profile: [[0, FULL], [T.second - 0.7, FULL], [T.second + 0.3, zoomRank], [at.brief - 1.2, zoomRank], [at.brief - 0.4, FULL]],
+    profile: [[0, FULL], [T.second - 0.7, FULL], [T.second + 0.3, zoomRank], [at.brief - 1.7, zoomRank], [at.brief - 0.3, FULL]],
     brief: [[0, FULL], [at.brief + 0.4, FULL], [at.brief + 1.5, { x: 360, y: 40, w: 1200 }]],
     weights: [[0, FULL]],
-    seasons: [[0, FULL]],
+    seasons: [[0, FULL], [playStart + 0.3, FULL], [playStart + 1.5, zoomYear], [calStart - 0.7, zoomYear], [calStart + 0.3, FULL]],
   };
   const rank = onPlane(box('profile', 'rank'), zoomRank);
   const sb = at.seasons;
@@ -343,7 +355,7 @@ const Demo: React.FC<{ t: number }> = ({ t }) => {
         return <Screen key={n} t={t} src={n} at={a} from={0} dur={Math.min(len(n), b + 0.5 - a)} cam={cams[n]} px={[[0, 960]]} py={py} pw={[[0, PLANE_W]]} radius={6} />;
       })}
       <Caption t={t} at={T.broad} out={at.profile - 0.3}>Broad hexagons, never exact spots</Caption>
-      <Ring t={t} at={T.second + 0.35} out={at.brief - 0.5} {...rank} />
+      <UnderBox t={t} at={T.second + 0.35} out={at.brief - 2.0} b={rank} />
       <Caption t={t} at={T.second} out={at.brief - 0.3}>Ranked 2nd of 29, anywhere from 1st to 5th</Caption>
       <Caption t={t} at={T.field - 0.2} out={at.weights - 0.3}>One page for the field</Caption>
       <Caption t={t} at={T.slider} out={at.seasons - 0.3}>Your weights, re-ranked live</Caption>
@@ -381,10 +393,10 @@ const Check: React.FC<{ t: number }> = ({ t }) => {
       <Say t={t} words={line('the expert checklist built on the work of botanist Leonardo L. Co', T.leonardo - 0.6)} x={960} y={540} size={40} weight={500} color={C.secondary} out={cdfpOut} />
       <Say t={t} words={[{ w: 'Pelser, Barcelona & Nickrent (eds.) · philippineplants.org', at: T.leonardo + 0.2 }]} x={960} y={610} size={28} weight={500} color={C.tertiary} out={cdfpOut} />
       {t >= s - 0.1 && t <= CHECK_END + 0.5 && (
-        <Screen t={t} src="check" at={s} from={0} dur={CHECK_END + 0.5 - s} cam={[[0, FULL]]} radius={6}
+        <Screen t={t} src="check" at={s} from={CHECK_FROM} dur={CHECK_END + 0.5 - s} cam={[[0, FULL]]} radius={6}
           px={[[0, 960]]} py={[[s - 0.45, 1500], [s, PLANE_Y], [CHECK_END - 0.2, PLANE_Y], [CHECK_END + 0.35, -620]]} pw={[[0, PLANE_W]]} />
       )}
-      <Ring t={t} at={T.agrees} out={CHECK_END - 0.3} {...onPlane(box('check', 'cdfp'))} />
+      <UnderBox t={t} at={T.agrees} out={CHECK_END - 0.3} b={onPlane(box('check', 'cdfp'))} />
       <Caption t={t} at={T.agrees} out={CHECK_END - 0.3}>{"Co's Flora agrees: native, and Endangered"}</Caption>
       {/* Where to look next: the islands Co's Flora documents it on, with no open records, on the real map. */}
       {t > T.but2 - 0.2 && t < mapOut + 0.5 && (
@@ -437,7 +449,7 @@ const FIVE = [
 const Results: React.FC<{ t: number }> = ({ t }) => {
   if (t < T.fivePlants - 0.3 || t > T.medical) return null;
   const out = T.medical - 0.7;
-  const sx = (r: number) => 1180 + ((r - 1) / 9) * 560;
+  const sx = (r: number) => 1060 + ((r - 1) / 9) * 480;
   return (
     <>
       <Say t={t} words={line('Five plants need ^attention now', T.fivePlants)} x={160} y={130} size={64} align="left" width={1600} out={out} />
@@ -471,7 +483,7 @@ const Results: React.FC<{ t: number }> = ({ t }) => {
         })}
       </Sheet>
       <Say t={t} words={line('Change the math, and the order barely moves.', T.change)} x={160} y={1000} size={40} align="left" width={1600} weight={500} color={C.secondary} out={out} />
-      <Say t={t} words={[{ w: 'Photos: iNaturalist observers, CC BY', at: T.fivePlants + 0.6 }]} x={1760} y={1000} size={20} align="left" width={400} weight={500} color={C.tertiary} out={out} />
+      <Say t={t} words={[{ w: 'Photos: iNaturalist observers, CC BY', at: T.fivePlants + 0.6 }]} x={1360} y={1000} size={20} align="left" width={400} weight={500} color={C.tertiary} out={out} />
     </>
   );
 };
@@ -492,7 +504,7 @@ const Close: React.FC<{ t: number }> = ({ t }) => {
   if (t < T.name2 - 0.5) return null;
   return (
     <>
-      <Photo t={t} at={T.name2 - 0.2} src="eurycoma-longifolia" x={1300} y={170} w={460} h={620} />
+      <Photo t={t} at={T.name2 + 0.2} src="eurycoma-longifolia" x={1300} y={170} w={460} h={620} />
       <Say t={t} words={[{ w: 'Harvester', at: T.name2 }, { w: 'Risk', at: cue('Risk', 2) }, { w: 'Atlas', at: cue('Atlas.', 3) }]} x={160} y={300} size={112} align="left" width={1100} />
       <Say t={t} words={line('Which plants first, where to look next, and how sure we are.', T.which)} x={164} y={430} size={42} align="left" width={1060} weight={500} color={C.secondary} />
       <Say t={t} words={[{ w: 'harvester-risk-atlas.vercel.app', at: cue('sure', 2) + 0.4 }]} x={164} y={560} size={52} align="left" width={1100} color={C.accent} />

@@ -151,15 +151,16 @@ export const PH: React.FC<{ t: number; x: number; y: number; scale: number; land
     <svg width={G.w * scale} height={G.h * scale} viewBox={`0 0 ${G.w} ${G.h}`} style={{ position: 'absolute', left: x, top: y, overflow: 'visible', opacity }}>
       <g opacity={landIn}>
         {G.land.map((d, i) => (
-          <path key={i} d={d} fill={SHEET} stroke={RULE2} strokeWidth={1.2 / scale} />
+          <path key={i} d={d} fill="#D5DAE0" stroke="#9AA2AC" strokeWidth={1.2 / scale} />
         ))}
       </g>
       {effort > 0 &&
         G.cells.map(([cx, cy, e], i) => {
           const k = Math.min(1, Math.max(0, effort * 1.6 - (cy / G.h) * 0.6));
           if (k <= 0) return null;
-          const well = e >= 100;
-          return <polygon key={i} points={hexPts(cx, cy, r * 0.94)} fill={well ? C.ink : '#C9CFD6'} opacity={k * (well ? 0.85 : 0.75)} />;
+          // e: share of the cell's areas that are well searched. Ink where most are, white where none are.
+          const fill = e >= 0.5 ? C.ink : e > 0 ? '#7D858F' : SHEET;
+          return <polygon key={i} points={hexPts(cx, cy, r * 0.96)} fill={fill} stroke="#9AA2AC" strokeWidth={0.6} opacity={k} />;
         })}
       {tongkat > 0 &&
         G.tongkat.map(([cx, cy], i) => {
@@ -168,8 +169,8 @@ export const PH: React.FC<{ t: number; x: number; y: number; scale: number; land
           const s = 1 + (1 - p) * 2.2;
           return (
             <g key={i} opacity={p * tongkat}>
-              <circle cx={cx} cy={cy} r={(r * 3.2 * s) / 1} fill="none" stroke={C.accent} strokeWidth={2.4 / scale} opacity={0.5} />
-              <polygon points={hexPts(cx, cy, r * 1.6)} fill={C.accent} />
+              <circle cx={cx} cy={cy} r={r * 2.2 * s} fill="none" stroke={C.accent} strokeWidth={3 / scale} opacity={0.6 * (1 - p) + 0.35} />
+              <polygon points={hexPts(cx, cy, r * 0.96)} fill={C.accent} stroke={SHEET} strokeWidth={1.5} />
             </g>
           );
         })}

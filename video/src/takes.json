@@ -2,7 +2,8 @@
  "intro": {
   "frames": 444,
   "clicks": [],
-  "marks": {}
+  "marks": {},
+  "boxes": {}
  },
  "overview": {
   "frames": 314,
@@ -12,7 +13,8 @@
   "marks": {
    "hover 1": 72,
    "hover 2": 183
-  }
+  },
+  "boxes": {}
  },
  "atlas": {
   "frames": 474,
@@ -22,7 +24,8 @@
   ],
   "marks": {
    "over the map": 239
-  }
+  },
+  "boxes": {}
  },
  "profile": {
   "frames": 322,
@@ -30,13 +33,23 @@
    316
   ],
   "marks": {
-   "at the rank": 84
+   "at the rank": 84,
+   "rank": 84
+  },
+  "boxes": {
+   "rank": {
+    "x": 1016,
+    "y": 433,
+    "w": 640,
+    "h": 25
+   }
   }
  },
  "brief": {
   "frames": 300,
   "clicks": [],
-  "marks": {}
+  "marks": {},
+  "boxes": {}
  },
  "weights": {
   "frames": 377,
@@ -46,17 +59,20 @@
   "marks": {
    "drag": 89,
    "release": 245
-  }
+  },
+  "boxes": {}
  },
  "plants": {
   "frames": 300,
   "clicks": [],
-  "marks": {}
+  "marks": {},
+  "boxes": {}
  },
  "checks": {
   "frames": 540,
   "clicks": [],
-  "marks": {}
+  "marks": {},
+  "boxes": {}
  },
  "check": {
   "frames": 846,
@@ -64,6 +80,68 @@
   "marks": {
    "cdfp": 228,
    "look next": 444
+  },
+  "boxes": {
+   "cdfp": {
+    "x": 481,
+    "y": 279,
+    "w": 1150,
+    "h": 25
+   },
+   "look next": {
+    "x": 308,
+    "y": 422,
+    "w": 1323,
+    "h": 25
+   }
+  }
+ },
+ "seasons": {
+  "frames": 1443,
+  "clicks": [
+   105
+  ],
+  "marks": {
+   "play": 0,
+   "month": 0,
+   "map": 0,
+   "chart": 0,
+   "calendar box": 0,
+   "playing": 111,
+   "calendar": 897,
+   "tooltip": 987
+  },
+  "boxes": {
+   "play": {
+    "x": 1490,
+    "y": 350,
+    "w": 142,
+    "h": 42
+   },
+   "month": {
+    "x": 289,
+    "y": 523,
+    "w": 690,
+    "h": 51
+   },
+   "map": {
+    "x": 1003,
+    "y": 523,
+    "w": 448,
+    "h": 560
+   },
+   "chart": {
+    "x": 289,
+    "y": 709,
+    "w": 690,
+    "h": 280
+   },
+   "calendar box": {
+    "x": 264,
+    "y": 702,
+    "w": 1392,
+    "h": 1729
+   }
   }
  }
 }
