@@ -44,7 +44,7 @@ Paste everything between the two rules below.
 
 Up to **4 billion people** rely on herbal medicine as their main source of healthcare ([Kew, State of the World's Plants and Fungi 2020](https://www.nhm.ac.uk/discover/news/2020/september/two-in-five-plants-are-threatened-with-extinction.html)). About **30,000** plant species have documented medicinal uses. An estimated **60–90%** of those in international trade are collected from the wild, only **7%** have been assessed for the IUCN Red List, and **1 in 5** of those assessed is threatened. The trade tripled in value between 1999 and 2015, to over US$3 billion ([IUCN and TRAFFIC, *Wild at Home*, 2018](https://iucn.org/news/species/201806/wild-home-threats-and-opportunities-trade-wild-plants)).
 
-The Philippines lost **1.47 million hectares of tree cover** between 2001 and 2023. That is about 175 ha a day, roughly 245 football pitches, and 7.9% of its tree cover in 2000 (Hansen et al. 2013, via Global Forest Watch; tree-cover loss includes plantation harvest). The government's threatened-plant list (DENR DAO 2026-20) names **1,186 plants** by our count, 248 of them critically endangered.
+The Philippines lost **1.47 million hectares of tree cover** between 2001 and 2023. That is about 175 hectares a day, roughly 245 football pitches, and 7.9% of its tree cover in 2000 (Hansen et al. 2013, via Global Forest Watch; tree-cover loss includes plantation harvest). The government's threatened-plant list (DENR DAO 2026-20) names **1,186 plants** by our count, 248 of them critically endangered.
 
 Many of the Philippines' medicinal plants are still gathered from the wild. Stuart's *Philippine Medicinal Plants* describes most of the plants in our cohort as "wild-crafted", and for many of them the part used is the root, the bark or the whole plant. Taking those parts can kill the plant, and slow-growing trees and lianas recover slowly (Cunningham 2001; Schippmann, Leaman & Cunningham 2002).
 
@@ -84,7 +84,7 @@ This closes a loop that no single source closes. Open records test the expert fl
 
 **Data.** We used GBIF occurrence records for the Philippines, Kew's World Checklist of Vascular Plants (WCVP) for native status and range, WDPCA Philippines for protected areas, Hansen/Global Forest Watch for tree-cover loss by province, WorldClim 2.1 with CMIP6 projections for climate, and Stuart's *Philippine Medicinal Plants* for harvest traits. DENR DAO 2026-20 is used for validation only. Of 9,660 Philippine GBIF records, 4,789 remain after a nine-rule cleaning pass. Each dropped record is assigned exactly one reason.
 
-**Index.** Each plant gets three components, each in $[0, 1]$ on fixed anchors rather than cohort min–max, so adding a plant never changes another plant's values:
+**Index.** Each plant gets three components, each from 0 to 1 on fixed anchors rather than cohort min–max, so adding a plant never changes another plant's values:
 
 - **Rarity (R)**: the *reporting rate*, the share of well-surveyed hexagons (≥ 100 vascular-plant records; 332 of 1,267) where the plant was recorded, on a log scale. This corrects for where botanists have looked. It is averaged with how few world regions WCVP lists the plant as native to.
 - **Harvest harm (H)**: which part is harvested, the life form, and whether it is only wild-sourced, from a rubric following Cunningham (2001).
@@ -94,7 +94,7 @@ $$\text{HPI} = \tfrac{1}{3}R + \tfrac{1}{3}H + \tfrac{1}{3}E \quad (\text{climat
 
 Climate is shown but carries no weight: projected warming is about +1.5 °C for every plant, so it cannot separate them. Plants are **gated** (listed but not scored) when WCVP does not list them as native, or when they have fewer than 5 occupied hexagons.
 
-**Uncertainty.** 2,000 seeded Monte Carlo draws perturb weights and evidence together. The weights follow a Dirichlet distribution centred on the defaults. The reporting rate is drawn from the Jeffreys posterior $\text{Beta}(k+\tfrac12,\, N-k+\tfrac12)$. Protected-area and forest-loss shares are bootstrapped over occupied cells. Each plant gets a median rank, a 90% rank interval and $P(\text{top quartile})$, which sets its tier: **Needs attention now** ($\ge 0.8$), **Keep watch** ($0.3$–$0.8$) or **Lower concern**.
+**Uncertainty.** 2,000 seeded Monte Carlo draws perturb weights and evidence together. The weights follow a Dirichlet distribution centred on the defaults. The reporting rate is drawn from the Jeffreys posterior, Beta(k + ½, N − k + ½). Protected-area and forest-loss shares are bootstrapped over occupied cells. Each plant gets a median rank, a 90% rank interval and the probability of being in the top quarter, which sets its tier: **Needs attention now** (0.8 or more), **Keep watch** (0.3 to 0.8) or **Lower concern**.
 
 **Software.** A Python pipeline (`fetch → base → index → validate → export`) using pandas, GeoPandas, H3 and rasterio writes static JSON. A React + TypeScript + MapLibre web app reads it. A golden-file test keeps the browser's weight explorer arithmetically identical to the Python index. Tests cover the Python pipeline (pytest), web unit tests (Vitest), and browser and accessibility tests (Playwright + axe), all run in GitHub Actions. A committed raw-data snapshot lets anyone rebuild every number offline with `python -m harvester_risk_atlas all --offline`.
 
@@ -180,7 +180,7 @@ A transparent screen with honest uncertainty is more useful than a single confid
 
 ## Development and attribution
 
-Created and developed on 2–3 November 2026 (Asia/Manila), during EthnoHack 2026. Third-party datasets, libraries, fonts and photos are listed with their licences in [`docs/ORIGINALITY.md`](https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/docs/ORIGINALITY.md). The full method is in [`docs/METHODS.md`](https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/docs/METHODS.md).
+Created and developed during the EthnoHack 2026 hacking period, 2–8 November 2026 (Asia/Manila). Third-party datasets, libraries, fonts and photos are listed with their licences in [`docs/ORIGINALITY.md`](https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/docs/ORIGINALITY.md). The full method is in [`docs/METHODS.md`](https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/docs/METHODS.md).
 
 ---
 

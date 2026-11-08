@@ -2,7 +2,7 @@
 
 Last updated: **3 November 2026**.
 
-Harvester Risk Atlas was created and developed on **2–3 November 2026 (Asia/Manila)**, as confirmed by the project owner. This applies to all project development to date, including the app, data pipeline, methods and documentation.
+Harvester Risk Atlas was created and developed during the EthnoHack 2026 hacking period, **2–8 November 2026 (Asia/Manila)**: the app, data pipeline, methods and documentation on 2–3 November (as confirmed by the project owner), and the expert cross-check (WFO, Co's Digital Flora, survey gaps), the Seasons page and the pitch film on 8 November.
 
 ## Project work
 

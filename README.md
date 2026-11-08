@@ -24,7 +24,7 @@
 
 Up to **4 billion people** rely on herbal medicine as their main source of healthcare<sup>[1]</sup>. About **30,000** plant species have documented medicinal uses. Of those in international trade, an estimated **60–90%** are collected from the wild. Only **7%** have been assessed for the IUCN Red List, and **1 in 5** of those assessed is threatened<sup>[2]</sup>.
 
-In the Philippines, **1.47 million hectares** of tree cover were lost between 2001 and 2023, about **175 ha a day**<sup>[3]</sup>. The national threatened-plant list names **1,186** plants<sup>[4]</sup>. But no dataset records how much of each medicinal plant is harvested, so nobody can say which ones are being dug up fastest, or where to look first.
+In the Philippines, **1.47 million hectares** of tree cover were lost between 2001 and 2023, about **175 hectares a day**<sup>[3]</sup>. The national threatened-plant list names **1,186** plants<sup>[4]</sup>. But no dataset records how much of each medicinal plant is harvested, so nobody can say which ones are being dug up fastest, or where to look first.
 
 **Harvester Risk Atlas** is a free, static web atlas and a reproducible data pipeline that:
 
@@ -360,7 +360,7 @@ The code is MIT-licensed ([`LICENSE`](LICENSE)). Data keeps its own licences. Se
 
 ## Development, originality and AI disclosure
 
-Harvester Risk Atlas was created and developed on **2–3 November 2026 (Asia/Manila)**, as confirmed by the project owner. Third-party data, libraries, photos and fonts are listed in [`docs/ORIGINALITY.md`](docs/ORIGINALITY.md).
+Harvester Risk Atlas was created and developed during the EthnoHack 2026 hacking period, **2–8 November 2026 (Asia/Manila)**: the core atlas on 2–3 November, and the expert cross-check, the Seasons page and the pitch film on 8 November. Third-party data, libraries, photos and fonts are listed in [`docs/ORIGINALITY.md`](docs/ORIGINALITY.md).
 
 AI assistants, including Claude Code, helped draft and edit code and documentation. Claude Code drafted the harvest-trait rows in `data/curated/harvest_traits.csv` from cited Stuart pages (recorded in `curated_by`); none is expert-verified yet (`verified_by` is empty). The team is responsible for reviewing the submitted work.
 
