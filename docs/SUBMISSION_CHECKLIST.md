@@ -61,7 +61,7 @@ From the "Final reminder" sent to participants.
 | Data sources and attribution | "How we built it", "Responsible research", README | Drafted |
 | Results or prototype | "Results", live app, gallery | Drafted |
 | GitHub repository | "Try it out" links | Public |
-| Pitch video ≤ 10 min | "Video demo link" | Rendered (2:48); upload to YouTube and paste the link |
+| Pitch video ≤ 10 min | "Video demo link" | Uploaded: https://youtu.be/6GCAjl0OtbI |
 | Slide deck ≤ 10 slides | Additional info upload (one file: the PDF) | Done: 10 slides |
 | Limitations, assumptions, future work | "Responsible research", "Assumptions", "What's next"; README | Drafted |
 | README explains how it works | `README.md` | Done |
@@ -73,7 +73,7 @@ From the "Final reminder" sent to participants.
 - [ ] Second member's EthnoHack registration confirmed as on or before 31 October.
 - [x] Roles filled in: `submission/devpost.md` Team section and `ORIGINALITY.md`.
 - [x] Video recorded (2:48, 60 fps, captions in `video/harvester-risk-atlas-pitch.en.srt`).
-- [ ] Video uploaded to YouTube (public or unlisted) and link pasted.
+- [x] Video uploaded to YouTube: https://youtu.be/6GCAjl0OtbI (plays signed out). Paste it into Devpost.
 - [ ] Slides PDF uploaded under Additional info.
 - [ ] Gallery images uploaded with captions.
 - [ ] Walk the demo path in a private window: Overview → Atlas → plant profile → field brief → How it works.

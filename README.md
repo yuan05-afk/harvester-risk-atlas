@@ -39,7 +39,7 @@ One of those plants is **tongkat ali** (*Eurycoma longifolia*). Its roots are du
 
 ## Try it now
 
-**Live demo:** [https://harvester-risk-atlas.vercel.app](https://harvester-risk-atlas.vercel.app/)
+**Live demo:** [https://harvester-risk-atlas.vercel.app](https://harvester-risk-atlas.vercel.app/) · **Pitch video (2:48):** [https://youtu.be/6GCAjl0OtbI](https://youtu.be/6GCAjl0OtbI)
 
 | Page | Link | What you see |
 | --- | --- | --- |
@@ -48,6 +48,7 @@ One of those plants is **tongkat ali** (*Eurycoma longifolia*). Its roots are du
 | Plant profile | [`/species/eurycoma-longifolia`](https://harvester-risk-atlas.vercel.app/species/eurycoma-longifolia) | Three reasons in plain words, evidence, rank range, sources |
 | Field brief | [`/species/eurycoma-longifolia/brief`](https://harvester-risk-atlas.vercel.app/species/eurycoma-longifolia/brief) | One printable A4 page |
 | All plants | [`/plants`](https://harvester-risk-atlas.vercel.app/plants) | Every plant by tier, with CSV download |
+| Seasons | [`/seasons`](https://harvester-risk-atlas.vercel.app/seasons) | Play the year: where and when each plant is recorded, flowering and fruiting, weighed against survey effort |
 | How it works | [`/how-it-works`](https://harvester-risk-atlas.vercel.app/how-it-works) | Method, weight explorer, robustness checks, sources |
 
 No login and no backend. All 51 plant records ship as static JSON in `web/public/data/`.
@@ -380,7 +381,7 @@ AI assistants, including Claude Code, helped draft and edit code and documentati
 | --- | --- |
 | Devpost project text | [`submission/devpost.md`](submission/devpost.md) |
 | Slide deck (10 slides) | [`submission/Harvester-Risk-Atlas-slides.pdf`](submission/Harvester-Risk-Atlas-slides.pdf) |
-| Pitch video (2:48) | Link added on Devpost; Remotion project, script and notes in [`video/`](video/NOTE.md) |
+| Pitch video (2:48) | [https://youtu.be/6GCAjl0OtbI](https://youtu.be/6GCAjl0OtbI); Remotion project, script and notes in [`video/`](video/NOTE.md) |
 | Judging guide | [`docs/JUDGING.md`](docs/JUDGING.md) |
 | Rules audit and checklist | [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md) |
 

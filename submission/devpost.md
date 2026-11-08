@@ -36,7 +36,7 @@ Paste everything between the two rules below.
 
 ---
 
-**Track 3: Biodiversity & Sustainability.** Live app: https://harvester-risk-atlas.vercel.app · Code: https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability · Slides: [PDF](https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/submission/Harvester-Risk-Atlas-slides.pdf)
+**Track 3: Biodiversity & Sustainability.** Live app: https://harvester-risk-atlas.vercel.app · Code: https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability · Slides: [PDF](https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability/blob/main/submission/Harvester-Risk-Atlas-slides.pdf) · Video: https://youtu.be/6GCAjl0OtbI
 
 > For research and education. Not medical advice, not a harvest permit, and not a Red List assessment.
 
@@ -49,8 +49,6 @@ The Philippines lost **1.47 million hectares of tree cover** between 2001 and 20
 Many of the Philippines' medicinal plants are still gathered from the wild. Stuart's *Philippine Medicinal Plants* describes most of the plants in our cohort as "wild-crafted", and for many of them the part used is the root, the bark or the whole plant. Taking those parts can kill the plant, and slow-growing trees and lianas recover slowly (Cunningham 2001; Schippmann, Leaman & Cunningham 2002).
 
 No dataset records how much of each plant is harvested. Only 4 of the 29 native plants we could score appear on the national threatened-plant list (DENR DAO 2026-20). Tongkat ali, whose roots are dug up and sold, is officially Endangered, yet open databases hold only 5 reliable records of it in the whole country. Rangers, LGU staff, harvester groups and students have limited time in the field. We wanted to give them a clear, honest answer to one question: **which plants should we look at first, where, and how far can we trust that order?**
-
-[Optional: add one or two sentences on your own motivation.]
 
 ## What it does
 
@@ -226,7 +224,7 @@ Upload in this order from `submission/gallery/`, with these captions:
 ### Video demo link
 
 ```
-[YouTube URL of video/out/harvester-risk-atlas-pitch-yt.mp4: 2:48, 60 fps; captions video/harvester-risk-atlas-pitch.en.srt]
+https://youtu.be/6GCAjl0OtbI
 ```
 
 ---
@@ -252,7 +250,7 @@ node ../submission/build.mjs
 - [x] Team of 2 on Devpost: Yuan Andrei C. Mariano and Alicia Jhyle Vilale.
 - [ ] Alicia Jhyle Vilale confirms they registered for EthnoHack by 31 October, 23:00.
 - [x] Roles filled in for both members in the Team section above.
-- [ ] Video uploaded (≤ 10 min, public or unlisted) and its link pasted.
+- [x] Video uploaded (2:48, public): https://youtu.be/6GCAjl0OtbI — paste it into Video demo link.
 - [ ] Slides PDF uploaded.
 - [ ] Optional motivation sentence written or removed.
 - [ ] Every link opens in a private browser window.
