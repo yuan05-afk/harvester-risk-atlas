@@ -1,0 +1,412 @@
+/* ---------- Seasons: every plant, every month ---------- */
+.season-calendar {
+  margin-top: var(--s7);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s4);
+}
+.season-calendar__head {
+  display: grid;
+  gap: var(--s3);
+  max-width: 72ch;
+}
+.season-calendar__head h2,
+.season-limits h2 {
+  margin: 0;
+}
+.season-calendar__head p {
+  margin: 0;
+  color: var(--ink-2);
+}
+.calendar-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+  align-items: center;
+  justify-content: space-between;
+}
+.calendar-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.calendar-sort select {
+  font: inherit;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--sheet);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r-control);
+  padding: 7px 10px;
+  min-height: 38px;
+}
+
+/* The legend: the five steps of the scale, then the marks. */
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s4) var(--s6);
+  align-items: flex-end;
+  padding: var(--s3) var(--s4);
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sheet);
+  font-size: var(--fs-small);
+  color: var(--ink-2);
+}
+.calendar-legend__title {
+  display: block;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.calendar-legend ol,
+.calendar-legend ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+}
+.calendar-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.calendar-legend .calendar-legend__swatch {
+  display: inline-block;
+  position: relative;
+  width: 26px;
+  min-height: 0;
+  height: 18px;
+  flex: none;
+  cursor: default;
+}
+
+/* The grid: plant and its record count, then twelve months. */
+.calendar {
+  --cal-cols: minmax(160px, 240px) repeat(12, minmax(22px, 1fr));
+  display: grid;
+  min-width: 0;
+  position: relative;
+}
+.calendar__row {
+  display: grid;
+  grid-template-columns: var(--cal-cols);
+  align-items: stretch;
+  gap: 2px;
+  padding: 2px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.calendar__row.is-hot {
+  background: var(--paper);
+}
+.calendar__row.is-selected {
+  background: var(--paper);
+  box-shadow: inset 3px 0 0 var(--ink);
+}
+.calendar__row--seasons {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.calendar__season {
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  color: var(--ink-2);
+  border-top: 3px solid var(--ink-2);
+  padding-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.calendar__season.is-wet {
+  color: var(--c-range);
+  border-top-color: var(--c-range);
+}
+.calendar__row--head {
+  position: sticky;
+  top: 64px;
+  z-index: 2;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule-strong);
+  font-size: var(--fs-micro);
+  color: var(--ink-3);
+  font-weight: 600;
+}
+.calendar__name {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  min-width: 0;
+  padding-right: var(--s2);
+}
+.calendar__row--head .calendar__name {
+  padding: 6px var(--s2);
+  justify-content: space-between;
+}
+.calendar__plant {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+  min-width: 0;
+  flex: 1;
+  font: inherit;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink);
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 6px var(--s2);
+  cursor: pointer;
+  border-radius: var(--r-control);
+}
+.calendar__plant:hover .calendar__label {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.calendar__label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.calendar__tag {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ink-3);
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  flex: none;
+}
+.calendar__count {
+  font-size: var(--fs-micro);
+  color: var(--ink-3);
+  flex: none;
+}
+.calendar__month {
+  display: grid;
+  place-items: center;
+  padding: 6px 0;
+  cursor: default;
+  border-radius: 2px;
+}
+.calendar__month.is-dry {
+  background: var(--sheet);
+}
+.calendar__month.is-hot {
+  color: var(--ink);
+  background: var(--rule);
+}
+.calendar__month.is-on {
+  color: var(--ink);
+  font-weight: 800;
+  box-shadow: inset 0 -3px 0 var(--ink);
+}
+.calendar__letter {
+  display: none;
+}
+.calendar__slot {
+  display: grid;
+}
+.calendar__cell {
+  position: relative;
+  min-height: 28px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  font: inherit;
+  transition:
+    transform var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease);
+}
+button.calendar__cell:hover,
+button.calendar__cell:focus-visible {
+  transform: scale(1.12);
+  z-index: 1;
+  box-shadow:
+    0 0 0 2px var(--sheet),
+    0 0 0 4px var(--ink);
+  outline: none;
+}
+.calendar__cell.c0 {
+  background: var(--tier-none);
+}
+.calendar__cell.c1 {
+  background: #efe2e8;
+}
+.calendar__cell.c2 {
+  background: var(--tier-lower);
+}
+.calendar__cell.c3 {
+  background: var(--tier-watch);
+}
+.calendar__cell.c4 {
+  background: var(--tier-high);
+}
+.calendar__cell.is-col {
+  box-shadow: inset 0 0 0 1px rgb(21 24 28 / 0.35);
+}
+.calendar__cell.is-on {
+  box-shadow: inset 0 0 0 2.5px var(--ink);
+}
+.calendar__flower,
+.calendar__fruit {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  bottom: 3px;
+  pointer-events: none;
+}
+.calendar__flower {
+  left: 3px;
+  background: var(--c-harvest);
+  box-shadow: 0 0 0 1.5px var(--sheet);
+}
+.calendar__fruit {
+  right: 3px;
+  border: 1.5px solid var(--c-habitat);
+  background: var(--sheet);
+}
+@media (max-width: 900px) {
+  .calendar__row--head {
+    top: 58px;
+  }
+}
+@media (max-width: 760px) {
+  .calendar {
+    --cal-cols: minmax(104px, 140px) repeat(12, minmax(14px, 1fr));
+  }
+  .calendar__abbr {
+    display: none;
+  }
+  .calendar__letter {
+    display: inline;
+  }
+  .calendar__count,
+  .calendar__tag {
+    display: none;
+  }
+  .calendar__plant {
+    padding: 6px 4px;
+  }
+  .calendar__season {
+    font-size: 0.625rem;
+  }
+  .calendar__row {
+    gap: 1px;
+  }
+}
+
+/* Tooltips: the calendar, the chart and the month ticks. */
+.season-tip {
+  position: fixed;
+  z-index: 60;
+  padding: 10px 12px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  box-shadow: var(--shadow-lift);
+  pointer-events: none;
+  font-size: var(--fs-small);
+  color: var(--ink-2);
+  display: grid;
+  gap: 4px;
+}
+.season-tip p,
+.map-tip .season-tip__hint {
+  margin: 0;
+}
+.season-tip__head {
+  color: var(--ink);
+}
+.season-tip__sub {
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.season-tip__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.season-tip .season-tip__swatch {
+  display: inline-block;
+  width: 18px;
+  height: 14px;
+  min-height: 0;
+  flex: none;
+}
+.season-tip__facts {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 12px;
+  margin: 4px 0 0;
+  padding-top: 6px;
+  border-top: 1px solid var(--rule);
+}
+.season-tip__facts dt {
+  color: var(--ink-2);
+}
+.season-tip__facts dd {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 600;
+  text-align: right;
+}
+.season-tip__hint {
+  font-size: var(--fs-micro);
+  color: var(--ink-3);
+}
+.map-tip .season-tip__hint {
+  margin-top: 6px;
+}
+
+/* The chart's hover columns, gridlines and the month buttons under the slider. */
+.season-chart__title {
+  margin: 0 0 var(--s2);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--ink);
+}
+.season-chart .hit {
+  fill: transparent;
+  cursor: pointer;
+}
+.season-chart .grid {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+.season-chart .bar.is-hover {
+  fill: var(--ink-3);
+}
+.season-chart .bar.is-on.is-hover {
+  fill: var(--tier-high);
+}
+.season-scrub__ticks button {
+  font: inherit;
+  font-size: var(--fs-micro);
+  color: var(--ink-3);
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  cursor: pointer;
+  border-radius: var(--r-control);
+}
+.season-scrub__ticks button:hover {
+  color: var(--ink);
+  background: var(--paper);
+}
+.season-scrub__ticks button.is-on {
+  color: var(--ink);
+  font-weight: 700;
+}
