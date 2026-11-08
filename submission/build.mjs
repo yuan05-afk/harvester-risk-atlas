@@ -28,6 +28,7 @@ const shots = [
   { name: "06-weight-explorer", path: "/how-it-works", scrollTo: "weighed things differently" },
   { name: "07-robustness-checks", path: "/how-it-works", scrollTo: "how sure is the ranking" },
   { name: "08-plants-list", path: "/plants" },
+  { name: "11-seasons", path: "/seasons?m=4" },
 ];
 
 const browser = await chromium.launch();

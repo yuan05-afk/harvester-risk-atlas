@@ -203,6 +203,11 @@ const H = {
   mark(what) {
     H.marks.push({ f: H.n, mark: what });
   },
+  /** Where an element sits on this frame (viewport px), for the film's drawn ink marks. */
+  async boxMark(what, loc) {
+    const r = await loc.boundingBox();
+    if (r) H.marks.push({ f: H.n, mark: what, box: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) } });
+  },
 };
 
 const report = {};

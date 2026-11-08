@@ -4,7 +4,8 @@
 //   atlas     click Tongkat Ali in the list (the map flies to its hexagons), point at the map, click "Full profile"
 //   profile   point at the rank and its range, click "Field brief"
 //   brief     read, scroll the page
-//   weights   drag "Harvest harm" up (the list re-ranks), click "Plants" in the menu
+//   weights   drag "Harvest harm" up (the list re-ranks), click "Seasons" in the menu
+//   seasons   press Play: the year runs on the map and chart, then scroll to every plant's calendar
 //   plants    scroll through the tiers
 //   checks    the robustness checks, scroll to "Typical uncertainty"
 //   intro     the app's own opening animation (first visit)
@@ -67,6 +68,7 @@ export const TAKES = {
     await H.hold(300);
     await H.to(await H.box(H.pg.getByText(/Ranked 2nd of 29/).first(), 0.15, 1.6), 1100);
     H.mark('at the rank');
+    await H.boxMark('rank', H.pg.getByText(/Ranked 2nd of 29/).first());
     await H.hold(2700);
     await H.click(H.pg.getByRole('link', { name: /Field brief/i }).first(), 950);
   },
@@ -105,7 +107,28 @@ export const TAKES = {
     H.down = false;
     H.mark('release');
     await H.hold(1000);
-    await H.click(H.pg.getByRole('navigation', { name: 'Main' }).first().getByRole('link', { name: 'Plants' }), 900);
+    await H.click(H.pg.getByRole('navigation', { name: 'Main' }).first().getByRole('link', { name: 'Seasons' }), 900);
+  },
+
+  // The year plays: makahiya's records month by month on the map, the chart's cursor walking from January.
+  async seasons(H) {
+    await H.goto('/seasons', 1500);
+    await H.idleFor(1200);
+    await H.hold(500);
+    const play = H.pg.getByRole('button', { name: /Play the year/ });
+    await H.boxMark('play', play);
+    await H.click(play, 1000);
+    H.mark('playing');
+    await H.to({ x: 1180, y: 760 }, 1400);
+    await H.hold(9000);
+    await H.boxMark('month', H.pg.locator('.season-readout__month'));
+    await H.boxMark('map', H.pg.locator('.season-map__frame'));
+    await H.boxMark('chart', H.pg.locator('.season-chart svg'));
+    await H.scroll(760, 1800);
+    H.mark('calendar');
+    await H.hold(500);
+    await H.boxMark('calendar', H.pg.locator('.calendar'));
+    await H.hold(4500);
   },
 
   async plants(H) {
@@ -127,9 +150,11 @@ export const TAKES = {
     await H.hold(1600);
     await H.to(await H.box(H.pg.getByText(/Native in Co's Digital Flora/).first(), 0.3, 0.5), 900);
     H.mark('cdfp');
+    await H.boxMark('cdfp', H.pg.getByText(/Native in Co's Digital Flora/).first());
     await H.hold(2600);
     await H.to(await H.box(H.pg.getByText(/Documented by Co's Digital Flora/).first(), 0.8, 0.5), 1000);
     H.mark('look next');
+    await H.boxMark('look next', H.pg.getByText(/Documented by Co's Digital Flora/).first());
     await H.hold(3200);
     await H.to(await H.box(H.pg.getByText(/areas right next to its records/).first(), 0.5, 0.5), 900);
     await H.hold(2600);

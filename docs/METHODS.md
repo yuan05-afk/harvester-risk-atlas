@@ -201,3 +201,15 @@ The host blocks automated requests, so family pages are saved by a person in a b
 Across the 29 ranked plants: 4,542 neighbouring cells, of which 2,859 are under-searched and 133 never searched (66% in total).
 
 **Limits.** Province-stem matching is coarse: an island name can match several provinces. CDFP distributions record where a plant has been documented, not where it is absent. The neighbour ring assumes a plant is likelier to occur next to known records; it is a heuristic, not a habitat model.
+
+## 11. Seasons: months, flowering and fruiting (`scripts/seasons.py`)
+
+For each of the 51 cohort taxa, GBIF occurrence search (`country=PH`, the taxon key from `taxa.csv`, up to 3,000 records) gives each record's month and, where the observer noted it, its `reproductiveCondition` (mostly iNaturalist annotations). A note containing "flower", "bud" or "anthesis" counts as flowering; "fruit" or "seed" as fruiting; "no evidence" counts as neither. Months are joined to the cleaned records by GBIF id, so the month-by-month map uses only records that passed the nine cleaning rules (H3 res 5, with res 4 parents for the country view).
+
+**Survey effort.** All Philippine Tracheophyta records in GBIF, faceted by month (fetched 8 Nov 2026): 32,202 · 34,620 · 55,733 · 63,067 · 74,986 · 44,752 · 28,673 · 35,642 · 29,550 · 33,700 · 32,014 · 27,878 (January to December). Records peak from March to May.
+
+**Activity.** For plant *i* with *n* dated records and *c<sub>m</sub>* in month *m*, the expected count is *e<sub>m</sub> = n · effort<sub>m</sub> / Σ effort*, and the activity shown is (*c<sub>m</sub>* + 3) / (*e<sub>m</sub>* + 3). 1 means "as expected from effort"; the pseudo-count of 3 stops a month with two or three records from reading as a peak. The page shows plants with at least 20 dated records (43 of 51).
+
+**Seasons** follow PAGASA's two-season climate type used across most of the country: dry December to May, wet June to November. Regional climate types differ (eastern Luzon and Mindanao have no pronounced dry season), and the page does not separate them.
+
+**Limits.** Records show when someone saw a plant, not when it grows. Species-specific events (one expedition, a bioblitz) are not removed by the effort correction: kalingag has 256 of its 389 dated records in October, far more than effort explains and more likely a collecting event than a season. Few records carry a phenology note (makahiya has the most, 40 flowering), so flowering and fruiting are hints. Seed dispersal, die-back and harvest timing are not in any open dataset and are not shown.

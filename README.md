@@ -88,6 +88,14 @@ Every name is matched in **World Flora Online**, the backbone the EthnoHack data
   <img src="submission/gallery/10-expert-check.png" width="720" alt="Tongkat ali's cross-check: an accepted WFO name, Co's Digital Flora agreeing it is native and Endangered, and where to look next" />
 </p>
 
+### 5. A year in the field
+
+The **Seasons** page plays the year. Slide or press *Play the year* and the map shows where a plant was recorded in each month, with the dry season (December to May) and the wet season (June to November) marked. Flowering and fruiting come from observers who noted them. Philippine plant records pile up from March to May, when field trips happen, so every month is divided by all vascular-plant records made that month: a month only stands out when it holds more records than effort explains. A calendar shows the 43 plants with at least 20 dated records, native and introduced, including invasive weeds such as makahiya. The page says what it cannot show: seed spread, die-back and harvest timing are in no open dataset.
+
+<p align="center">
+  <img src="submission/gallery/11-seasons.png" width="720" alt="Seasons: makahiya in April, records against survey effort by month, its cells on the map, and every plant's calendar" />
+</p>
+
 ---
 
 ## How it works
@@ -239,6 +247,14 @@ python scripts/name_check.py                       # WFO for every name; CDFP fo
 .venv/Scripts/python.exe scripts/survey_gaps.py    # under-searched neighbours of each plant's records (needs h3)
 ```
 
+### Seasons (months, flowering and fruiting)
+
+```bash
+.venv/Scripts/python.exe scripts/seasons.py        # GBIF occurrence search: month and reproductive condition per record (needs h3)
+```
+
+Writes `web/public/data/seasons.json` and a `seasons` block in each plant's JSON. Survey effort per month is the count of all Philippine vascular-plant records (Tracheophyta) in GBIF that month.
+
 CDFP's host blocks automated requests, and we do not try to get around it. To add a family, open `https://www.philippineplants.org/Families/<Family>.html` in a browser and save it as `data/raw/cdfp/<Family>.html`. These pages are not committed, because CDFP's terms ask that its data not be republished in bulk. A plant whose family page is not saved shows as *not yet compared*, never as *not listed*. Facts transcribed by hand are in `data/curated/cdfp_facts.csv`, with source and date.
 
 ### API keys
@@ -364,7 +380,7 @@ AI assistants, including Claude Code, helped draft and edit code and documentati
 | --- | --- |
 | Devpost project text | [`submission/devpost.md`](submission/devpost.md) |
 | Slide deck (10 slides) | [`submission/Harvester-Risk-Atlas-slides.pdf`](submission/Harvester-Risk-Atlas-slides.pdf) |
-| Pitch video (≤ 10 min) | Link added on Devpost; script in [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md) |
+| Pitch video (2:48) | Link added on Devpost; Remotion project, script and notes in [`video/`](video/NOTE.md) |
 | Judging guide | [`docs/JUDGING.md`](docs/JUDGING.md) |
 | Rules audit and checklist | [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md) |
 

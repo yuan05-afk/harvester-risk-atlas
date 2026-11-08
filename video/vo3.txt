@@ -1,0 +1,21 @@
+[warmly] Up to four billion people rely on herbal medicine. Most medicinal plants in trade are still taken from the wild. And almost no one is counting what is left.
+
+In the Philippines, about one hundred seventy-five hectares of tree cover disappear every day. But no one measures harvest. So where should a ranger, or a harvester, even start?
+
+Take tongkat ali. Its roots are dug up and sold. It is officially endangered. Yet open databases hold just five reliable records of it.
+
+[confident] So we built Harvester Risk Atlas: a free map that ranks which wild medicinal plants of the Philippines need help first, where they grow, and how sure we are.
+
+It asks three questions. How rare is it? Does harvesting kill it? Is its home disappearing? Rarity is measured only where botanists actually searched. Then the whole ranking runs two thousand times, with different weights and different data each time. So every plant gets a range, not a single number.
+
+Pick tongkat ali on the atlas. You see broad hexagons, never exact spots, so the plant stays hard to find. Its profile explains why it ranks second of twenty-nine, anywhere from first to fifth. One click gives a ranger a field brief. Move a slider, and the ranking updates.
+
+[curious] And now, the year itself. On the new Seasons page, slide through the months, from the dry season into the wet. Watch where a plant is recorded, and when observers saw it in flower or in fruit, even an invasive weed like makahiya. Plant records pile up from March to May, when people go out. So every month is weighed against how many people were looking.
+
+[confident] Every name is checked against World Flora Online, and every plant against Co's Digital Flora of the Philippines, built on the work of botanist Leonardo Co. For tongkat ali, it agrees: native, and endangered. But it also lists Mindoro, Homonhon, and Bucas Grande, where open data has nothing. That is where to look next. Across all ranked plants, two thirds of the land next to known records has barely been searched.
+
+[serious] Five plants need attention now: kalingag, tongkat ali, bitaog, tibig, and amuyon. Change the math, and the order barely moves.
+
+It is not medical advice, and its harvest data still needs experts in the field.
+
+[warmly] Harvester Risk Atlas. Which plants first, where to look next, and how sure we are. Help us protect the plants that heal us.

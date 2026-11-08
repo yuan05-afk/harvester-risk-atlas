@@ -2,7 +2,7 @@
 
 EthnoHack 2026, Track 3: Biodiversity & Sustainability. Checked against the EthnoHack overview, rules, resources and updates pages and the organisers' final reminder on **3 November 2026**.
 
-**Deadline:** **8 November 2026, 10:00 Athens time (EET, UTC+2)**: 16:00 in Manila (UTC+8) and 08:00 UTC. The Devpost form shows 17:00 GMT+8, but the organisers' final reminder gives 10:00 Athens time, so treat **16:00 Manila** as the deadline. Judging ends 15 November 2026.
+**Deadline:** **8 November 2026, 8:30 am EST** on the Devpost page (checked 8 Nov): 14:30 CET, **21:30 Manila**. An earlier organiser reminder said 10:00 Athens time (16:00 Manila), so submit early and update afterwards. Judging ends 15 November 2026.
 
 **Hacking period:** started 2 November 2026, 13:00 Athens time (19:00 Manila).
 
@@ -78,7 +78,7 @@ From the "Final reminder" sent to participants.
 - [ ] Walk the demo path in a private window: Overview → Atlas → plant profile → field brief → How it works.
 - [ ] Run the checks and record the actual results: `python -m pytest -q`; in `web/`: `npm test`, `npm run build`, `npm run e2e`.
 - [ ] Every link opens in a private (signed-out) browser window: live app, GitHub, slides PDF, video.
-- [ ] Submit **before 16:00 Manila on 8 November** (10:00 Athens), well ahead of the last minutes.
+- [ ] Submit early on 8 November (Devpost deadline 21:30 Manila, 8:30 am EST), well ahead of the last minutes.
 - [ ] Open the public project page and check that it renders.
 
 These boxes are pending checks, not claims of completed work. Deployment notes: [`../DEPLOY.md`](../DEPLOY.md).

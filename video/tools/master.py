@@ -20,23 +20,25 @@ SR = 48000
 
 # (word that ends the beat, occurrence of that word, extra seconds of picture after it)
 BEATS = [
-    ('left.', 1, 1.0),         # hook lands, night lifts
-    ('start?', 1, 0.8),        # the question hangs
-    ('it.', 1, 1.2),           # five records drop
-    ('are.', 1, 1.0),          # the title
-    ('number.', 1, 0.6),       # the range
-    ('spots.', 1, 2.0),        # atlas: the map flies to its hexagons
-    ('fifth.', 1, 1.6),        # profile
-    ('brief.', 1, 1.6),        # field brief
-    ('changes.', 1, 2.0),      # the slider re-ranks
-    ('next.', 1, 2.2),         # the cross-check on the page
-    ('plan.', 1, 1.0),         # two thirds under-searched
-    ('moves.', 1, 0.8),        # results
-    ('field.', 1, 0.8),        # limits
+    ('left.', 1, 0.6),         # the hook lands
+    ('start?', 1, 0.6),        # the question hangs
+    ('it.', 1, 0.8),           # five records on the map
+    ('are.', 1, 0.8),          # the app
+    ('number.', 1, 0.5),       # the range
+    ('find.', 1, 1.6),         # atlas: the map flies to its hexagons
+    ('fifth.', 1, 1.2),        # profile
+    ('brief.', 1, 1.2),        # field brief
+    ('updates.', 1, 1.4),      # the slider re-ranks
+    ('looking.', 1, 1.4),      # the year plays on the Seasons page
+    ('next.', 1, 1.2),         # the cross-check on the page
+    ('searched.', 1, 0.4),     # the searched cells
+    ('searched.', 2, 0.8),     # two thirds under-searched
+    ('moves.', 1, 0.6),        # results
+    ('field.', 1, 0.6),        # limits
 ]
 
-words = json.load(open('audio/vo2-take1.words.json', encoding='utf-8'))
-sil = json.load(open('audio/vo2-take1.silences.json', encoding='utf-8'))
+words = json.load(open('audio/vo3-brian.words.json', encoding='utf-8'))
+sil = json.load(open('audio/vo3-brian.silences.json', encoding='utf-8'))
 
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', 'audio/vo-clean.wav', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'],
                      capture_output=True, check=True).stdout

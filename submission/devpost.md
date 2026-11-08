@@ -2,7 +2,7 @@
 
 Copy each block into the matching Devpost field. Text in `[square brackets]` must be filled in or removed before submitting.
 
-Deadline: **8 November 2026, 10:00 Athens time (EET, UTC+2)**: 16:00 in Manila (UTC+8) and 08:00 UTC. The Devpost form shows 17:00 GMT+8, but the organisers' final reminder gives 10:00 Athens time, so treat **16:00 Manila** as the deadline.
+Deadline: **8 November 2026, 8:30 am EST** on the Devpost page (checked 8 Nov): 14:30 CET, 13:30 UTC, **21:30 in Manila**. An earlier organiser reminder said 10:00 Athens time (16:00 Manila), so submit early and update the entry afterwards.
 
 ---
 
@@ -60,9 +60,14 @@ Harvester Risk Atlas ranks **29 native medicinal plants** (from a cohort of 51) 
 - **Atlas**: pick a plant to see where it grows, or click an area to see which plants grow there. Plants appear only as H3 hexagons of about 250 km², never as points, so plants at risk from collection stay hard to find.
 - **Plant profiles**: the three reasons for each rank in plain words, the evidence behind them, how far the rank could move, sources, and credited photos.
 - **Field briefs**: a one-page A4 sheet per plant to print and take into the field.
+- **Seasons** (new): slide or play through the year and watch where each plant was recorded month by month, and when observers saw it in flower or in fruit, through the dry season (December to May) and the wet season (June to November). Every month is weighed against how many people were out looking, and a calendar shows the 43 plants with at least 20 dated records, including introduced and invasive ones such as makahiya.
 - **How it works**: the method, a **weight explorer** that re-ranks the plants live (the weights are kept in the URL, so a view can be shared), and the robustness checks.
 
 Every rank is given with its range, for example: *"Ranked 2nd of 29. It could be anywhere from 1st to 5th."*
+
+## What's new: a year in the field
+
+Plant records in the Philippines pile up from March to May, when field trips happen: all Philippine vascular-plant records in GBIF peak at 74,986 in May against 27,878 in December. So a raw count by month mostly shows when people go out. The new **Seasons** page reads each record's month and, where the observer noted it, its flowering or fruiting condition (GBIF occurrence search, 51 plants), then divides each plant's monthly share by the share of all plant records made that month, with a small pseudo-count so a month with two or three records cannot look like a peak. You can press **Play the year** and watch the map change month by month, or open the calendar of every plant. The page says plainly what it cannot show: seed spread, die-back and harvest timing are not in any open dataset, and few records carry a flowering note, so those are hints, not a calendar. Reproducible with `python scripts/seasons.py`.
 
 ## What's new: checked against expert sources, and where to look next
 
@@ -152,7 +157,7 @@ A transparent screen with honest uncertainty is more useful than a single confid
 - **Traditional knowledge:** uses and local names come only from a published, cited compendium (Stuart), with a link per plant and no redistribution of its text. No community, interview or personal data were collected.
 - **Sensitive data:** plants appear only as ~250 km² hexagons.
 - **Licences:** each source is credited with its licence in the app and the repository. The data licences are CC0, CC BY 4.0, CC BY-NC and Protected Planet non-commercial terms. Photos are credited individually.
-- **AI use:** AI assistants (including Claude Code) helped write the code and documentation and drafted the harvest-trait rows from cited Stuart pages. **None of the 29 trait rows is expert-verified yet**, and each plant page says "being checked". The pitch video's narration is an ElevenLabs synthetic voice ("Jennica") reading the team's script. The project owner is responsible for the submission.
+- **AI use:** AI assistants (including Claude Code) helped write the code and documentation and drafted the harvest-trait rows from cited Stuart pages. **None of the 29 trait rows is expert-verified yet**, and each plant page says "being checked". The pitch video's narration is an ElevenLabs synthetic voice ("Brian", eleven_v4) reading the team's script. The project owner is responsible for the submission.
 - **Limitations:** GBIF records are presence-only and effort-biased. Harvest harm is a literature rubric, not field data. Forest loss is measured per province. IUCN categories are linked only when an API token is configured, and they are never invented.
 
 ## Assumptions
@@ -214,13 +219,14 @@ Upload in this order from `submission/gallery/`, with these captions:
 | `08-plants-list.png` | All plants by tier, with CSV download |
 | `09-phone-profile.png` | Phone layout of a plant profile |
 | `10-expert-check.png` | New: checked against World Flora Online and Co's Digital Flora, with where to look next |
+| `11-seasons.png` | New: a year in the field. Where and when each plant is recorded, flowering and fruiting, weighed against survey effort |
 
 `09-phone-profile.png` is portrait, so Devpost will crop it into the 3:2 frame. Leave it out if the crop looks poor.
 
 ### Video demo link
 
 ```
-[YouTube URL of video/out/harvester-risk-atlas-pitch.mp4: 2:19, 60 fps; captions video/harvester-risk-atlas-pitch.en.srt]
+[YouTube URL of video/out/harvester-risk-atlas-pitch-yt.mp4: 2:48, 60 fps; captions video/harvester-risk-atlas-pitch.en.srt]
 ```
 
 ---
