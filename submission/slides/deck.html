@@ -234,19 +234,19 @@
   <div class="foot"><span>Two plants share median rank 2. Photos via iNaturalist: Nielbert Raner (CC BY), Steven Bodzin (CC BY), 葉子 (CC0), Mark Bulahao (CC BY), shulinchen (CC BY-NC).</span><span>7 / 10</span></div>
 </section>
 
-<!-- 8 · DESIRE: can you trust it? -->
+<!-- 8 · DESIRE: new — checked against expert sources, and where to look next -->
 <section class="slide">
-  <div class="fig">Validation</div>
-  <h2>Can you trust it? We tried to break it</h2>
-  <p class="lead">There is no official answer key for harvest risk, so we tested whether the order holds when we change our own choices. 1.00 means exactly the same order.</p>
-  <div class="body" style="grid-template-columns:1fr 1fr;gap:22px 40px;align-content:start;margin-top:30px">
-    <div class="rule-top check"><div class="num" style="color:var(--c-habitat)">0.97</div><div><div class="tick" style="color:var(--c-habitat)">Holds up</div><p>Combine the three reasons a different way: nearly the same order.</p></div></div>
-    <div class="rule-top check"><div class="num" style="color:var(--c-habitat)">1.00</div><div><div class="tick" style="color:var(--c-habitat)">Holds up</div><p>Halve or double what counts as a "well-searched" area: same order.</p></div></div>
-    <div class="rule-top check"><div class="num" style="color:var(--c-harvest)">0.73</div><div><div class="tick" style="color:var(--c-harvest)">Known limit</div><p>Leave rarity out and the order changes most. Rarity matters most.</p></div></div>
-    <div class="rule-top check"><div class="num" style="color:var(--ink-3)">9th</div><div><div class="tick" style="color:var(--ink-3)">Weak signal</div><p>DENR-listed plants rank 9th on average, versus 15th by chance. Only 4 plants (p = 0.076).</p></div></div>
+  <div class="fig">What's new · checked against expert sources</div>
+  <h2>Checked against expert sources, and turned into a survey plan</h2>
+  <div class="body" style="grid-template-columns:1fr 1fr 1fr;gap:28px;align-content:start;margin-top:34px">
+    <div class="rule-top"><div class="num" style="font-size:66px">50 of 51</div><p style="font-size:19px;margin-top:10px">names matched in <b>World Flora Online</b>, the backbone EthnoHack recommends; all accepted names. The hybrid <i>Mentha × piperita</i> is flagged and not ranked.</p></div>
+    <div class="rule-top"><div class="num" style="font-size:66px;color:var(--c-habitat)">Agrees</div><p style="font-size:19px;margin-top:10px"><b>Co's Digital Flora of the Philippines</b> (built on Leonardo L. Co's work) confirms tongkat ali as native and DENR Endangered. Disagreements are shown, never hidden.</p></div>
+    <div class="rule-top"><div class="num" style="font-size:66px;color:var(--tier-high)">66%</div><p style="font-size:19px;margin-top:10px">of the land next to known records of the 29 ranked plants has barely been searched: 2,992 of 4,542 neighbouring areas.</p></div>
   </div>
-  <p style="font-size:20px;margin-bottom:6px">Typical uncertainty: a plant's rank is known to within <b>about 5 places</b>. When the evidence can't separate plants, we say so: they share a tier.</p>
-  <div class="foot"><span>Spearman ρ, 29 plants: geometric mean 0.97, rank mean 0.89, threshold 50/200 ≥ 0.997, leave-out R/H/E 0.73/0.88/0.94. validation.json</span><span>8 / 10</span></div>
+  <div class="sheet" style="padding:20px 26px;margin-bottom:10px">
+    <p style="font-size:20px;color:var(--ink)"><b>Where to look next</b>, on every plant page: places Co's Flora documents with no open record yet (tongkat ali: <b>Mindoro, Homonhon, Bucas Grande</b>), under-searched areas beside known records, and records outside the documented range to double-check. And the ranking holds: change the maths and the order barely moves (Spearman ρ = 0.97).</p>
+  </div>
+  <div class="foot"><span>WFO Plant List (CC0) · Pelser, Barcelona &amp; Nickrent (eds.) 2011 onwards, Co's Digital Flora of the Philippines · scripts/name_check.py, scripts/survey_gaps.py</span><span>8 / 10</span></div>
 </section>
 
 <!-- 9 · DESIRE: honest limits and responsible research -->

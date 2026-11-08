@@ -1,0 +1,21 @@
+Up to four billion people rely on herbal medicine. Most medicinal plants in trade are taken from the wild. And almost no one is counting what is left.
+
+In the Philippines, forests lose about one hundred seventy-five hectares of tree cover every day. But nobody measures harvest. So where should a ranger, or a harvester, even start?
+
+Take tongkat ali. Its roots are dug up and sold, and it is officially endangered. Yet open databases hold only five reliable records of it.
+
+This is Harvester Risk Atlas: a free map that ranks which wild medicinal plants of the Philippines need help first, where they grow, and how sure we are.
+
+It asks three questions. How rare is it? Does harvesting kill it? Is its home disappearing? It measures rarity only where botanists have searched well, and re-runs the ranking two thousand times, so every plant gets a range, not one number.
+
+Pick tongkat ali on the atlas, and you see broad hexagons, never exact spots. Its profile explains why it ranks second of twenty-nine, anywhere from first to fifth. One click gives a ranger a one-page field brief. Move a slider, and the ranking changes.
+
+Now, what is new. Every name is checked against World Flora Online, and every plant against Co's Digital Flora of the Philippines, built on the work of botanist Leonardo Co. For tongkat ali, Co's Flora agrees: native, and endangered. But it also records it on Mindoro, Homonhon, and Bucas Grande, where open data has nothing. That is where to look next.
+
+Across all twenty-nine ranked plants, two thirds of the land next to known records has barely been searched. The atlas turns a ranking into a survey plan.
+
+Five plants need attention now: kalingag, tongkat ali, bitaog, tibig, and amuyon. Change the math, and the order barely moves.
+
+It is not medical advice, and its harvest data still needs experts in the field.
+
+Harvester Risk Atlas. Which plants first, where to look next, and how sure. Help us protect the plants that heal us.

@@ -76,6 +76,20 @@ Readers are rangers, local government staff, harvesters and students. Tiers and 
 
 ---
 
+### 4. Checked against expert sources, and a plan for where to look next
+
+Every name is matched in **World Flora Online**, the backbone the EthnoHack datasets guide recommends: 50 of 51 matched, all accepted names. Each plant is compared with **Co's Digital Flora of the Philippines** (CDFP), the expert checklist built on the work of botanist Leonardo L. Co. Where they disagree with the atlas, the plant page says so. Each plant page then lists where to look next:
+
+- places the expert flora documents where open data holds no reliable record. For tongkat ali these are Mindoro, Homonhon and Bucas Grande;
+- under-searched areas right next to known records. Across the 29 ranked plants, 2,992 of 4,542 neighbouring areas (66%) are under-searched;
+- records outside the documented range, which should be double-checked.
+
+<p align="center">
+  <img src="submission/gallery/10-expert-check.png" width="720" alt="Tongkat ali's cross-check: an accepted WFO name, Co's Digital Flora agreeing it is native and Endangered, and where to look next" />
+</p>
+
+---
+
 ## How it works
 
 <p align="center">
@@ -218,6 +232,19 @@ python -m harvester_risk_atlas all --offline   # fetch → base → index → va
 
 `--offline` rebuilds every number from the committed raw snapshot in `data/raw/`. Without it, the pipeline downloads GBIF, WCVP and the other sources again. A free IUCN token and a GBIF account are optional. The Monte Carlo is seeded, so a rerun gives the same ranks.
 
+### Expert cross-check (WFO and Co's Digital Flora)
+
+```bash
+python scripts/name_check.py                       # WFO for every name; CDFP for families saved in data/raw/cdfp/
+.venv/Scripts/python.exe scripts/survey_gaps.py    # under-searched neighbours of each plant's records (needs h3)
+```
+
+CDFP's host blocks automated requests, and we do not try to get around it. To add a family, open `https://www.philippineplants.org/Families/<Family>.html` in a browser and save it as `data/raw/cdfp/<Family>.html`. These pages are not committed, because CDFP's terms ask that its data not be republished in bulk. A plant whose family page is not saved shows as *not yet compared*, never as *not listed*. Facts transcribed by hand are in `data/curated/cdfp_facts.csv`, with source and date.
+
+### API keys
+
+None are needed to run the atlas or reproduce the results. The optional IUCN Red List API token goes in a local `.env` file, which `.gitignore` excludes: copy `.env.example` to `.env` and set `IUCN_API_TOKEN=...`. Create the token free at https://api.iucnredlist.org/users/sign_up. The optional GBIF account variables are also listed in `.env.example`. Never commit `.env`.
+
 ### Tests
 
 ```bash
@@ -268,6 +295,8 @@ The same checks run in GitHub Actions on every push ([`.github/workflows/ci.yml`
 | DENR DAO 2026-20 | validation only | public government document |
 | Stuart GU Jr., *Philippine Medicinal Plants* (StuartXchange) | harvest traits, cohort additions | cited per plant; text not redistributed |
 | Natural Earth | land mask | public domain |
+| [World Flora Online Plant List](https://list.worldfloraonline.org/) | name check: WFO ID, accepted name or synonym | CC0 (backbone data) |
+| [Co's Digital Flora of the Philippines](https://www.philippineplants.org/) (Pelser, Barcelona & Nickrent, eds., 2011 onwards) | expert cross-check: status, Philippine distribution, IUCN and DAO categories | use with citation; no bulk republication, so only facts for our 51 plants are published |
 | IUCN Red List API v4 (optional) | Red List status | IUCN terms; categories never invented |
 | iNaturalist observers and GBIF herbarium scans | plant photos | per-image licence; creator credited on every photo |
 | Atkinson Hyperlegible Next, Fraunces | fonts | SIL Open Font License 1.1 |

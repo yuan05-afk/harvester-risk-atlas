@@ -17,10 +17,10 @@ Harvester Risk Atlas
 ### Elevator pitch (max 200 characters)
 
 ```
-Which wild medicinal plants of the Philippines need conservation attention first, where, why, and how sure we are: an open, reproducible ranking with uncertainty.
+Which wild medicinal plants of the Philippines need help first, where to look next, and how sure we are, cross-checked against World Flora Online and Co's Digital Flora.
 ```
 
-(162 characters.)
+(169 characters.)
 
 ### Thumbnail (3:2, JPG/PNG/GIF, max 5 MB)
 
@@ -64,6 +64,19 @@ Harvester Risk Atlas ranks **29 native medicinal plants** (from a cohort of 51) 
 
 Every rank is given with its range, for example: *"Ranked 2nd of 29. It could be anywhere from 1st to 5th."*
 
+## What's new: checked against expert sources, and where to look next
+
+A ranking is only as good as its names and its records, and the mentors warned that wrong or outdated plant names are the first thing a domain expert catches. So the atlas now checks itself against two expert sources, and turns what it finds into a survey plan.
+
+- **Every name is checked in World Flora Online** (the WFO Plant List, the backbone EthnoHack's dataset guide recommends): **50 of 51 names matched, all accepted names**, each with its WFO ID on the plant page. Homonyms are resolved to the accepted name (for example *Artemisia vulgaris* L., not *A. vulgaris* Burm.f.). The one unresolved name, the hybrid *Mentha × piperita*, is already flagged and not ranked.
+- **Each plant is compared with Co's Digital Flora of the Philippines** (CDFP; Pelser, Barcelona & Nickrent, eds., 2011 onwards), the expert checklist built on the work of the Filipino botanist Leonardo L. Co. For tongkat ali, CDFP **agrees** with the atlas: native, and DENR Endangered. It also gives its global IUCN status as Least Concern, so the plant is nationally endangered but not globally threatened, and the page says both. Where CDFP and the atlas disagree, the page says so; it never silently overrides.
+- **Where to look next**, on every plant page:
+  1. places the expert flora documents but where open data holds no reliable record. For tongkat ali these are **Mindoro, Homonhon and Bucas Grande**;
+  2. under-searched areas right next to known records. Across the 29 ranked plants, **2,992 of 4,542 neighbouring areas (66%)** have fewer than 100 plant records of any kind, and 133 have none;
+  3. records outside the documented range, which should be double-checked for misidentification. For tongkat ali these are Tawi-Tawi and Zamboanga del Norte.
+
+This closes a loop that no single source closes. Open records test the expert flora's distribution, the expert flora tests the open records, and survey effort says where a short field visit would add the most. The check is reproducible with `python scripts/name_check.py` and `scripts/survey_gaps.py`, and the results are in `data/processed/v2/name_check.csv`.
+
 ## How we built it
 
 **Data.** We used GBIF occurrence records for the Philippines, Kew's World Checklist of Vascular Plants (WCVP) for native status and range, WDPCA Philippines for protected areas, Hansen/Global Forest Watch for tree-cover loss by province, WorldClim 2.1 with CMIP6 projections for climate, and Stuart's *Philippine Medicinal Plants* for harvest traits. DENR DAO 2026-20 is used for validation only. Of 9,660 Philippine GBIF records, 4,789 remain after a nine-rule cleaning pass. Each dropped record is assigned exactly one reason.
@@ -104,6 +117,14 @@ No ground truth exists for harvest priority, so we tested **robustness, not accu
 
 The DENR check is directional only. Two listed plants (tongkat ali, Endangered; kalingag, Other Threatened Species) rank in the top five even though the list is not an input, and two rank lower.
 
+Checked against expert sources (new):
+
+| Check | Result |
+|---|---|
+| Names in World Flora Online | 50 of 51 matched, all accepted; 1 hybrid unresolved and already flagged |
+| Co's Digital Flora (tongkat ali) | Native and DENR Endangered: agrees with the atlas; 2 of 4 record provinces inside the documented range |
+| Survey gaps next to known records | 2,992 of 4,542 neighbouring areas (66%) under-searched; 133 never searched |
+
 One data-quality note: tongkat ali rests on only 5 reliable records in 5 hexagons, exactly at the gate. Its high rarity partly reflects how little it has been recorded, which is why its rank is given as a range (1st to 5th) and why field surveys are the next step.
 
 ## Challenges we ran into
@@ -111,6 +132,8 @@ One data-quality note: tongkat ali rests on only 5 reliable records in 5 hexagon
 - **Survey effort.** A roadside weed collects more records than a forest liana, so raw record counts measure attention as much as rarity. We built a target-group survey-effort layer and scored rarity only in well-surveyed cells.
 - **Bootstrapping range.** Resampling occupied cells with replacement shrinks the unique-cell count and biases range measures, so we draw the reporting rate from a Beta posterior instead.
 - **Nativity surprises.** WCVP lists lagundi (*Vitex negundo*), a flagship Department of Health herb, as introduced to the Philippines. We kept the gate and explain it, rather than overriding data to obtain a preferred ranking.
+- **Checking against Co's Digital Flora.** CDFP's host blocks automated requests. We did not try to get around it: family pages are saved by a person in a browser and read locally, and any plant whose page is not yet saved is shown as *not yet compared*, never as *not listed*. CDFP's terms allow use with citation but not republishing substantial data, so only the facts for our 51 plants are published, with the citation.
+- **Homonyms.** Several binomials have more than one author in WFO. We take the accepted, placed name and record the choice.
 - **Climate that does not discriminate.** Projected warming is nearly uniform across plants. We report it but give it zero weight, and the weight explorer lets readers add it.
 
 ## Accomplishments that we're proud of
@@ -129,7 +152,7 @@ A transparent screen with honest uncertainty is more useful than a single confid
 - **Traditional knowledge:** uses and local names come only from a published, cited compendium (Stuart), with a link per plant and no redistribution of its text. No community, interview or personal data were collected.
 - **Sensitive data:** plants appear only as ~250 km² hexagons.
 - **Licences:** each source is credited with its licence in the app and the repository. The data licences are CC0, CC BY 4.0, CC BY-NC and Protected Planet non-commercial terms. Photos are credited individually.
-- **AI use:** AI assistants (including Claude Code) helped write the code and documentation and drafted the harvest-trait rows from cited Stuart pages. **None of the 29 trait rows is expert-verified yet**, and each plant page says "being checked". The project owner is responsible for the submission.
+- **AI use:** AI assistants (including Claude Code) helped write the code and documentation and drafted the harvest-trait rows from cited Stuart pages. **None of the 29 trait rows is expert-verified yet**, and each plant page says "being checked". The pitch video's narration is an ElevenLabs synthetic voice ("Jennica") reading the team's script. The project owner is responsible for the submission.
 - **Limitations:** GBIF records are presence-only and effort-biased. Harvest harm is a literature rubric, not field data. Forest loss is measured per province. IUCN categories are linked only when an API token is configured, and they are never invented.
 
 ## Assumptions
@@ -161,7 +184,7 @@ Created and developed on 2–3 November 2026 (Asia/Manila), during EthnoHack 202
 ### Built with (max 25 tags)
 
 ```
-python, pandas, numpy, geopandas, shapely, h3, rasterio, pyarrow, pytest, typescript, react, vite, maplibre-gl, d3, zod, vitest, playwright, axe-core, github-actions, vercel, gbif, wcvp, worldclim, global-forest-watch, protected-planet
+python, pandas, numpy, geopandas, shapely, h3, rasterio, pytest, typescript, react, vite, maplibre-gl, d3, vitest, playwright, github-actions, vercel, remotion, gbif, wcvp, world-flora-online, cos-digital-flora-of-the-philippines, worldclim, global-forest-watch, protected-planet
 ```
 
 (25 tags.)
@@ -190,13 +213,14 @@ Upload in this order from `submission/gallery/`, with these captions:
 | `07-robustness-checks.png` | How sure is the ranking: the robustness checks |
 | `08-plants-list.png` | All plants by tier, with CSV download |
 | `09-phone-profile.png` | Phone layout of a plant profile |
+| `10-expert-check.png` | New: checked against World Flora Online and Co's Digital Flora, with where to look next |
 
 `09-phone-profile.png` is portrait, so Devpost will crop it into the 3:2 frame. Leave it out if the crop looks poor.
 
 ### Video demo link
 
 ```
-[YouTube or Vimeo URL: record from docs/VIDEO_SCRIPT.md, max 10 minutes]
+[YouTube URL of video/out/harvester-risk-atlas-pitch.mp4: 2:19, 60 fps; captions video/harvester-risk-atlas-pitch.en.srt]
 ```
 
 ---

@@ -1,0 +1,69 @@
+{
+ "intro": {
+  "frames": 444,
+  "clicks": [],
+  "marks": {}
+ },
+ "overview": {
+  "frames": 314,
+  "clicks": [
+   308
+  ],
+  "marks": {
+   "hover 1": 72,
+   "hover 2": 183
+  }
+ },
+ "atlas": {
+  "frames": 474,
+  "clicks": [
+   83,
+   468
+  ],
+  "marks": {
+   "over the map": 239
+  }
+ },
+ "profile": {
+  "frames": 322,
+  "clicks": [
+   316
+  ],
+  "marks": {
+   "at the rank": 84
+  }
+ },
+ "brief": {
+  "frames": 300,
+  "clicks": [],
+  "marks": {}
+ },
+ "weights": {
+  "frames": 377,
+  "clicks": [
+   371
+  ],
+  "marks": {
+   "drag": 89,
+   "release": 245
+  }
+ },
+ "plants": {
+  "frames": 300,
+  "clicks": [],
+  "marks": {}
+ },
+ "checks": {
+  "frames": 540,
+  "clicks": [],
+  "marks": {}
+ },
+ "check": {
+  "frames": 846,
+  "clicks": [],
+  "marks": {
+   "cdfp": 228,
+   "look next": 444
+  }
+ }
+}

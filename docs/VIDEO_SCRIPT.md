@@ -1,5 +1,7 @@
 # Pitch video script — Harvester Risk Atlas
 
+> **The recorded film supersedes this draft.** The final 4:00 film is built in [`../video/`](../video/). Its narration is [`../video/vo.txt`](../video/vo.txt), voiced in one take in Yuan's own voice. [`../video/NOTE.md`](../video/NOTE.md) has the beat-by-beat direction, what is real and what is designed, and the checks. [`../video/YOUTUBE.md`](../video/YOUTUBE.md) has the upload copy and chapters. The draft below is kept for reference.
+
 EthnoHack 2026 limit: **10 minutes maximum**. This script runs about **8 minutes**, leaving two minutes in hand. Upload to YouTube or Vimeo (public or unlisted) and paste the link into Devpost.
 
 Director and editor: Alicia Jhyle Vilale. The script follows the slide deck (`submission/Harvester-Risk-Atlas-slides.pdf`) in AIDA order: **Attention** (slides 1–3), **Interest** (4–5), **Desire** (6–9) and **Action** (10). Each heading names the EthnoHack points it covers: problem, motivation, approach, technology, data, results, demo, impact and future.

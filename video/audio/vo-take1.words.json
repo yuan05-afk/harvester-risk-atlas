@@ -1,0 +1,2517 @@
+[
+{
+"word": "Up",
+"start": 0.0,
+"end": 0.16
+},
+{
+"word": "to",
+"start": 0.16,
+"end": 0.44
+},
+{
+"word": "4",
+"start": 0.44,
+"end": 0.7
+},
+{
+"word": "billion",
+"start": 0.7,
+"end": 1.2
+},
+{
+"word": "people",
+"start": 1.2,
+"end": 1.78
+},
+{
+"word": "rely",
+"start": 1.78,
+"end": 2.14
+},
+{
+"word": "on",
+"start": 2.14,
+"end": 2.36
+},
+{
+"word": "herbal",
+"start": 2.36,
+"end": 2.6
+},
+{
+"word": "medicine.",
+"start": 2.6,
+"end": 3.12
+},
+{
+"word": "Most",
+"start": 4.02,
+"end": 4.24
+},
+{
+"word": "medicinal",
+"start": 4.24,
+"end": 4.68
+},
+{
+"word": "plants",
+"start": 4.68,
+"end": 4.98
+},
+{
+"word": "in",
+"start": 4.98,
+"end": 5.2
+},
+{
+"word": "trade",
+"start": 5.2,
+"end": 5.5
+},
+{
+"word": "are",
+"start": 5.5,
+"end": 5.74
+},
+{
+"word": "not",
+"start": 5.74,
+"end": 5.92
+},
+{
+"word": "farmed.",
+"start": 5.92,
+"end": 6.48
+},
+{
+"word": "They",
+"start": 6.82,
+"end": 6.9
+},
+{
+"word": "are",
+"start": 6.9,
+"end": 7.0
+},
+{
+"word": "taken",
+"start": 7.0,
+"end": 7.2
+},
+{
+"word": "from",
+"start": 7.2,
+"end": 7.5
+},
+{
+"word": "the",
+"start": 7.5,
+"end": 7.66
+},
+{
+"word": "wild,",
+"start": 7.66,
+"end": 7.94
+},
+{
+"word": "roots,",
+"start": 8.3,
+"end": 8.7
+},
+{
+"word": "bark,",
+"start": 9.24,
+"end": 9.3
+},
+{
+"word": "and",
+"start": 9.54,
+"end": 9.68
+},
+{
+"word": "all.",
+"start": 9.68,
+"end": 9.94
+},
+{
+"word": "And",
+"start": 10.46,
+"end": 10.56
+},
+{
+"word": "almost",
+"start": 10.56,
+"end": 10.86
+},
+{
+"word": "no",
+"start": 10.86,
+"end": 11.26
+},
+{
+"word": "one",
+"start": 11.26,
+"end": 11.46
+},
+{
+"word": "is",
+"start": 11.46,
+"end": 11.68
+},
+{
+"word": "counting",
+"start": 11.68,
+"end": 11.98
+},
+{
+"word": "what",
+"start": 11.98,
+"end": 12.22
+},
+{
+"word": "is",
+"start": 12.22,
+"end": 12.36
+},
+{
+"word": "left.",
+"start": 12.36,
+"end": 12.72
+},
+{
+"word": "About",
+"start": 13.24,
+"end": 13.46
+},
+{
+"word": "30",
+"start": 13.46,
+"end": 13.92
+},
+{
+"word": ",000",
+"start": 13.92,
+"end": 14.46
+},
+{
+"word": "plant",
+"start": 14.46,
+"end": 14.7
+},
+{
+"word": "species",
+"start": 14.7,
+"end": 15.06
+},
+{
+"word": "are",
+"start": 15.06,
+"end": 15.38
+},
+{
+"word": "used",
+"start": 15.38,
+"end": 15.64
+},
+{
+"word": "as",
+"start": 15.64,
+"end": 15.88
+},
+{
+"word": "medicine.",
+"start": 15.88,
+"end": 16.36
+},
+{
+"word": "Only",
+"start": 16.82,
+"end": 17.04
+},
+{
+"word": "7",
+"start": 17.04,
+"end": 17.52
+},
+{
+"word": "%",
+"start": 17.52,
+"end": 17.88
+},
+{
+"word": "have",
+"start": 17.88,
+"end": 18.14
+},
+{
+"word": "ever",
+"start": 18.14,
+"end": 18.48
+},
+{
+"word": "been",
+"start": 18.48,
+"end": 18.66
+},
+{
+"word": "checked",
+"start": 18.66,
+"end": 18.92
+},
+{
+"word": "for",
+"start": 18.92,
+"end": 19.14
+},
+{
+"word": "extinction",
+"start": 19.14,
+"end": 19.5
+},
+{
+"word": "risk.",
+"start": 19.5,
+"end": 20.0
+},
+{
+"word": "Here",
+"start": 20.48,
+"end": 20.7
+},
+{
+"word": "in",
+"start": 20.7,
+"end": 20.82
+},
+{
+"word": "the",
+"start": 20.82,
+"end": 20.96
+},
+{
+"word": "Philippines,",
+"start": 20.96,
+"end": 21.32
+},
+{
+"word": "the",
+"start": 21.7,
+"end": 21.9
+},
+{
+"word": "forests",
+"start": 21.9,
+"end": 22.2
+},
+{
+"word": "these",
+"start": 22.2,
+"end": 22.46
+},
+{
+"word": "plants",
+"start": 22.46,
+"end": 22.78
+},
+{
+"word": "need",
+"start": 22.78,
+"end": 23.14
+},
+{
+"word": "lose",
+"start": 23.14,
+"end": 23.38
+},
+{
+"word": "about",
+"start": 23.38,
+"end": 23.66
+},
+{
+"word": "175",
+"start": 23.66,
+"end": 24.64
+},
+{
+"word": "hectares",
+"start": 24.64,
+"end": 25.34
+},
+{
+"word": "of",
+"start": 25.34,
+"end": 25.58
+},
+{
+"word": "tree",
+"start": 25.58,
+"end": 25.84
+},
+{
+"word": "cover",
+"start": 25.84,
+"end": 26.1
+},
+{
+"word": "every",
+"start": 26.1,
+"end": 26.76
+},
+{
+"word": "single",
+"start": 26.76,
+"end": 27.08
+},
+{
+"word": "day.",
+"start": 27.08,
+"end": 27.5
+},
+{
+"word": "The",
+"start": 27.5,
+"end": 28.02
+},
+{
+"word": "government",
+"start": 28.02,
+"end": 28.28
+},
+{
+"word": "lists",
+"start": 28.28,
+"end": 28.62
+},
+{
+"word": "more",
+"start": 28.62,
+"end": 28.86
+},
+{
+"word": "than",
+"start": 28.86,
+"end": 29.04
+},
+{
+"word": "1",
+"start": 29.04,
+"end": 29.38
+},
+{
+"word": ",100",
+"start": 29.38,
+"end": 29.76
+},
+{
+"word": "threatened",
+"start": 29.76,
+"end": 30.2
+},
+{
+"word": "plants,",
+"start": 30.2,
+"end": 30.78
+},
+{
+"word": "but",
+"start": 30.98,
+"end": 31.32
+},
+{
+"word": "nobody",
+"start": 31.32,
+"end": 31.74
+},
+{
+"word": "measures",
+"start": 31.74,
+"end": 32.14
+},
+{
+"word": "harvest.",
+"start": 32.14,
+"end": 32.52
+},
+{
+"word": "So",
+"start": 33.2,
+"end": 33.38
+},
+{
+"word": "if",
+"start": 33.38,
+"end": 33.5
+},
+{
+"word": "you",
+"start": 33.5,
+"end": 33.64
+},
+{
+"word": "are",
+"start": 33.64,
+"end": 33.78
+},
+{
+"word": "a",
+"start": 33.78,
+"end": 33.94
+},
+{
+"word": "ranger,",
+"start": 33.94,
+"end": 34.24
+},
+{
+"word": "a",
+"start": 34.6,
+"end": 34.74
+},
+{
+"word": "local",
+"start": 34.74,
+"end": 34.94
+},
+{
+"word": "official,",
+"start": 34.94,
+"end": 35.42
+},
+{
+"word": "or",
+"start": 35.7,
+"end": 35.88
+},
+{
+"word": "a",
+"start": 35.88,
+"end": 36.02
+},
+{
+"word": "harvester,",
+"start": 36.02,
+"end": 36.56
+},
+{
+"word": "where",
+"start": 36.82,
+"end": 37.1
+},
+{
+"word": "do",
+"start": 37.1,
+"end": 37.24
+},
+{
+"word": "you",
+"start": 37.24,
+"end": 37.34
+},
+{
+"word": "even",
+"start": 37.34,
+"end": 37.52
+},
+{
+"word": "start?",
+"start": 37.52,
+"end": 37.92
+},
+{
+"word": "Take",
+"start": 38.68,
+"end": 38.8
+},
+{
+"word": "Tonkata",
+"start": 38.8,
+"end": 39.22
+},
+{
+"word": "Ali.",
+"start": 39.22,
+"end": 39.52
+},
+{
+"word": "Its",
+"start": 40.02,
+"end": 40.18
+},
+{
+"word": "roots",
+"start": 40.18,
+"end": 40.46
+},
+{
+"word": "are",
+"start": 40.46,
+"end": 40.72
+},
+{
+"word": "dug",
+"start": 40.72,
+"end": 40.94
+},
+{
+"word": "up",
+"start": 40.94,
+"end": 41.16
+},
+{
+"word": "and",
+"start": 41.16,
+"end": 41.4
+},
+{
+"word": "sold.",
+"start": 41.4,
+"end": 41.74
+},
+{
+"word": "It",
+"start": 42.12,
+"end": 42.28
+},
+{
+"word": "is",
+"start": 42.28,
+"end": 42.38
+},
+{
+"word": "officially",
+"start": 42.38,
+"end": 42.9
+},
+{
+"word": "endangered.",
+"start": 42.9,
+"end": 43.58
+},
+{
+"word": "Yet",
+"start": 44.0,
+"end": 44.2
+},
+{
+"word": "across",
+"start": 44.2,
+"end": 44.54
+},
+{
+"word": "the",
+"start": 44.54,
+"end": 44.76
+},
+{
+"word": "whole",
+"start": 44.76,
+"end": 45.04
+},
+{
+"word": "country,",
+"start": 45.04,
+"end": 45.54
+},
+{
+"word": "open",
+"start": 45.8,
+"end": 46.04
+},
+{
+"word": "databases",
+"start": 46.04,
+"end": 46.48
+},
+{
+"word": "hold",
+"start": 46.48,
+"end": 46.86
+},
+{
+"word": "only",
+"start": 46.86,
+"end": 47.14
+},
+{
+"word": "five",
+"start": 47.14,
+"end": 47.56
+},
+{
+"word": "reliable",
+"start": 47.56,
+"end": 48.06
+},
+{
+"word": "records",
+"start": 48.06,
+"end": 48.44
+},
+{
+"word": "of",
+"start": 48.44,
+"end": 48.68
+},
+{
+"word": "it.",
+"start": 48.68,
+"end": 48.84
+},
+{
+"word": "So",
+"start": 49.2,
+"end": 49.56
+},
+{
+"word": "we've",
+"start": 49.56,
+"end": 49.94
+},
+{
+"word": "built",
+"start": 49.94,
+"end": 50.12
+},
+{
+"word": "an",
+"start": 50.12,
+"end": 50.28
+},
+{
+"word": "answer.",
+"start": 50.28,
+"end": 50.64
+},
+{
+"word": "This",
+"start": 51.06,
+"end": 51.34
+},
+{
+"word": "is",
+"start": 51.34,
+"end": 51.66
+},
+{
+"word": "Harvester",
+"start": 51.66,
+"end": 52.3
+},
+{
+"word": "Risk",
+"start": 52.3,
+"end": 52.52
+},
+{
+"word": "Atlas,",
+"start": 52.52,
+"end": 52.94
+},
+{
+"word": "a",
+"start": 53.3,
+"end": 53.44
+},
+{
+"word": "free",
+"start": 53.44,
+"end": 53.72
+},
+{
+"word": "map",
+"start": 53.72,
+"end": 53.96
+},
+{
+"word": "that",
+"start": 53.96,
+"end": 54.18
+},
+{
+"word": "ranks",
+"start": 54.18,
+"end": 54.42
+},
+{
+"word": "which",
+"start": 54.42,
+"end": 54.74
+},
+{
+"word": "wild",
+"start": 54.74,
+"end": 55.06
+},
+{
+"word": "medicinal",
+"start": 55.06,
+"end": 55.36
+},
+{
+"word": "plants",
+"start": 55.36,
+"end": 55.76
+},
+{
+"word": "of",
+"start": 55.76,
+"end": 55.9
+},
+{
+"word": "the",
+"start": 55.9,
+"end": 56.04
+},
+{
+"word": "Philippines",
+"start": 56.04,
+"end": 56.44
+},
+{
+"word": "need",
+"start": 56.44,
+"end": 56.78
+},
+{
+"word": "help",
+"start": 56.78,
+"end": 57.02
+},
+{
+"word": "first,",
+"start": 57.02,
+"end": 57.38
+},
+{
+"word": "where",
+"start": 57.7,
+"end": 57.9
+},
+{
+"word": "they",
+"start": 57.9,
+"end": 58.12
+},
+{
+"word": "grow,",
+"start": 58.12,
+"end": 58.4
+},
+{
+"word": "why,",
+"start": 58.76,
+"end": 59.12
+},
+{
+"word": "and",
+"start": 59.42,
+"end": 59.52
+},
+{
+"word": "how",
+"start": 59.52,
+"end": 59.76
+},
+{
+"word": "sure",
+"start": 59.76,
+"end": 60.04
+},
+{
+"word": "we",
+"start": 60.04,
+"end": 60.26
+},
+{
+"word": "are.",
+"start": 60.26,
+"end": 60.56
+},
+{
+"word": "For",
+"start": 60.82,
+"end": 60.98
+},
+{
+"word": "every",
+"start": 60.98,
+"end": 61.32
+},
+{
+"word": "native",
+"start": 61.32,
+"end": 61.56
+},
+{
+"word": "plant,",
+"start": 61.56,
+"end": 61.92
+},
+{
+"word": "we",
+"start": 62.16,
+"end": 62.24
+},
+{
+"word": "ask",
+"start": 62.24,
+"end": 62.46
+},
+{
+"word": "three",
+"start": 62.46,
+"end": 62.82
+},
+{
+"word": "simple",
+"start": 62.82,
+"end": 63.24
+},
+{
+"word": "questions.",
+"start": 63.24,
+"end": 63.72
+},
+{
+"word": "How",
+"start": 64.26,
+"end": 64.36
+},
+{
+"word": "hard",
+"start": 64.36,
+"end": 64.58
+},
+{
+"word": "is",
+"start": 64.58,
+"end": 64.72
+},
+{
+"word": "it",
+"start": 64.72,
+"end": 64.84
+},
+{
+"word": "to",
+"start": 64.84,
+"end": 64.98
+},
+{
+"word": "find?",
+"start": 64.98,
+"end": 65.24
+},
+{
+"word": "Does",
+"start": 65.6,
+"end": 65.74
+},
+{
+"word": "harvesting",
+"start": 65.74,
+"end": 66.16
+},
+{
+"word": "kill",
+"start": 66.16,
+"end": 66.48
+},
+{
+"word": "it?",
+"start": 66.48,
+"end": 66.66
+},
+{
+"word": "And",
+"start": 66.94,
+"end": 67.12
+},
+{
+"word": "is",
+"start": 67.12,
+"end": 67.36
+},
+{
+"word": "its",
+"start": 67.36,
+"end": 67.52
+},
+{
+"word": "home",
+"start": 67.52,
+"end": 67.8
+},
+{
+"word": "disappearing?",
+"start": 67.8,
+"end": 68.28
+},
+{
+"word": "We",
+"start": 68.76,
+"end": 68.96
+},
+{
+"word": "answer",
+"start": 68.96,
+"end": 69.26
+},
+{
+"word": "them",
+"start": 69.26,
+"end": 69.46
+},
+{
+"word": "with",
+"start": 69.46,
+"end": 69.66
+},
+{
+"word": "six",
+"start": 69.66,
+"end": 69.96
+},
+{
+"word": "open",
+"start": 69.96,
+"end": 70.38
+},
+{
+"word": "sources.",
+"start": 70.38,
+"end": 70.86
+},
+{
+"word": "Nine",
+"start": 71.4,
+"end": 71.56
+},
+{
+"word": "checks",
+"start": 71.56,
+"end": 71.88
+},
+{
+"word": "clean",
+"start": 71.88,
+"end": 72.16
+},
+{
+"word": "almost",
+"start": 72.16,
+"end": 72.48
+},
+{
+"word": "10",
+"start": 72.48,
+"end": 72.9
+},
+{
+"word": ",000",
+"start": 72.9,
+"end": 73.28
+},
+{
+"word": "records",
+"start": 73.28,
+"end": 73.62
+},
+{
+"word": "down",
+"start": 73.62,
+"end": 73.98
+},
+{
+"word": "to",
+"start": 73.98,
+"end": 74.14
+},
+{
+"word": "the",
+"start": 74.14,
+"end": 74.26
+},
+{
+"word": "ones",
+"start": 74.26,
+"end": 74.42
+},
+{
+"word": "we",
+"start": 74.42,
+"end": 74.62
+},
+{
+"word": "can",
+"start": 74.62,
+"end": 74.76
+},
+{
+"word": "trust.",
+"start": 74.76,
+"end": 75.1
+},
+{
+"word": "And",
+"start": 75.46,
+"end": 75.58
+},
+{
+"word": "because",
+"start": 75.58,
+"end": 75.84
+},
+{
+"word": "busy",
+"start": 75.84,
+"end": 76.2
+},
+{
+"word": "roadsides",
+"start": 76.2,
+"end": 76.72
+},
+{
+"word": "get",
+"start": 76.72,
+"end": 76.92
+},
+{
+"word": "photographed",
+"start": 76.92,
+"end": 77.36
+},
+{
+"word": "more",
+"start": 77.36,
+"end": 77.68
+},
+{
+"word": "than",
+"start": 77.68,
+"end": 77.88
+},
+{
+"word": "deep",
+"start": 77.88,
+"end": 78.06
+},
+{
+"word": "forest,",
+"start": 78.06,
+"end": 78.48
+},
+{
+"word": "we",
+"start": 78.76,
+"end": 78.92
+},
+{
+"word": "only",
+"start": 78.92,
+"end": 79.18
+},
+{
+"word": "measure",
+"start": 79.18,
+"end": 79.52
+},
+{
+"word": "rarity",
+"start": 79.52,
+"end": 79.88
+},
+{
+"word": "where",
+"start": 79.88,
+"end": 80.12
+},
+{
+"word": "botanists",
+"start": 80.12,
+"end": 80.66
+},
+{
+"word": "have",
+"start": 80.66,
+"end": 80.84
+},
+{
+"word": "searched",
+"start": 80.84,
+"end": 81.18
+},
+{
+"word": "well.",
+"start": 81.18,
+"end": 81.56
+},
+{
+"word": "Then,",
+"start": 81.56,
+"end": 82.18
+},
+{
+"word": "we",
+"start": 82.36,
+"end": 82.48
+},
+{
+"word": "rerun",
+"start": 82.48,
+"end": 82.92
+},
+{
+"word": "the",
+"start": 82.92,
+"end": 83.08
+},
+{
+"word": "whole",
+"start": 83.08,
+"end": 83.38
+},
+{
+"word": "ranking",
+"start": 83.38,
+"end": 83.72
+},
+{
+"word": "2",
+"start": 83.72,
+"end": 84.12
+},
+{
+"word": ",000",
+"start": 84.12,
+"end": 84.64
+},
+{
+"word": "times",
+"start": 84.64,
+"end": 85.02
+},
+{
+"word": "with",
+"start": 85.02,
+"end": 85.38
+},
+{
+"word": "different",
+"start": 85.38,
+"end": 85.68
+},
+{
+"word": "weights",
+"start": 85.68,
+"end": 85.94
+},
+{
+"word": "and",
+"start": 85.94,
+"end": 86.18
+},
+{
+"word": "evidence.",
+"start": 86.18,
+"end": 86.54
+},
+{
+"word": "So",
+"start": 86.92,
+"end": 87.08
+},
+{
+"word": "every",
+"start": 87.08,
+"end": 87.44
+},
+{
+"word": "plant",
+"start": 87.44,
+"end": 87.74
+},
+{
+"word": "gets",
+"start": 87.74,
+"end": 87.94
+},
+{
+"word": "a",
+"start": 87.94,
+"end": 88.14
+},
+{
+"word": "range,",
+"start": 88.14,
+"end": 88.42
+},
+{
+"word": "not",
+"start": 88.7,
+"end": 88.94
+},
+{
+"word": "just",
+"start": 88.94,
+"end": 89.1
+},
+{
+"word": "one",
+"start": 89.1,
+"end": 89.34
+},
+{
+"word": "number.",
+"start": 89.34,
+"end": 89.68
+},
+{
+"word": "Let",
+"start": 90.0,
+"end": 90.14
+},
+{
+"word": "me",
+"start": 90.14,
+"end": 90.28
+},
+{
+"word": "show",
+"start": 90.28,
+"end": 90.44
+},
+{
+"word": "you.",
+"start": 90.44,
+"end": 90.7
+},
+{
+"word": "The",
+"start": 90.94,
+"end": 91.06
+},
+{
+"word": "overview",
+"start": 91.06,
+"end": 91.48
+},
+{
+"word": "shows",
+"start": 91.48,
+"end": 91.8
+},
+{
+"word": "where",
+"start": 91.8,
+"end": 92.1
+},
+{
+"word": "the",
+"start": 92.1,
+"end": 92.28
+},
+{
+"word": "plants",
+"start": 92.28,
+"end": 92.52
+},
+{
+"word": "that",
+"start": 92.52,
+"end": 92.7
+},
+{
+"word": "need",
+"start": 92.7,
+"end": 92.84
+},
+{
+"word": "attention",
+"start": 92.84,
+"end": 93.32
+},
+{
+"word": "cluster.",
+"start": 93.32,
+"end": 93.66
+},
+{
+"word": "Pick",
+"start": 94.26,
+"end": 94.38
+},
+{
+"word": "Tonkata",
+"start": 94.38,
+"end": 94.8
+},
+{
+"word": "Ali",
+"start": 94.8,
+"end": 95.04
+},
+{
+"word": "on",
+"start": 95.04,
+"end": 95.18
+},
+{
+"word": "the",
+"start": 95.18,
+"end": 95.32
+},
+{
+"word": "Atlas.",
+"start": 95.32,
+"end": 95.6
+},
+{
+"word": "You",
+"start": 96.02,
+"end": 96.16
+},
+{
+"word": "only",
+"start": 96.16,
+"end": 96.44
+},
+{
+"word": "see",
+"start": 96.44,
+"end": 96.72
+},
+{
+"word": "broad",
+"start": 96.72,
+"end": 97.06
+},
+{
+"word": "hexagons,",
+"start": 97.06,
+"end": 97.68
+},
+{
+"word": "never",
+"start": 98.08,
+"end": 98.24
+},
+{
+"word": "exact",
+"start": 98.24,
+"end": 98.64
+},
+{
+"word": "spots,",
+"start": 98.64,
+"end": 99.02
+},
+{
+"word": "so",
+"start": 99.24,
+"end": 99.48
+},
+{
+"word": "the",
+"start": 99.48,
+"end": 99.62
+},
+{
+"word": "map",
+"start": 99.62,
+"end": 99.8
+},
+{
+"word": "can't",
+"start": 99.8,
+"end": 100.22
+},
+{
+"word": "lead",
+"start": 100.22,
+"end": 100.36
+},
+{
+"word": "collectors",
+"start": 100.36,
+"end": 100.68
+},
+{
+"word": "to",
+"start": 100.68,
+"end": 101.02
+},
+{
+"word": "them.",
+"start": 101.02,
+"end": 101.24
+},
+{
+"word": "Its",
+"start": 101.52,
+"end": 101.66
+},
+{
+"word": "profile",
+"start": 101.66,
+"end": 102.12
+},
+{
+"word": "gives",
+"start": 102.12,
+"end": 102.38
+},
+{
+"word": "the",
+"start": 102.38,
+"end": 102.58
+},
+{
+"word": "reasons",
+"start": 102.58,
+"end": 102.9
+},
+{
+"word": "in",
+"start": 102.9,
+"end": 103.2
+},
+{
+"word": "plain",
+"start": 103.2,
+"end": 103.48
+},
+{
+"word": "words,",
+"start": 103.48,
+"end": 104.0
+},
+{
+"word": "ranked",
+"start": 104.38,
+"end": 104.5
+},
+{
+"word": "2nd",
+"start": 104.5,
+"end": 105.06
+},
+{
+"word": "of",
+"start": 105.06,
+"end": 105.18
+},
+{
+"word": "29,",
+"start": 105.18,
+"end": 105.6
+},
+{
+"word": "and",
+"start": 106.1,
+"end": 106.22
+},
+{
+"word": "it",
+"start": 106.22,
+"end": 106.3
+},
+{
+"word": "could",
+"start": 106.3,
+"end": 106.42
+},
+{
+"word": "be",
+"start": 106.42,
+"end": 106.56
+},
+{
+"word": "anywhere",
+"start": 106.56,
+"end": 107.0
+},
+{
+"word": "from",
+"start": 107.0,
+"end": 107.28
+},
+{
+"word": "1st",
+"start": 107.28,
+"end": 107.7
+},
+{
+"word": "to",
+"start": 107.7,
+"end": 107.88
+},
+{
+"word": "5th.",
+"start": 107.88,
+"end": 108.32
+},
+{
+"word": "One",
+"start": 108.32,
+"end": 108.76
+},
+{
+"word": "click",
+"start": 108.76,
+"end": 109.06
+},
+{
+"word": "and",
+"start": 109.06,
+"end": 109.34
+},
+{
+"word": "a",
+"start": 109.34,
+"end": 109.46
+},
+{
+"word": "ranger",
+"start": 109.46,
+"end": 109.66
+},
+{
+"word": "has",
+"start": 109.66,
+"end": 109.94
+},
+{
+"word": "a",
+"start": 109.94,
+"end": 110.08
+},
+{
+"word": "one",
+"start": 110.08,
+"end": 110.32
+},
+{
+"word": "-page",
+"start": 110.32,
+"end": 110.58
+},
+{
+"word": "brief",
+"start": 110.58,
+"end": 110.84
+},
+{
+"word": "to",
+"start": 110.84,
+"end": 111.1
+},
+{
+"word": "print",
+"start": 111.1,
+"end": 111.32
+},
+{
+"word": "and",
+"start": 111.32,
+"end": 111.58
+},
+{
+"word": "carry",
+"start": 111.58,
+"end": 111.88
+},
+{
+"word": "into",
+"start": 111.88,
+"end": 112.14
+},
+{
+"word": "the",
+"start": 112.14,
+"end": 112.28
+},
+{
+"word": "field.",
+"start": 112.28,
+"end": 112.6
+},
+{
+"word": "And",
+"start": 112.9,
+"end": 113.0
+},
+{
+"word": "if",
+"start": 113.0,
+"end": 113.1
+},
+{
+"word": "you",
+"start": 113.1,
+"end": 113.24
+},
+{
+"word": "think",
+"start": 113.24,
+"end": 113.38
+},
+{
+"word": "harvest",
+"start": 113.38,
+"end": 113.74
+},
+{
+"word": "matters",
+"start": 113.74,
+"end": 114.06
+},
+{
+"word": "more,",
+"start": 114.06,
+"end": 114.42
+},
+{
+"word": "move",
+"start": 114.68,
+"end": 114.82
+},
+{
+"word": "the",
+"start": 114.82,
+"end": 115.02
+},
+{
+"word": "slider.",
+"start": 115.02,
+"end": 115.3
+},
+{
+"word": "The",
+"start": 115.66,
+"end": 115.76
+},
+{
+"word": "ranking",
+"start": 115.76,
+"end": 116.02
+},
+{
+"word": "changes",
+"start": 116.02,
+"end": 116.54
+},
+{
+"word": "right",
+"start": 116.54,
+"end": 116.9
+},
+{
+"word": "in",
+"start": 116.9,
+"end": 117.08
+},
+{
+"word": "front",
+"start": 117.08,
+"end": 117.22
+},
+{
+"word": "of",
+"start": 117.22,
+"end": 117.38
+},
+{
+"word": "you.",
+"start": 117.38,
+"end": 117.6
+},
+{
+"word": "Every",
+"start": 117.88,
+"end": 118.12
+},
+{
+"word": "plant",
+"start": 118.12,
+"end": 118.4
+},
+{
+"word": "is",
+"start": 118.4,
+"end": 118.62
+},
+{
+"word": "grouped",
+"start": 118.62,
+"end": 118.82
+},
+{
+"word": "by",
+"start": 118.82,
+"end": 119.06
+},
+{
+"word": "tier,",
+"start": 119.06,
+"end": 119.32
+},
+{
+"word": "and",
+"start": 119.6,
+"end": 119.72
+},
+{
+"word": "you",
+"start": 119.72,
+"end": 119.8
+},
+{
+"word": "can",
+"start": 119.8,
+"end": 119.96
+},
+{
+"word": "download",
+"start": 119.96,
+"end": 120.32
+},
+{
+"word": "the",
+"start": 120.32,
+"end": 120.52
+},
+{
+"word": "whole",
+"start": 120.52,
+"end": 120.78
+},
+{
+"word": "list.",
+"start": 120.78,
+"end": 121.08
+},
+{
+"word": "So",
+"start": 121.54,
+"end": 121.82
+},
+{
+"word": "what",
+"start": 121.82,
+"end": 122.12
+},
+{
+"word": "did",
+"start": 122.12,
+"end": 122.26
+},
+{
+"word": "we",
+"start": 122.26,
+"end": 122.4
+},
+{
+"word": "find?",
+"start": 122.4,
+"end": 122.7
+},
+{
+"word": "Five",
+"start": 123.24,
+"end": 123.44
+},
+{
+"word": "plants",
+"start": 123.44,
+"end": 123.82
+},
+{
+"word": "need",
+"start": 123.82,
+"end": 124.04
+},
+{
+"word": "attention",
+"start": 124.04,
+"end": 124.5
+},
+{
+"word": "now.",
+"start": 124.5,
+"end": 124.98
+},
+{
+"word": "Kalinag,",
+"start": 125.4,
+"end": 125.8
+},
+{
+"word": "found",
+"start": 126.06,
+"end": 126.22
+},
+{
+"word": "only",
+"start": 126.22,
+"end": 126.62
+},
+{
+"word": "in",
+"start": 126.62,
+"end": 126.82
+},
+{
+"word": "the",
+"start": 126.82,
+"end": 126.96
+},
+{
+"word": "Philippines.",
+"start": 126.96,
+"end": 127.34
+},
+{
+"word": "Tonkata",
+"start": 127.9,
+"end": 128.18
+},
+{
+"word": "Ali,",
+"start": 128.18,
+"end": 128.54
+},
+{
+"word": "Bitaog,",
+"start": 128.96,
+"end": 129.44
+},
+{
+"word": "Tibig,",
+"start": 129.84,
+"end": 130.1
+},
+{
+"word": "and",
+"start": 130.48,
+"end": 130.62
+},
+{
+"word": "Amuyon.",
+"start": 130.62,
+"end": 131.08
+},
+{
+"word": "Two",
+"start": 131.38,
+"end": 131.54
+},
+{
+"word": "of",
+"start": 131.54,
+"end": 131.7
+},
+{
+"word": "them",
+"start": 131.7,
+"end": 131.92
+},
+{
+"word": "are",
+"start": 131.92,
+"end": 132.12
+},
+{
+"word": "already",
+"start": 132.12,
+"end": 132.52
+},
+{
+"word": "on",
+"start": 132.52,
+"end": 132.76
+},
+{
+"word": "the",
+"start": 132.76,
+"end": 132.9
+},
+{
+"word": "government's",
+"start": 132.9,
+"end": 133.4
+},
+{
+"word": "threatened",
+"start": 133.4,
+"end": 133.66
+},
+{
+"word": "list,",
+"start": 133.66,
+"end": 134.14
+},
+{
+"word": "even",
+"start": 134.48,
+"end": 134.72
+},
+{
+"word": "though",
+"start": 134.72,
+"end": 134.9
+},
+{
+"word": "we",
+"start": 134.9,
+"end": 135.06
+},
+{
+"word": "never",
+"start": 135.06,
+"end": 135.32
+},
+{
+"word": "use",
+"start": 135.32,
+"end": 135.64
+},
+{
+"word": "that",
+"start": 135.64,
+"end": 135.88
+},
+{
+"word": "list.",
+"start": 135.88,
+"end": 136.24
+},
+{
+"word": "We",
+"start": 136.24,
+"end": 137.1
+},
+{
+"word": "also",
+"start": 137.1,
+"end": 137.34
+},
+{
+"word": "tried",
+"start": 137.34,
+"end": 137.62
+},
+{
+"word": "to",
+"start": 137.62,
+"end": 137.8
+},
+{
+"word": "break",
+"start": 137.8,
+"end": 138.0
+},
+{
+"word": "our",
+"start": 138.0,
+"end": 138.2
+},
+{
+"word": "own",
+"start": 138.2,
+"end": 138.44
+},
+{
+"word": "ranking,",
+"start": 138.44,
+"end": 138.9
+},
+{
+"word": "change",
+"start": 139.4,
+"end": 139.52
+},
+{
+"word": "the",
+"start": 139.52,
+"end": 139.74
+},
+{
+"word": "math,",
+"start": 139.74,
+"end": 140.0
+},
+{
+"word": "and",
+"start": 140.38,
+"end": 140.44
+},
+{
+"word": "the",
+"start": 140.44,
+"end": 140.52
+},
+{
+"word": "order",
+"start": 140.52,
+"end": 140.76
+},
+{
+"word": "barely",
+"start": 140.76,
+"end": 141.2
+},
+{
+"word": "moves.",
+"start": 141.2,
+"end": 141.7
+},
+{
+"word": "Most",
+"start": 142.22,
+"end": 142.42
+},
+{
+"word": "plants'",
+"start": 142.42,
+"end": 142.72
+},
+{
+"word": "ranks",
+"start": 142.92,
+"end": 143.06
+},
+{
+"word": "are",
+"start": 143.06,
+"end": 143.32
+},
+{
+"word": "known",
+"start": 143.32,
+"end": 143.52
+},
+{
+"word": "to",
+"start": 143.52,
+"end": 143.74
+},
+{
+"word": "within",
+"start": 143.74,
+"end": 144.02
+},
+{
+"word": "about",
+"start": 144.02,
+"end": 144.28
+},
+{
+"word": "five",
+"start": 144.28,
+"end": 144.66
+},
+{
+"word": "places.",
+"start": 144.66,
+"end": 145.18
+},
+{
+"word": "And",
+"start": 145.82,
+"end": 146.1
+},
+{
+"word": "we",
+"start": 146.1,
+"end": 146.42
+},
+{
+"word": "are",
+"start": 146.42,
+"end": 146.52
+},
+{
+"word": "honest",
+"start": 146.52,
+"end": 146.84
+},
+{
+"word": "about",
+"start": 146.84,
+"end": 147.14
+},
+{
+"word": "the",
+"start": 147.14,
+"end": 147.32
+},
+{
+"word": "limits.",
+"start": 147.32,
+"end": 147.6
+},
+{
+"word": "This",
+"start": 148.06,
+"end": 148.28
+},
+{
+"word": "is",
+"start": 148.28,
+"end": 148.42
+},
+{
+"word": "not",
+"start": 148.42,
+"end": 148.68
+},
+{
+"word": "medical",
+"start": 148.68,
+"end": 149.04
+},
+{
+"word": "advice,",
+"start": 149.04,
+"end": 149.44
+},
+{
+"word": "and",
+"start": 149.7,
+"end": 149.9
+},
+{
+"word": "it",
+"start": 149.9,
+"end": 150.02
+},
+{
+"word": "is",
+"start": 150.02,
+"end": 150.16
+},
+{
+"word": "not",
+"start": 150.16,
+"end": 150.48
+},
+{
+"word": "a",
+"start": 150.48,
+"end": 150.7
+},
+{
+"word": "permit.",
+"start": 150.7,
+"end": 151.0
+},
+{
+"word": "Our",
+"start": 151.46,
+"end": 151.66
+},
+{
+"word": "harvest",
+"start": 151.66,
+"end": 151.96
+},
+{
+"word": "data",
+"start": 151.96,
+"end": 152.24
+},
+{
+"word": "comes",
+"start": 152.24,
+"end": 152.54
+},
+{
+"word": "from",
+"start": 152.54,
+"end": 152.78
+},
+{
+"word": "books,",
+"start": 152.78,
+"end": 153.1
+},
+{
+"word": "and",
+"start": 153.5,
+"end": 153.64
+},
+{
+"word": "it",
+"start": 153.64,
+"end": 153.76
+},
+{
+"word": "still",
+"start": 153.76,
+"end": 154.02
+},
+{
+"word": "needs",
+"start": 154.02,
+"end": 154.26
+},
+{
+"word": "expert",
+"start": 154.26,
+"end": 154.64
+},
+{
+"word": "eyes.",
+"start": 154.64,
+"end": 154.96
+},
+{
+"word": "Every",
+"start": 155.44,
+"end": 155.72
+},
+{
+"word": "page",
+"start": 155.72,
+"end": 156.0
+},
+{
+"word": "says",
+"start": 156.0,
+"end": 156.3
+},
+{
+"word": "so.",
+"start": 156.3,
+"end": 156.68
+},
+{
+"word": "Next,",
+"start": 157.26,
+"end": 157.54
+},
+{
+"word": "we",
+"start": 157.94,
+"end": 158.06
+},
+{
+"word": "want",
+"start": 158.06,
+"end": 158.26
+},
+{
+"word": "Filipino",
+"start": 158.26,
+"end": 158.78
+},
+{
+"word": "ethnobotanists",
+"start": 158.78,
+"end": 159.68
+},
+{
+"word": "and",
+"start": 159.68,
+"end": 159.94
+},
+{
+"word": "harvester",
+"start": 159.94,
+"end": 160.44
+},
+{
+"word": "communities",
+"start": 160.44,
+"end": 160.76
+},
+{
+"word": "to",
+"start": 160.76,
+"end": 161.22
+},
+{
+"word": "check",
+"start": 161.22,
+"end": 161.44
+},
+{
+"word": "every",
+"start": 161.44,
+"end": 161.9
+},
+{
+"word": "trait",
+"start": 161.9,
+"end": 162.28
+},
+{
+"word": "and",
+"start": 162.28,
+"end": 162.72
+},
+{
+"word": "to",
+"start": 162.72,
+"end": 162.86
+},
+{
+"word": "map",
+"start": 162.86,
+"end": 163.08
+},
+{
+"word": "where",
+"start": 163.08,
+"end": 163.3
+},
+{
+"word": "these",
+"start": 163.3,
+"end": 163.5
+},
+{
+"word": "plants",
+"start": 163.5,
+"end": 163.78
+},
+{
+"word": "grow",
+"start": 163.78,
+"end": 164.14
+},
+{
+"word": "beyond",
+"start": 164.14,
+"end": 164.58
+},
+{
+"word": "the",
+"start": 164.58,
+"end": 164.78
+},
+{
+"word": "records",
+"start": 164.78,
+"end": 165.02
+},
+{
+"word": "we",
+"start": 165.02,
+"end": 165.24
+},
+{
+"word": "have.",
+"start": 165.24,
+"end": 165.66
+},
+{
+"word": "Harvester",
+"start": 166.22,
+"end": 166.7
+},
+{
+"word": "risk",
+"start": 166.7,
+"end": 166.96
+},
+{
+"word": "atlas,",
+"start": 166.96,
+"end": 167.52
+},
+{
+"word": "which",
+"start": 167.94,
+"end": 168.14
+},
+{
+"word": "plants",
+"start": 168.14,
+"end": 168.38
+},
+{
+"word": "first,",
+"start": 168.38,
+"end": 168.8
+},
+{
+"word": "where,",
+"start": 169.18,
+"end": 169.5
+},
+{
+"word": "and",
+"start": 169.94,
+"end": 170.0
+},
+{
+"word": "how",
+"start": 170.0,
+"end": 170.22
+},
+{
+"word": "sure.",
+"start": 170.22,
+"end": 170.54
+},
+{
+"word": "Open",
+"start": 171.48,
+"end": 171.48
+},
+{
+"word": "it,",
+"start": 171.48,
+"end": 171.72
+},
+{
+"word": "and",
+"start": 172.1,
+"end": 172.28
+},
+{
+"word": "help",
+"start": 172.28,
+"end": 172.46
+},
+{
+"word": "us",
+"start": 172.46,
+"end": 172.7
+},
+{
+"word": "protect",
+"start": 172.7,
+"end": 173.0
+},
+{
+"word": "the",
+"start": 173.0,
+"end": 173.2
+},
+{
+"word": "plants",
+"start": 173.2,
+"end": 173.52
+},
+{
+"word": "that",
+"start": 173.52,
+"end": 173.76
+},
+{
+"word": "heal",
+"start": 173.76,
+"end": 174.0
+},
+{
+"word": "us.",
+"start": 174.0,
+"end": 174.3
+}
+]

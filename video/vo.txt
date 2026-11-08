@@ -1,0 +1,17 @@
+[warmly] Up to four billion people rely on herbal medicine. [short pause] Most medicinal plants in trade are not farmed. They are taken from the wild... roots, bark, and all. [pause] And almost no one is counting what is left.
+
+[serious] About thirty thousand plant species are used as medicine. Only seven percent have ever been checked for extinction risk. [short pause] Here in the Philippines, the forests these plants need lose about one hundred seventy-five hectares of tree cover... every single day. The government lists more than eleven hundred threatened plants. But nobody measures harvest. [pause] So if you are a ranger, a local official, or a harvester... where do you even start?
+
+[softly] Take tongkat ali. Its roots are dug up and sold. It is officially Endangered. Yet across the whole country, open databases hold only FIVE reliable records of it. [pause]
+
+[warmly] So we built an answer. This is Harvester Risk Atlas. A free map that ranks which wild medicinal plants of the Philippines need help first... where they grow, why, and how sure we are.
+
+For every native plant, we ask three simple questions. How hard is it to find? Does harvesting kill it? And is its home disappearing? [short pause] We answer them with six open sources. Nine checks clean almost ten thousand records down to the ones we can trust. And because busy roadsides get photographed more than deep forest, we only measure rarity where botanists have searched well. [short pause] Then we re-run the whole ranking two thousand times, with different weights and evidence. So every plant gets a range... not just one number.
+
+[excited] Let me show you. The overview shows where the plants that need attention cluster. [short pause] Pick tongkat ali on the atlas. You only see broad hexagons, never exact spots, so the map can't lead collectors to them. [short pause] Its profile gives the reasons in plain words. Ranked second of twenty-nine... and it could be anywhere from first to fifth. [short pause] One click, and a ranger has a one-page brief to print and carry into the field. [short pause] And if you think harvest matters more, move the slider. The ranking changes right in front of you. [short pause] Every plant is grouped by tier, and you can download the whole list.
+
+[serious] So what did we find? Five plants need attention now. Kalingag, found only in the Philippines. Tongkat ali. Bitaog. Tibig. And amuyon. [short pause] Two of them are already on the government's threatened list, even though we never used that list. [short pause] We also tried to break our own ranking. Change the math, and the order barely moves. Most plants' ranks are known to within about five places.
+
+[softly] And we are honest about the limits. This is not medical advice, and it is not a permit. Our harvest data comes from books, and it still needs expert eyes. Every page says so. [short pause] Next, we want Filipino ethnobotanists and harvester communities to check every trait, and to map where these plants grow beyond the records we have.
+
+[warmly] Harvester Risk Atlas. Which plants first, where, and how sure. [pause] Open it... and help us protect the plants that heal us.

@@ -176,3 +176,28 @@ High-attention species are shown only as H3 cells (about 250 km²), never as poi
 - OECD/JRC (2008). *Handbook on Constructing Composite Indicators.*
 - Schippmann U, Leaman DJ, Cunningham AB (2002). *Impact of Cultivation and Gathering of Medicinal Plants on Biodiversity.* FAO.
 - Zizka A et al. (2019). CoordinateCleaner. *Methods Ecol Evol* 10: 744–751.
+
+## 10. Expert cross-check and where to look next (`scripts/name_check.py`, `scripts/survey_gaps.py`)
+
+**Names.** Every cohort name is matched in the World Flora Online Plant List (REST matching, then GraphQL for role and accepted name). Where a binomial has several authors (homonyms), the accepted name that WFO places in its classification is used, and the choice is recorded. Result, 8 November 2026: 50 of 51 names matched, all accepted. *Mentha × piperita* is unresolved; it is already gated and flagged for review.
+
+**Expert flora.** Each plant is compared with Co's Digital Flora of the Philippines (Pelser, Barcelona & Nickrent, eds., 2011 onwards):
+- status (native, endemic, introduced) against the atlas's nativity gate (WCVP);
+- DAO category against the atlas's DENR category;
+- the global IUCN category CDFP cites;
+- CDFP's Philippine distribution against the provinces of the cleaned GBIF records.
+
+Places are compared by name stem: "Surigao del Sur" becomes "surigao", which matches a province or island named in CDFP.
+
+The host blocks automated requests, so family pages are saved by a person in a browser (`data/raw/cdfp/`, not committed). Facts transcribed by hand are kept in `data/curated/cdfp_facts.csv` with source and date. A plant without a saved page is reported as not yet compared, never as not listed. At the time of writing, tongkat ali has been compared:
+- CDFP agrees it is native and DAO Endangered, and gives IUCN Least Concern;
+- 2 of its 4 record provinces fall inside the documented range.
+
+**Where to look next.** Three lists per plant:
+1. places CDFP documents where no reliable open record exists (survey targets);
+2. record provinces outside CDFP's documented range (records to double-check for misidentification);
+3. from survey effort, the land H3 res-5 cells in the ring around each occupied cell, counted as never searched (0 vascular-plant records in GBIF) or under-searched (fewer than 100, the atlas's well-searched threshold). Only counts are published, so no finer location is revealed.
+
+Across the 29 ranked plants: 4,542 neighbouring cells, of which 2,859 are under-searched and 133 never searched (66% in total).
+
+**Limits.** Province-stem matching is coarse: an island name can match several provinces. CDFP distributions record where a plant has been documented, not where it is absent. The neighbour ring assumes a plant is likelier to occur next to known records; it is a heuristic, not a habitat model.
