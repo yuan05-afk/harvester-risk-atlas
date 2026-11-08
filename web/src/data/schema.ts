@@ -98,6 +98,21 @@ export const SpeciesDetail = SpeciesSummary.extend({
     .nullable(),
   gbif: z.object({ taxon_key: num, match_type: z.string(), fetched_at: z.string(), n_world: z.number() }),
   wcvp: z.object({ key: num, fetched_at: z.string() }),
+  /** Cross-check with expert sources (scripts/name_check.py, scripts/survey_gaps.py). */
+  check: z
+    .object({
+      wfo: z.object({ id: z.string(), name: z.string(), role: z.string(), accepted: z.string() }),
+      cdfp: z.object({ checked: z.boolean(), listed: z.boolean(), name: z.string(), status: z.string(), iucn: z.string(), dao: z.string(), url: z.string() }),
+      nativity_agrees: z.union([z.boolean(), z.literal("")]),
+      dao_agrees: z.union([z.boolean(), z.literal("")]),
+      records: z.number(),
+      confirmed: z.number(),
+      look_next: z.array(z.string()),
+      double_check: z.array(z.string()),
+      checked: z.string(),
+      survey: z.object({ neighbours: z.number(), never: z.number(), under: z.number(), threshold: z.number() }).optional(),
+    })
+    .optional(),
 });
 export type SpeciesDetail = z.infer<typeof SpeciesDetail>;
 

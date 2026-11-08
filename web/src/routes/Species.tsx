@@ -177,6 +177,12 @@ function Profile({ d, cohort }: { d: SpeciesDetail; cohort: SpeciesSummary[] }) 
         </div>
       </Section>
 
+      {d.check ? (
+        <Section title="Checked against expert sources" lead="Every name is matched to World Flora Online, and each plant is compared with Co's Digital Flora of the Philippines, the expert checklist built on Leonardo L. Co's work. Where they disagree with the atlas, it says so.">
+          <ExpertCheck d={d} />
+        </Section>
+      ) : null}
+
       <Section title="Climate outlook" lead="Expected warming where it grows by 2041 to 2060. Shown for context only: it is about the same for every plant, so it does not change the ranking.">
         <div className="sheet pad">
           <ClimateRange species={d} cohort={cohort} />
@@ -212,6 +218,78 @@ function Profile({ d, cohort }: { d: SpeciesDetail; cohort: SpeciesSummary[] }) 
         ) : null}
       </nav>
     </article>
+  );
+}
+
+/** The cross-check with WFO and Co's Digital Flora, and where to look next. Plain sentences, sources linked. */
+function ExpertCheck({ d }: { d: SpeciesDetail }) {
+  const c = d.check!;
+  const w = c.wfo;
+  const f = c.cdfp;
+  const name =
+    w.role === "accepted"
+      ? "An accepted name in World Flora Online."
+      : w.role === "synonym"
+        ? `World Flora Online treats this name as a synonym of ${w.accepted}.`
+        : "Not resolved in World Flora Online; the name needs checking.";
+  const status = !f.checked
+    ? "Not yet compared with Co's Digital Flora."
+    : !f.listed
+      ? "Not found in Co's Digital Flora under this name."
+      : `${f.status || "Listed"} in Co's Digital Flora${c.nativity_agrees === true ? ", which agrees with the atlas" : c.nativity_agrees === false ? ", which disagrees with the atlas's nativity source (WCVP)" : ""}.`;
+  const lists = f.checked && f.listed && (f.dao || f.iucn) ? [f.dao ? `DENR list: ${f.dao}${c.dao_agrees === true ? " (agrees)" : c.dao_agrees === false ? " (differs from the atlas)" : ""}` : "", f.iucn ? `IUCN: ${f.iucn}` : ""].filter(Boolean).join(" · ") : "";
+  const s = c.survey;
+  return (
+    <div className="sheet pad expert-check">
+      <dl className="expert-check__list">
+        <div>
+          <dt>Name</dt>
+          <dd>
+            {name}{" "}
+            {w.id ? (
+              <a href={`https://list.worldfloraonline.org/${w.id}`} target="_blank" rel="noreferrer">
+                {w.id}
+              </a>
+            ) : null}
+          </dd>
+        </div>
+        <div>
+          <dt>Co's Digital Flora</dt>
+          <dd>
+            {status}
+            {lists ? <> {lists}.</> : null}{" "}
+            {f.checked && f.listed ? (
+              <a href={f.url} target="_blank" rel="noreferrer">
+                Source
+              </a>
+            ) : null}
+          </dd>
+        </div>
+        {f.checked && f.listed && c.records > 0 ? (
+          <div>
+            <dt>Records</dt>
+            <dd>
+              {c.confirmed} of {c.records} provinces with records fall inside the range Co's Digital Flora documents.
+            </dd>
+          </div>
+        ) : null}
+      </dl>
+      {c.look_next.length || (s && s.never + s.under > 0) || c.double_check.length ? (
+        <>
+          <h3 className="expert-check__head">Where to look next</h3>
+          <ul className="expert-check__next">
+            {c.look_next.length ? <li>Documented by Co's Digital Flora, but no reliable open record yet: <b>{c.look_next.join(", ")}</b>.</li> : null}
+            {s && s.never + s.under > 0 ? (
+              <li>
+                Of the {s.neighbours} areas right next to its records, <b>{s.never}</b> have never been searched and <b>{s.under}</b> are under-searched (fewer than {s.threshold} plant records of any kind).
+              </li>
+            ) : null}
+            {c.double_check.length ? <li>Records to double-check, outside the documented range: <b>{c.double_check.join(", ")}</b>.</li> : null}
+          </ul>
+        </>
+      ) : null}
+      <p className="expert-check__note">Checked {fmtDate(c.checked)}. Province names only; no finer location is shown.</p>
+    </div>
   );
 }
 

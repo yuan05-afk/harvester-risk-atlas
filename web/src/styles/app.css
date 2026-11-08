@@ -3082,3 +3082,14 @@ video {
 .nav-glyph__fill {
   fill: none;
 }
+
+/* Expert cross-check on the plant page */
+.expert-check__list { display: grid; gap: var(--s3); margin: 0; }
+.expert-check__list > div { display: grid; grid-template-columns: 11rem 1fr; gap: var(--s4); padding-bottom: var(--s3); border-bottom: 1px solid var(--rule); }
+.expert-check__list dt { font-weight: 700; color: var(--ink); }
+.expert-check__list dd { margin: 0; color: var(--ink-2); }
+.expert-check__head { font-family: var(--serif); font-size: var(--fs-h3); margin: var(--s5) 0 var(--s2); }
+.expert-check__next { margin: 0; padding-left: 1.2rem; color: var(--ink-2); display: grid; gap: var(--s2); }
+.expert-check__next b { color: var(--ink); }
+.expert-check__note { margin: var(--s4) 0 0; font-size: var(--fs-small); color: var(--ink-3); }
+@media (max-width: 720px) { .expert-check__list > div { grid-template-columns: 1fr; gap: var(--s1); } }
