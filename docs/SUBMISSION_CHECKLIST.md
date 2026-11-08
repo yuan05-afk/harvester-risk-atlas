@@ -37,7 +37,7 @@ Do this first:
 | README, installation and reproduction | Met | `README.md`; `python -m harvester_risk_atlas all --offline` |
 | Data-processing scripts and model code | Met | `src/harvester_risk_atlas/`, `notebooks/01_eda_hpi.ipynb` |
 | Dataset references and licences | Met | `README.md`, `docs/METHODS.md` §9, `docs/ORIGINALITY.md`, How it works page |
-| Pitch video ≤ 10 min | **To record** | Script: [`VIDEO_SCRIPT.md`](VIDEO_SCRIPT.md), about 8 min |
+| Pitch video ≤ 10 min | Met: 2:48 (fits the organisers' 2–3 min guideline) | `video/out/harvester-risk-atlas-pitch-yt.mp4`; notes [`../video/NOTE.md`](../video/NOTE.md) |
 | Slide deck ≤ 10 slides | Met | `submission/Harvester-Risk-Atlas-slides.pdf`, 10 slides |
 | Originality: work created during the hackathon; own vs pre-existing parts identified | Met per owner's confirmation | `docs/ORIGINALITY.md` records development on 2–3 Nov 2026 and lists every third-party component. Some source-data retrieval and access dates in the data files fall before 2 November. If a judge asks, explain them as data provenance; `ORIGINALITY.md` already covers this |
 | Licences respected | Met, with care | WDPCA and some GBIF datasets are non-commercial; the project is non-commercial. Stuart text is cited, not redistributed |
@@ -61,7 +61,7 @@ From the "Final reminder" sent to participants.
 | Data sources and attribution | "How we built it", "Responsible research", README | Drafted |
 | Results or prototype | "Results", live app, gallery | Drafted |
 | GitHub repository | "Try it out" links | Public |
-| Pitch video ≤ 10 min | "Video demo link" | **To record** |
+| Pitch video ≤ 10 min | "Video demo link" | Rendered (2:48); upload to YouTube and paste the link |
 | Slide deck ≤ 10 slides | Additional info upload (one file: the PDF) | Done: 10 slides |
 | Limitations, assumptions, future work | "Responsible research", "Assumptions", "What's next"; README | Drafted |
 | README explains how it works | `README.md` | Done |
@@ -72,7 +72,8 @@ From the "Final reminder" sent to participants.
 - [x] Teammate added and accepted on Devpost.
 - [ ] Second member's EthnoHack registration confirmed as on or before 31 October.
 - [x] Roles filled in: `submission/devpost.md` Team section and `ORIGINALITY.md`.
-- [ ] Video recorded, under 10 minutes, uploaded, link pasted.
+- [x] Video recorded (2:48, 60 fps, captions in `video/harvester-risk-atlas-pitch.en.srt`).
+- [ ] Video uploaded to YouTube (public or unlisted) and link pasted.
 - [ ] Slides PDF uploaded under Additional info.
 - [ ] Gallery images uploaded with captions.
 - [ ] Walk the demo path in a private window: Overview → Atlas → plant profile → field brief → How it works.
