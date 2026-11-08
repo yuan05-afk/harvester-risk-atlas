@@ -53,3 +53,8 @@ web/playwright-report/
 .vercel
 web/dist-ssr/
 data/raw/cdfp/
+
+# Secrets: never committed (EthnoHack GitHub guide)
+*.env
+!.env.example
+config/secrets.json
