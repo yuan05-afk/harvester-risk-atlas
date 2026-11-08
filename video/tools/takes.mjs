@@ -114,21 +114,33 @@ export const TAKES = {
   async seasons(H) {
     await H.goto('/seasons', 1500);
     await H.idleFor(1200);
-    await H.hold(500);
+    // Measure everything before Play: once the year is playing, the page's month timer keeps the capture clock from
+    // answering layout queries (the take hung here once).
     const play = H.pg.getByRole('button', { name: /Play the year/ });
     await H.boxMark('play', play);
-    await H.click(play, 1000);
-    H.mark('playing');
-    await H.to({ x: 1180, y: 760 }, 1400);
-    await H.hold(9000);
     await H.boxMark('month', H.pg.locator('.season-readout__month'));
     await H.boxMark('map', H.pg.locator('.season-map__frame'));
     await H.boxMark('chart', H.pg.locator('.season-chart svg'));
-    await H.scroll(760, 1800);
-    H.mark('calendar');
+    const cal = await H.pg.locator('.calendar').boundingBox();
+    const SCROLL = 760;
+    H.marks.push({ f: H.n, mark: 'calendar box', box: { x: Math.round(cal.x), y: Math.round(cal.y - SCROLL), w: Math.round(cal.width), h: Math.round(cal.height) } });
+    const rest = await H.box(H.pg.locator('.season-readout__line').first(), 0.3, 0.5);
     await H.hold(500);
-    await H.boxMark('calendar', H.pg.locator('.calendar'));
-    await H.hold(4500);
+    await H.click(play, 1000);
+    H.mark('playing');
+    // Rest the hand on the readout, clear of the chart and map, while the year plays.
+    await H.to(rest, 1300);
+    await H.hold(10000);
+    await H.scroll(SCROLL, 1800);
+    H.mark('calendar');
+    await H.hold(400);
+    // Point at a square in the calendar (third plant, April): its label opens.
+    const colW = (cal.width - 240) / 12;
+    await H.to({ x: cal.x + 240 + colW * 3.5, y: cal.y - SCROLL + 150 }, 1100);
+    H.mark('tooltip');
+    await H.hold(3200);
+    await H.to({ x: cal.x + 240 + colW * 6.5, y: cal.y - SCROLL + 230 }, 900);
+    await H.hold(3500);
   },
 
   async plants(H) {
