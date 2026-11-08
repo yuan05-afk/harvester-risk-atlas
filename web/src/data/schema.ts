@@ -113,8 +113,48 @@ export const SpeciesDetail = SpeciesSummary.extend({
       survey: z.object({ neighbours: z.number(), never: z.number(), under: z.number(), threshold: z.number() }).optional(),
     })
     .optional(),
+  /** Months of the year (scripts/seasons.py): records, flowering and fruiting notes, and where it was recorded each month. */
+  seasons: z
+    .object({
+      months: z.array(
+        z.object({ m: z.number(), all: z.number(), records: z.number(), flowering: z.number(), fruiting: z.number(), index: z.number() }),
+      ),
+      n: z.number(),
+      n_flowering: z.number(),
+      n_fruiting: z.number(),
+      dry_share: num,
+      dry_expected: z.number(),
+      cells: z.record(z.string(), z.array(z.string())),
+      cells_r4: z.record(z.string(), z.array(z.string())),
+      fetched: z.string(),
+    })
+    .optional(),
 });
 export type SpeciesDetail = z.infer<typeof SpeciesDetail>;
+
+export const SeasonsIndex = z.object({
+  effort: z.array(z.number()),
+  dry: z.array(z.number()),
+  fetched: z.string(),
+  species: z.array(
+    z.object({
+      slug: z.string(),
+      name: z.string(),
+      vernacular: z.string().nullable(),
+      tier: z.string().nullable(),
+      ph_status: z.string().nullable(),
+      n: z.number(),
+      counts: z.array(z.number()),
+      n_flowering: z.number(),
+      n_fruiting: z.number(),
+      index: z.array(z.number()),
+      flowering: z.array(z.number()),
+      fruiting: z.array(z.number()),
+      dry_share: num,
+    }),
+  ),
+});
+export type SeasonsIndex = z.infer<typeof SeasonsIndex>;
 
 export const Source = z.object({
   id: z.string(),
@@ -204,6 +244,7 @@ export const SCHEMAS = {
   species: SpeciesDetail,
   manifest: Manifest,
   validation: Validation,
+  seasons: SeasonsIndex,
   cells: CellCollection,
   geo: Geo,
 };

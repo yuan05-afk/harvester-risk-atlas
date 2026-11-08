@@ -88,6 +88,7 @@ export function useData<K extends keyof Shapes>(path: string | null, kind: K): L
 export const useSpeciesList = () => useData("species.json", "speciesList");
 export const useManifest = () => useData("manifest.json", "manifest");
 export const useValidation = () => useData("validation.json", "validation");
+export const useSeasons = () => useData("seasons.json", "seasons");
 export const useSpecies = (slug: string | undefined) => useData(slug ? `species/${slug}.json` : null, "species");
 
 export function geoUrl(name: string): string {

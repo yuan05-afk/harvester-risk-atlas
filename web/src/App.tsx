@@ -11,6 +11,7 @@ import { Overview } from "./routes/Overview";
 const Atlas = lazy(() => import("./routes/Atlas").then((m) => ({ default: m.Atlas })));
 const Brief = lazy(() => import("./routes/Brief").then((m) => ({ default: m.Brief })));
 const HowItWorks = lazy(() => import("./routes/HowItWorks").then((m) => ({ default: m.HowItWorks })));
+const Seasons = lazy(() => import("./routes/Seasons").then((m) => ({ default: m.Seasons })));
 const Plants = lazy(() => import("./routes/Plants").then((m) => ({ default: m.Plants })));
 const Species = lazy(() => import("./routes/Species").then((m) => ({ default: m.Species })));
 
@@ -32,6 +33,7 @@ function Shell() {
         <Route path="/atlas" element={<Layout bleed><Atlas /></Layout>} />
         <Route path="/plants" element={<Layout><Plants /></Layout>} />
         <Route path="/rankings" element={<Navigate to="/plants" replace />} />
+        <Route path="/seasons" element={<Layout><Seasons /></Layout>} />
         <Route path="/species/:slug" element={<Layout><Species /></Layout>} />
         <Route
           path="/species/:slug/brief"

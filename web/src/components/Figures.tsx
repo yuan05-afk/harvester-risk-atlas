@@ -327,7 +327,7 @@ export function ComponentGlyph({ k, color, size = 28 }: { k: Component; color: s
 }
 
 /** Pen-drawn glyphs for the mobile tab bar, in the same hand as the figures. */
-export function NavGlyph({ name }: { name: "overview" | "atlas" | "plants" | "how" }) {
+export function NavGlyph({ name }: { name: "overview" | "atlas" | "plants" | "seasons" | "how" }) {
   return (
     <svg className="nav-glyph" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
       <g fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round">
@@ -351,6 +351,13 @@ export function NavGlyph({ name }: { name: "overview" | "atlas" | "plants" | "ho
             <path d={leaf(12, 15, -150, 8, 2.8)} />
             <path d={leaf(12, 11, -30, 8, 2.8)} className="nav-glyph__fill" />
             <path d={leaf(12, 8, -90, 5, 1.8)} />
+          </>
+        ) : name === "seasons" ? (
+          <>
+            {/* a year dial: the dry half filled, the wet half open */}
+            <circle cx="12" cy="12" r="8.5" />
+            <path d="M12 3.5A8.5 8.5 0 0 1 12 20.5Z" className="nav-glyph__fill" />
+            <path d="M12 12L16.5 7" />
           </>
         ) : (
           <>
