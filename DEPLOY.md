@@ -2,7 +2,7 @@
 
 ## Web app (Vercel)
 
-The atlas is a static site in `web/`. Its public source repository is https://github.com/yuan05-afk/harvester-risk-atlas.
+The atlas is a static site in `web/`. Its public source repository is https://github.com/yuan05-afk/makeathon-2026-harvester-risk-atlas-biodiversity-sustainability.
 
 | Setting | Value |
 |---|---|
